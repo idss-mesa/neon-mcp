@@ -1,7 +1,7 @@
 """Stateless Streamable HTTP at ``/mcp`` (MCP 2026-07-28).
 
 The SDK builds the Starlette app (``Server.streamable_http_app`` with
-``stateless_http=True``: no ``Mcp-Session-Id``, any instance answers any
+``stateless_http=True``: no session header, any instance answers any
 request). neon-mcp adds ``/healthz`` + ``/readyz`` routes and one raw ASGI
 middleware that assigns a request id and exposes request headers to the tool
 adapter through context variables. A caller's ``X-API-Token`` is honoured
