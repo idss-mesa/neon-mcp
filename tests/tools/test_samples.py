@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from neon_mcp.server import NeonServer
-from tests.fixture_router import TEST_TOKEN, FixtureRouter, Reply, Route
+from tests.fixture_router import TEST_TOKEN, FixtureRouter, Reply, Route, load_fixture
 from tests.helpers import call_err, call_ok
 
 TAG = "A00000123456"
@@ -13,7 +13,11 @@ async def test_list_supported_classes(server: NeonServer, router: FixtureRouter)
     payload = await call_ok(server, "neon_list_sample_classes", {})
     assert payload["sourceEndpoint"] == "supportedClasses" and payload["page"]["total"] == 8
     keys = [i["sampleClass"] for i in payload["items"]]
-    assert keys == sorted(keys) and all(i["description"] for i in payload["items"])
+    entries = load_fixture("samples_supportedClasses.json")["data"]["entries"]
+    assert keys == sorted(keys)
+    assert sum(1 for i in payload["items"] if i.get("description")) == sum(
+        1 for e in entries if e.get("value")
+    )
     wdp = await call_ok(server, "neon_list_sample_classes", {"query": "wet deposition"})
     assert wdp["items"] and all("wdp" in i["sampleClass"] for i in wdp["items"])
     assert router.paths() == ["GET /samples/supportedClasses"]

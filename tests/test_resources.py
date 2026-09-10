@@ -1,9 +1,9 @@
 from __future__ import annotations
 
 import json
+from typing import get_args
 
 import pytest
-from typing import get_args
 
 from neon_mcp.errors import ToolError
 from neon_mcp.models.common import FileKind, TaxonTypeCode

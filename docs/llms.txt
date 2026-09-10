@@ -11,6 +11,42 @@ If you want NEON data rather than documentation, connect to the neon-mcp server 
 ## Getting started
 
 - [NEON API token](https://idss-mesa.github.io/neon-mcp/getting-started/api-token/): Why NEON's data and sample endpoints require an API token, how to obtain one, how neon-mcp reads it, and the rate limits that apply with and without it.
+- [Clients](https://idss-mesa.github.io/neon-mcp/getting-started/clients/): Register neon-mcp with Claude Code, Claude Desktop, Codex CLI, OpenCode and Antigravity over stdio, or connect to a hosted server over HTTP.
+- [Configuration](https://idss-mesa.github.io/neon-mcp/getting-started/configuration/): Configure neon-mcp with a YAML file, NEON_MCP_ environment variables or command-line flags; precedence rules and every setting with its default.
+- [Install neon-mcp](https://idss-mesa.github.io/neon-mcp/getting-started/install/): Install the neon-mcp server with uv or pip from GitHub (or PyPI once released), verify it with --version and --check, and run it from source.
+- [Quickstart](https://idss-mesa.github.io/neon-mcp/getting-started/quickstart/): A first session with neon-mcp: register it with Claude Code, check it with neon_ping, then find a product, check availability, list files and cite.
+
+## Tools
+
+- [Availability and data files](https://idss-mesa.github.io/neon-mcp/tools/availability-and-data/): Check which sites and months have NEON data without a token, list data files with signed URLs using a token, and download them on stdio.
+- [GraphQL](https://idss-mesa.github.io/neon-mcp/tools/graphql/): Use neon_graphql, a guard-railed read-only GraphQL tool, for NEON metadata shapes the dedicated tools do not cover, and its introspection mode.
+- [Locations](https://idss-mesa.github.io/neon-mcp/tools/locations/): Walk NEON location hierarchies by type with neon_find_locations (towers, plots, huts) and read one location in depth with neon_get_location.
+- [Products](https://idss-mesa.github.io/neon-mcp/tools/products/): Find NEON data products with neon_search_products and read one in depth with neon_get_product, including its opt-in detail sections.
+- [Prototype datasets](https://idss-mesa.github.io/neon-mcp/tools/prototype-datasets/): Search NEON's prototype datasets with neon_search_prototype_datasets and read one with its files, DOI and descriptions using neon_get_prototype_dataset.
+- [Tool reference](https://idss-mesa.github.io/neon-mcp/tools/reference/): Every neon-mcp tool with its inputs, result fields, NEON endpoints, token requirement and annotations, generated from the registry.
+- [Releases and citations](https://idss-mesa.github.io/neon-mcp/tools/releases/): Browse NEON's annual data releases and their DOIs with neon_list_releases and neon_get_release, and cite data correctly with neon_get_citation.
+- [Resources and prompts](https://idss-mesa.github.io/neon-mcp/tools/resources-and-prompts/): The neon:// guide and reference resources, the three resource templates backed by tools, and the three task prompts neon-mcp exposes.
+- [Samples](https://idss-mesa.github.io/neon-mcp/tools/samples/): Look up NEON sample classes and trace a physical sample's custody chain; neon_get_sample is the one tool that may ask the user a question (MRTR).
+- [Sites](https://idss-mesa.github.io/neon-mcp/tools/sites/): Find NEON's field sites with neon_search_sites by name, state, domain, type, product or proximity, and read one site with neon_get_site.
+- [Taxonomy](https://idss-mesa.github.io/neon-mcp/tools/taxonomy/): Page through NEON's taxon lists with neon_search_taxonomy by type code or rank, with exact scientific names, a genus fallback and Darwin Core keys.
+- [Utilities and errors](https://idss-mesa.github.io/neon-mcp/tools/utilities/): neon_ping for status and connectivity, neon_get_document for NEON documents, and the error codes every neon-mcp tool can return with their remedies.
+
+## MCP protocol
+
+- [MCP 2026-07-28 conformance](https://idss-mesa.github.io/neon-mcp/mcp/spec-2026-07-28/): How neon-mcp implements the MCP 2026-07-28 stateless core: discovery, cache hints, result metadata, MRTR, header routing and the conformance tests.
+- [Transports](https://idss-mesa.github.io/neon-mcp/mcp/transports/): The stdio and stateless Streamable HTTP transports: endpoints, health checks, DNS-rebinding protection and per-request NEON tokens.
+
+## Deploy
+
+- [Hosted HTTP deployment](https://idss-mesa.github.io/neon-mcp/deploy/hosted-http/): Run neon-mcp as a stateless Streamable HTTP service with uvicorn behind nginx or Caddy, systemd or Docker, health checks and horizontal scaling.
+- [Security](https://idss-mesa.github.io/neon-mcp/deploy/security/): How neon-mcp protects NEON tokens, confines downloads, validates hosts and limits requests, and what operators must configure.
+
+## Develop
+
+- [Adding a tool](https://idss-mesa.github.io/neon-mcp/develop/adding-tools/): A walkthrough of adding a neon-mcp tool: input and output models, registration, annotations, a fixture route, tests and docs regeneration.
+- [Architecture](https://idss-mesa.github.io/neon-mcp/develop/architecture/): The module map of neon-mcp: registry and SDK adapter, the NEON client, cache and catalogs, projections, and the transports.
+- [Contributing](https://idss-mesa.github.io/neon-mcp/develop/contributing/): Branch and pull-request rules, lint and type checks, documentation regeneration, the two change logs, versioning and releases.
+- [Testing](https://idss-mesa.github.io/neon-mcp/develop/testing/): The neon-mcp test layout: hermetic fixtures and the FixtureRouter, the conformance suite, live tests, coverage and the CI jobs.
 
 ## About
 

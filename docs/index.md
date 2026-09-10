@@ -24,7 +24,7 @@ New Mexico and released under the MIT license.
 ## Install in one minute
 
 ```bash
-uv tool install neon-mcp
+uv tool install git+https://github.com/idss-mesa/neon-mcp
 claude mcp add neon -s user -- neon-mcp --transport stdio
 ```
 
@@ -46,10 +46,12 @@ knowledge bundle: every page carries YAML frontmatter with `type`,
 provenance and lifecycle fields, and the whole corpus is available to agents
 at [`llms.txt`](llms.txt) and [`llms-full.txt`](llms-full.txt).
 
-* [Getting started](getting-started/index.md) - Install neon-mcp, connect an MCP client, and configure your NEON API token.
+* [Getting started](getting-started/index.md) - Install neon-mcp, connect an MCP client, add your NEON API token and tune the configuration.
+* [Tools](tools/index.md) - The 20 tools by family, with the generated tool reference, worked examples, pitfalls and error codes.
+* [MCP protocol](mcp/index.md) - How neon-mcp implements the MCP 2026-07-28 stateless core and its stdio and Streamable HTTP transports.
+* [Deploy](deploy/index.md) - Run neon-mcp as a hosted, stateless HTTP service behind TLS, and the security model operators rely on.
+* [Develop](develop/index.md) - Architecture, adding a tool, the hermetic test suite, and how to contribute and release.
 * [About](about/index.md) - How agents should consume this site, how to cite NEON data, licenses, and the change log.
-
-<!-- TODO(phase-2): add Tools, MCP protocol, Deploy and Develop sections here once the tool catalogue is final. -->
 
 ## Where to get help
 

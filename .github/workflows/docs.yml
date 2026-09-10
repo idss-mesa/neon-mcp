@@ -27,15 +27,15 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: 3.x
-      - run: pip install pyyaml
+      # The reference generators import the package (no network).
+      - run: pip install -e ".[docs]"
       - run: python scripts/okf_validate.py docs
-      # Fail if the llms.txt machine-readable indexes are out of date.
-      # TODO(phase-2): once the tool catalogue is final, install the package
-      # (`pip install -e .`) and add `python scripts/gen_tools_reference.py`
-      # plus `docs/tools/reference.md` to this drift check.
+      # Fail if any generated file drifted from its sources.
       - run: |
           python scripts/gen_llms_txt.py
-          git diff --exit-code docs/llms.txt docs/llms-full.txt
+          python scripts/gen_tools_reference.py
+          python scripts/gen_config_reference.py
+          git diff --exit-code docs/llms.txt docs/llms-full.txt docs/tools/reference.md docs/getting-started/configuration.md
 
   deploy:
     needs: okf-conformance
@@ -52,7 +52,7 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: 3.x
-      - run: pip install zensical pyyaml
+      - run: pip install -e ".[docs]"
       - run: zensical build --clean --strict
       # Agent surface: markdown mirror, OKF meta injection, robots.txt
       - run: python scripts/postbuild_agent_surface.py site

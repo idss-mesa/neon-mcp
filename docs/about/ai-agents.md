@@ -57,6 +57,7 @@ All URLs are under `https://idss-mesa.github.io/neon-mcp/`.
 | [`llms-full.txt`](../llms-full.txt) — `https://idss-mesa.github.io/neon-mcp/llms-full.txt` | The entire corpus in one file: every page's Markdown with frontmatter, each prefixed by its canonical URL |
 | Any page URL + `index.md` | That page's Markdown source with full OKF frontmatter, e.g. `https://idss-mesa.github.io/neon-mcp/getting-started/api-token/index.md` |
 | `https://idss-mesa.github.io/neon-mcp/sitemap.xml`, `https://idss-mesa.github.io/neon-mcp/robots.txt` | Standard crawl surface; `robots.txt` welcomes AI fetchers and repeats these pointers |
+| [`tools/reference/`](../tools/reference.md) — `https://idss-mesa.github.io/neon-mcp/tools/reference/` | The tool catalogue generated from the server's registry: every tool's inputs, result fields, endpoints and token requirement |
 | [Source repository](https://github.com/idss-mesa/neon-mcp){target=_blank} | The bundle itself under `docs/`, plus `AGENTS.md` with the rules coding agents follow when editing it |
 
 Every rendered page also declares its Markdown twin and OKF signals in its

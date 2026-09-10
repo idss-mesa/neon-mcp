@@ -8,7 +8,7 @@ public ``/samples/classes`` endpoint); other clients get ``ambiguous_input``.
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import Field, model_validator
 
@@ -68,6 +68,7 @@ async def _classes_for_tag(tag: str, ctx: ToolContext) -> list[str] | None:
 )
 async def neon_list_sample_classes(args: ListSampleClassesIn, ctx: ToolContext) -> SampleClassList:
     notes: list[str] = []
+    endpoint: Literal["classes", "supportedClasses"]
     if args.sample_tag:
         classes = await _classes_for_tag(args.sample_tag, ctx)
         if classes is None:

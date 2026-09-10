@@ -9,7 +9,7 @@ tags:
   - rate-limits
 generated:
   by: "claude/fable-5.1"
-  at: "2026-09-10T00:00:00Z"
+  at: "2026-09-10T12:00:00Z"
 sources:
   - id: neon-api-auth
     resource: "https://data.neonscience.org/data-api/authentication/"
@@ -70,49 +70,51 @@ download links it returns.
 
 ## Giving the token to neon-mcp
 
-neon-mcp reads the token from any of three places. When more than one is
-set, the command-line flag wins over the environment variable, which wins
-over the YAML config file.
-
-=== "Environment variable (recommended)"
+=== "Local (stdio) — environment variable"
 
     ```bash
     export NEON_MCP_NEON__API_TOKEN="paste-your-token-here"
+    # or the variable neonUtilities documents, accepted as a fallback:
+    export NEON_TOKEN="paste-your-token-here"
     ```
 
-    The `NEON_MCP_` prefix selects neon-mcp's settings and the double
-    underscore (`__`) separates the `neon` section from its `api_token`
-    field. This is the form to use with
-    `claude mcp add neon -s user -e NEON_MCP_NEON__API_TOKEN=... -- neon-mcp --transport stdio`
-    and with a systemd `EnvironmentFile=`.
+    neon-mcp reads `NEON_MCP_NEON__API_TOKEN` first, then `NEON_TOKEN`, then
+    `NEON_API_TOKEN`. Pass it to a client at registration, e.g.
+    `claude mcp add neon -s user -e NEON_TOKEN=... -- neon-mcp --transport stdio`,
+    or through a systemd `EnvironmentFile=`.
 
-=== "YAML config file"
+=== "Local (stdio) — YAML config file"
 
     ```yaml
     neon:
       api_token: "paste-your-token-here"
     ```
 
-    Keep this file out of version control — `config.yaml` and
-    `*.local.yaml` are already listed in the repository's `.gitignore`.
+    Pass the file with `--config`. Keep it out of version control — `config.yaml`
+    and `*.local.yaml` are already in the repository's `.gitignore`.
 
-=== "Command-line flag"
+=== "Hosted (HTTP) — per-request header"
 
-    ```bash
-    neon-mcp --transport stdio --api-token "paste-your-token-here"
-    ```
+    Each caller sends its own token in the `X-API-Token` header, for example
+    `claude mcp add --transport http neon https://neon-mcp.example.org/mcp --header "X-API-Token: $NEON_TOKEN"`.
+    The server honours the header only when its `server.public_base_url` is
+    `https://` (TLS in front of it), so a token never crosses the network in clear
+    text; `server.allow_insecure_header_token` overrides this for local testing only.
+    An operator's configured token is **not** lent to anonymous HTTP callers unless
+    `server.share_config_token_over_http` is set.
 
-    Convenient for a one-off test; less suitable for long-running services,
-    because the token is visible in the process list.
+There is deliberately no command-line flag for the token: arguments are visible in
+the process list and shell history. The environment variable wins over the YAML file.
 
 !!! danger "Never commit a token"
 
     Do not paste a token into a repository, a checked-in MCP client
     configuration, an issue, or a chat transcript. If a token leaks, revoke
     it at [data.neonscience.org/myaccount](https://data.neonscience.org/myaccount){target=_blank}
-    and generate a new one. neon-mcp never logs the token, never echoes it in
-    tool results or error messages, and never places it in MCP `requestState`
-    (which round-trips through the client).
+    and generate a new one. neon-mcp sends it only as the `X-API-Token` header and
+    only to data.neonscience.org, never logs it, never echoes it in tool results or
+    error messages, never puts it in cache keys (only a one-way hash), and never
+    places it in MCP `requestState` (which round-trips through the client).
 
 ## Rate limits
 
@@ -130,7 +132,7 @@ and `X-RateLimit-Reset` (seconds until the burst refills in full). When the
 limit is exceeded the API returns `HTTP 429` with a `RetryAfter` header and
 the body `{"message":"API rate limit exceeded"}`. neon-mcp shares one HTTP
 client across all tools, slows down when `X-RateLimit-Remaining` runs low,
-and retries a 429 after the `RetryAfter` interval, so agents rarely hit the
+and retries a 429 after the `RetryAfter` interval (it keeps 10 % under both limits), so agents rarely hit the
 limit — but a token remains the single most effective way to speed up a
 heavy session.
 
@@ -142,12 +144,13 @@ headers are authoritative[^neon-api-rate-limiting].
 * Discovery tools (products, sites, locations, availability, releases,
   taxonomy, prototype datasets) behave identically with or without a token,
   apart from the lower rate limit.
-* Tools that must call a token-only endpoint do **not** surface a raw `403`.
-  They return a structured error with `code: "auth_required"`, a message
-  naming the three configuration options above, and a link to
+* Three tools need a token: `neon_list_files`, `neon_download_files` (for NEON data
+  files; prototype and document downloads need none) and `neon_get_sample`. Without
+  one they fail **before** any request with a structured error,
+  `code: "auth_required"`, whose message names the settings above and links to
   [data.neonscience.org/myaccount](https://data.neonscience.org/myaccount){target=_blank}.
-  The tool reference (published with the full tool catalogue) marks every
-  token-only tool so an agent can plan ahead.
+  The [tool reference](../tools/reference.md) marks each token-only tool, and
+  `neon_ping` reports whether a token is available.
 
 [^neon-api-auth]: NEON Data API — Authentication. <https://data.neonscience.org/data-api/authentication/>
 [^neon-api-rate-limiting]: NEON Data API — Rate Limiting. <https://data.neonscience.org/data-api/rate-limiting/>

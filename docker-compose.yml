@@ -1,0 +1,14 @@
+# Local or single-host deployment. Put a TLS-terminating reverse proxy in front
+# (the NEON token in X-API-Token is a bearer secret) and set PUBLIC_BASE_URL.
+services:
+  neon-mcp:
+    build: .
+    image: neon-mcp:local
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      NEON_MCP_SERVER__PUBLIC_BASE_URL: "${PUBLIC_BASE_URL:-}"
+      NEON_MCP_SERVER__ALLOWED_HOSTS: "${ALLOWED_HOSTS:-}"
+      # Optional operator token (only lent to callers if share_config_token_over_http):
+      # NEON_TOKEN: "${NEON_TOKEN}"
+    restart: unless-stopped

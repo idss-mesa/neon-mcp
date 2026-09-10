@@ -9,8 +9,8 @@ tags:
   - data-policy
   - CC-BY
 generated:
-  by: "claude/fable-5.1"
-  at: "2026-09-10T00:00:00Z"
+  by: "claude/opus-5"
+  at: "2026-09-10T12:00:00Z"
 sources:
   - id: neon-guidelines
     resource: "https://www.neonscience.org/data-samples/guidelines-policies"
@@ -69,32 +69,34 @@ The Data API exposes the DOI wherever a product meets a release[^neon-api-releas
 * `GET /releases/{releaseTag}` returns `dataProducts[]`, each with
   `productCode`, `productName` and `productDoi`.
 
-For example, the product *2D wind speed and direction* (`DP1.00001.001`) in
-`RELEASE-2021` carries `productDoi.url` =
-[https://doi.org/10.48443/s9ya-zc81](https://doi.org/10.48443/s9ya-zc81){target=_blank}.
+For example, *Breeding landbird point counts* (`DP1.10003.001`) in
+`RELEASE-2026` carries `productDoi.url` =
+[https://doi.org/10.48443/v6hs-mx57](https://doi.org/10.48443/v6hs-mx57){target=_blank}
+(and `RELEASE-2025` carries `https://doi.org/10.48443/3nka-yg96`).
 neon-mcp's product and release tools surface these fields, so an agent can
 assemble a citation without a second lookup.
 
 ## How to cite a data product
 
 NEON's recommended pattern[^neon-citation] names the product, its code, the
-release, the DOI and the access date:
+release, the DOI and the access date. neon-mcp's `neon_get_citation` tool renders
+exactly this wording (from the `neon://guide/citing-neon-data` resource), plus a
+BibTeX entry:
 
 > NEON (National Ecological Observatory Network). *Product name*
-> (DPx.xxxxx.xxx), RELEASE-YYYY. https://doi.org/xx.xxxxx/xxxx-xxxx.
-> Dataset accessed from https://data.neonscience.org/data-products/DPx.xxxxx.xxx/RELEASE-YYYY
-> on Month DD, YYYY.
+> (DPx.xxxxx.xxx), RELEASE-YYYY. https://doi.org/10.48443/xxxx-xxxx. Dataset
+> accessed from https://data.neonscience.org on Month D, YYYY.
 
-Filled in for the example above:
+Filled in for *Breeding landbird point counts* in `RELEASE-2026`:
 
-> NEON (National Ecological Observatory Network). 2D wind speed and direction
-> (DP1.00001.001), RELEASE-2021. https://doi.org/10.48443/s9ya-zc81. Dataset
-> accessed from https://data.neonscience.org/data-products/DP1.00001.001/RELEASE-2021
-> on September 10, 2026.
+> NEON (National Ecological Observatory Network). Breeding landbird point counts
+> (DP1.10003.001), RELEASE-2026. https://doi.org/10.48443/v6hs-mx57. Dataset
+> accessed from https://data.neonscience.org on September 10, 2026.
 
 Cite every product you used, each at the release you actually downloaded.
 If you retrieved data through neon-mcp you may mention the tool in your
 methods, but the citation of record is always the NEON data product DOI.
+Never cite the signed download URLs: they expire after about seven days.
 
 ## Provisional data
 
@@ -111,7 +113,7 @@ provisional data, say so and cite them by access date:
 
 > NEON (National Ecological Observatory Network). *Product name*
 > (DPx.xxxxx.xxx), provisional data. Dataset accessed from
-> https://data.neonscience.org on Month DD, YYYY.
+> https://data.neonscience.org on Month D, YYYY. Data archived at [your DOI].
 
 ## Acknowledging NEON and NSF
 

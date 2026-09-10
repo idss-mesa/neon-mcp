@@ -13,32 +13,13 @@ extra_css = ["stylesheets/extra.css"]
 
 nav = [
   { "Home" = "index.md" },
-  { "Getting started" = [ { "Contents" = "getting-started/index.md" }, "getting-started/api-token.md" ] },
+  { "Getting started" = [ { "Contents" = "getting-started/index.md" }, "getting-started/install.md", "getting-started/quickstart.md", "getting-started/api-token.md", "getting-started/clients.md", "getting-started/configuration.md" ] },
+  { "Tools" = [ { "Contents" = "tools/index.md" }, "tools/reference.md", "tools/products.md", "tools/sites.md", "tools/locations.md", "tools/availability-and-data.md", "tools/releases.md", "tools/taxonomy.md", "tools/samples.md", "tools/prototype-datasets.md", "tools/graphql.md", "tools/utilities.md", "tools/resources-and-prompts.md" ] },
+  { "MCP protocol" = [ { "Contents" = "mcp/index.md" }, "mcp/spec-2026-07-28.md", "mcp/transports.md" ] },
+  { "Deploy" = [ { "Contents" = "deploy/index.md" }, "deploy/hosted-http.md", "deploy/security.md" ] },
+  { "Develop" = [ { "Contents" = "develop/index.md" }, "develop/architecture.md", "develop/adding-tools.md", "develop/testing.md", "develop/contributing.md" ] },
   { "About" = [ { "Contents" = "about/index.md" }, "about/ai-agents.md", "about/citing-neon.md", "about/license.md", { "Changelog" = "log.md" } ] },
 ]
-
-# TODO(phase-2): once the tool catalogue is final, grow `nav` to the full layout
-# (order: Home · Getting started · Tools · MCP protocol · Deploy · Develop · About):
-#
-#   { "Getting started" = [ { "Contents" = "getting-started/index.md" },
-#       "getting-started/install.md", "getting-started/quickstart.md",
-#       "getting-started/api-token.md", "getting-started/clients.md",
-#       "getting-started/configuration.md" ] },
-#   { "Tools" = [ { "Contents" = "tools/index.md" }, "tools/reference.md",
-#       "tools/products.md", "tools/sites.md", "tools/locations.md",
-#       "tools/availability-and-data.md", "tools/releases.md", "tools/taxonomy.md",
-#       "tools/samples.md", "tools/prototype-datasets.md", "tools/graphql.md",
-#       "tools/utilities.md", "tools/resources-and-prompts.md" ] },
-#   { "MCP protocol" = [ { "Contents" = "mcp/index.md" },
-#       "mcp/spec-2026-07-28.md", "mcp/transports.md" ] },
-#   { "Deploy" = [ { "Contents" = "deploy/index.md" },
-#       "deploy/hosted-http.md", "deploy/security.md" ] },
-#   { "Develop" = [ { "Contents" = "develop/index.md" },
-#       "develop/architecture.md", "develop/adding-tools.md",
-#       "develop/testing.md", "develop/contributing.md" ] },
-#
-# The About group keeps ai-agents.md, citing-neon.md, license.md and
-# { "Changelog" = "log.md" } as they are today.
 
 [project.theme]
 favicon = "assets/favicon.svg"

@@ -15,7 +15,7 @@ tags:
   - rate-limits
 generated:
   by: "claude/fable-5.1"
-  at: "2026-09-10T00:00:00Z"
+  at: "2026-09-10T12:00:00Z"
 sources:
   - id: neon-api-auth
     resource: "https://data.neonscience.org/data-api/authentication/"
@@ -76,49 +76,51 @@ download links it returns.
 
 ## Giving the token to neon-mcp
 
-neon-mcp reads the token from any of three places. When more than one is
-set, the command-line flag wins over the environment variable, which wins
-over the YAML config file.
-
-=== "Environment variable (recommended)"
+=== "Local (stdio) — environment variable"
 
     ```bash
     export NEON_MCP_NEON__API_TOKEN="paste-your-token-here"
+    # or the variable neonUtilities documents, accepted as a fallback:
+    export NEON_TOKEN="paste-your-token-here"
     ```
 
-    The `NEON_MCP_` prefix selects neon-mcp's settings and the double
-    underscore (`__`) separates the `neon` section from its `api_token`
-    field. This is the form to use with
-    `claude mcp add neon -s user -e NEON_MCP_NEON__API_TOKEN=... -- neon-mcp --transport stdio`
-    and with a systemd `EnvironmentFile=`.
+    neon-mcp reads `NEON_MCP_NEON__API_TOKEN` first, then `NEON_TOKEN`, then
+    `NEON_API_TOKEN`. Pass it to a client at registration, e.g.
+    `claude mcp add neon -s user -e NEON_TOKEN=... -- neon-mcp --transport stdio`,
+    or through a systemd `EnvironmentFile=`.
 
-=== "YAML config file"
+=== "Local (stdio) — YAML config file"
 
     ```yaml
     neon:
       api_token: "paste-your-token-here"
     ```
 
-    Keep this file out of version control — `config.yaml` and
-    `*.local.yaml` are already listed in the repository's `.gitignore`.
+    Pass the file with `--config`. Keep it out of version control — `config.yaml`
+    and `*.local.yaml` are already in the repository's `.gitignore`.
 
-=== "Command-line flag"
+=== "Hosted (HTTP) — per-request header"
 
-    ```bash
-    neon-mcp --transport stdio --api-token "paste-your-token-here"
-    ```
+    Each caller sends its own token in the `X-API-Token` header, for example
+    `claude mcp add --transport http neon https://neon-mcp.example.org/mcp --header "X-API-Token: $NEON_TOKEN"`.
+    The server honours the header only when its `server.public_base_url` is
+    `https://` (TLS in front of it), so a token never crosses the network in clear
+    text; `server.allow_insecure_header_token` overrides this for local testing only.
+    An operator's configured token is **not** lent to anonymous HTTP callers unless
+    `server.share_config_token_over_http` is set.
 
-    Convenient for a one-off test; less suitable for long-running services,
-    because the token is visible in the process list.
+There is deliberately no command-line flag for the token: arguments are visible in
+the process list and shell history. The environment variable wins over the YAML file.
 
 !!! danger "Never commit a token"
 
     Do not paste a token into a repository, a checked-in MCP client
     configuration, an issue, or a chat transcript. If a token leaks, revoke
     it at [data.neonscience.org/myaccount](https://data.neonscience.org/myaccount){target=_blank}
-    and generate a new one. neon-mcp never logs the token, never echoes it in
-    tool results or error messages, and never places it in MCP `requestState`
-    (which round-trips through the client).
+    and generate a new one. neon-mcp sends it only as the `X-API-Token` header and
+    only to data.neonscience.org, never logs it, never echoes it in tool results or
+    error messages, never puts it in cache keys (only a one-way hash), and never
+    places it in MCP `requestState` (which round-trips through the client).
 
 ## Rate limits
 
@@ -136,7 +138,7 @@ and `X-RateLimit-Reset` (seconds until the burst refills in full). When the
 limit is exceeded the API returns `HTTP 429` with a `RetryAfter` header and
 the body `{"message":"API rate limit exceeded"}`. neon-mcp shares one HTTP
 client across all tools, slows down when `X-RateLimit-Remaining` runs low,
-and retries a 429 after the `RetryAfter` interval, so agents rarely hit the
+and retries a 429 after the `RetryAfter` interval (it keeps 10 % under both limits), so agents rarely hit the
 limit — but a token remains the single most effective way to speed up a
 heavy session.
 
@@ -148,16 +150,2731 @@ headers are authoritative[^neon-api-rate-limiting].
 * Discovery tools (products, sites, locations, availability, releases,
   taxonomy, prototype datasets) behave identically with or without a token,
   apart from the lower rate limit.
-* Tools that must call a token-only endpoint do **not** surface a raw `403`.
-  They return a structured error with `code: "auth_required"`, a message
-  naming the three configuration options above, and a link to
+* Three tools need a token: `neon_list_files`, `neon_download_files` (for NEON data
+  files; prototype and document downloads need none) and `neon_get_sample`. Without
+  one they fail **before** any request with a structured error,
+  `code: "auth_required"`, whose message names the settings above and links to
   [data.neonscience.org/myaccount](https://data.neonscience.org/myaccount){target=_blank}.
-  The tool reference (published with the full tool catalogue) marks every
-  token-only tool so an agent can plan ahead.
+  The [tool reference](../tools/reference.md) marks each token-only tool, and
+  `neon_ping` reports whether a token is available.
 
 [^neon-api-auth]: NEON Data API — Authentication. <https://data.neonscience.org/data-api/authentication/>
 [^neon-api-rate-limiting]: NEON Data API — Rate Limiting. <https://data.neonscience.org/data-api/rate-limiting/>
 [^neon-myaccount]: NEON Data Portal — My Account. <https://data.neonscience.org/myaccount>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/getting-started/clients/
+
+---
+title: "Clients"
+description: "Register neon-mcp with Claude Code, Claude Desktop, Codex CLI, OpenCode and Antigravity over stdio, or connect to a hosted server over HTTP."
+type: Guide
+tags:
+  - getting-started
+  - clients
+  - claude-code
+  - codex
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: claude-code-mcp
+    resource: "https://docs.claude.com/en/docs/claude-code/mcp"
+    title: "Claude Code — MCP"
+    author: "team:anthropic"
+  - id: codex-mcp
+    resource: "https://developers.openai.com/codex/cli/"
+    title: "OpenAI Codex CLI"
+    author: "team:openai"
+  - id: opencode-mcp
+    resource: "https://opencode.ai/docs/mcp-servers/"
+    title: "OpenCode — MCP servers"
+    author: "team:opencode"
+  - id: mesa-install
+    resource: "https://github.com/idss-mesa/docs/blob/main/install.sh"
+    title: "idss-mesa installer (client registration conventions)"
+    author: "team:idss-mesa"
+status: stable
+stale_after: "2027-03-10T00:00:00Z"
+---
+
+# Clients
+
+Local clients start neon-mcp themselves over **stdio**; hosted deployments are reached
+over **Streamable HTTP**. The examples use `neon-mcp` on your `PATH` (see
+[Install](install.md)); replace it with an absolute path such as
+`/home/me/neon-mcp/.venv/bin/neon-mcp` when the client does not share your shell's
+`PATH`. JSON-configured clients do not expand `~` or `$HOME`, so use absolute paths
+there[^mesa-install].
+
+The token is optional; see [NEON API token](api-token.md). Put it in the client's
+environment settings, never in a shared or committed file.
+
+## Claude Code
+
+```bash
+claude mcp add neon -s user -e NEON_TOKEN="$NEON_TOKEN" -- neon-mcp --transport stdio
+claude mcp list
+```
+
+`-s user` makes the server available in every project[^claude-code-mcp]; drop the `-e`
+option to run without a token.
+
+## Claude Desktop
+
+Edit `claude_desktop_config.json` (macOS: `~/Library/Application Support/Claude/`;
+Windows: `%APPDATA%\Claude\`) and restart the app:
+
+```json
+{
+  "mcpServers": {
+    "neon": {
+      "command": "/absolute/path/to/neon-mcp",
+      "args": ["--transport", "stdio"],
+      "env": { "NEON_TOKEN": "paste-your-token-here" }
+    }
+  }
+}
+```
+
+## Codex CLI
+
+```bash
+codex mcp add neon --env NEON_TOKEN="$NEON_TOKEN" -- neon-mcp --transport stdio
+codex mcp list
+```
+
+This writes the server into `~/.codex/config.toml`[^codex-mcp]; restart running sessions.
+
+## OpenCode
+
+Add to `~/.config/opencode/opencode.json`[^opencode-mcp]:
+
+```json
+{
+  "mcp": {
+    "neon": {
+      "type": "local",
+      "command": ["/absolute/path/to/neon-mcp", "--transport", "stdio"],
+      "enabled": true,
+      "environment": { "NEON_TOKEN": "paste-your-token-here" }
+    }
+  }
+}
+```
+
+## Google Antigravity
+
+Add to `~/.gemini/config/mcp_config.json` (older installs: `~/.gemini/antigravity/mcp_config.json`):
+
+```json
+{
+  "mcpServers": {
+    "neon": {
+      "command": "/absolute/path/to/neon-mcp",
+      "args": ["--transport", "stdio"],
+      "env": { "NEON_TOKEN": "paste-your-token-here" }
+    }
+  }
+}
+```
+
+## Any other stdio client
+
+Run `neon-mcp --transport stdio` (bare `neon-mcp` does the same) with the token in the
+environment. The server speaks MCP 2026-07-28 and still accepts clients on earlier
+protocol revisions over stdio.
+
+## A hosted server (HTTP)
+
+```bash
+claude mcp add --transport http neon https://neon-mcp.example.org/mcp \
+  --header "X-API-Token: $NEON_TOKEN"
+```
+
+Each user sends their own token in `X-API-Token`; the server honours it only over HTTPS
+(see [Transports](../mcp/transports.md)). Over HTTP `neon_download_files` is not offered:
+use the signed URLs from `neon_list_files` instead.
+
+[^claude-code-mcp]: Claude Code — MCP. <https://docs.claude.com/en/docs/claude-code/mcp>
+[^codex-mcp]: OpenAI Codex CLI. <https://developers.openai.com/codex/cli/>
+[^opencode-mcp]: OpenCode — MCP servers. <https://opencode.ai/docs/mcp-servers/>
+[^mesa-install]: idss-mesa installer. <https://github.com/idss-mesa/docs/blob/main/install.sh>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/getting-started/configuration/
+
+---
+title: "Configuration"
+description: "Configure neon-mcp with a YAML file, NEON_MCP_ environment variables or command-line flags; precedence rules and every setting with its default."
+type: Reference
+tags:
+  - getting-started
+  - configuration
+  - environment
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: config-module
+    resource: "https://github.com/idss-mesa/neon-mcp/blob/main/src/neon_mcp/config.py"
+    title: "neon-mcp configuration model (config.py)"
+    author: "team:idss-mesa"
+status: stable
+---
+
+# Configuration
+
+neon-mcp runs with no configuration at all: the defaults serve stdio, keep 10 %
+under NEON's rate limits, cache responses in memory and confine downloads to
+`~/neon-downloads`. Settings come from four layers; a higher layer wins:
+
+1. **Command-line flags** (only a handful of common settings).
+2. **Environment variables** named `NEON_MCP_<SECTION>__<FIELD>`, with a double
+   underscore descending into nested sections at any depth, e.g.
+   `NEON_MCP_NEON__RATE_LIMIT__ANONYMOUS_RPS=1.5`. List settings take a
+   comma-separated value: `NEON_MCP_SERVER__ALLOWED_HOSTS=neon.example.org,alt.example.org`.
+   The empty string, `none` and `null` mean "unset".
+3. **A YAML file** passed with `--config path.yaml`, using the same section and
+   field names (see `config.yaml.example` in the repository).
+4. **Built-in defaults** (the table below).
+
+Unknown keys in the YAML file or the environment are ignored with a warning, so a
+typo does not stop the server but is visible in its log.
+
+## The NEON API token
+
+The token is the only secret. Set `NEON_MCP_NEON__API_TOKEN`; if that is unset,
+neon-mcp falls back to `NEON_TOKEN` (the variable neonUtilities documents) and then
+`NEON_API_TOKEN`. There is deliberately **no command-line flag** for it: arguments are
+visible to every user in the process list and end up in shell history. See
+[NEON API token](api-token.md).
+
+## Command-line flags
+
+| Flag | Sets |
+| --- | --- |
+| `--config PATH` | YAML file to load |
+| `--transport {stdio,http}` | `server.transport` |
+| `--bind-address`, `--bind-port` | `server.bind_address`, `server.bind_port` |
+| `--log-level` | `server.log_level` |
+| `--download-dir PATH` | `downloads.directory` |
+| `--no-downloads` | `downloads.enabled = false` |
+| `--prewarm` / `--no-prewarm` | `cache.prewarm` |
+| `--print-config` | print the effective configuration (token shown as `***`) and exit |
+| `--check` | load the configuration, call `neon_ping(check_api=true)` in-process, print a JSON verdict, exit 0 or 1 |
+| `--version` | print the version |
+
+## Automatic values
+
+A few settings default to "unset" and resolve per transport:
+
+* `neon.token_for_public_endpoints` — on stdio the token is sent to every NEON
+  request (a single user gets the faster token rate limit everywhere); over HTTP it
+  is sent only to token-only endpoints.
+* `cache.prewarm` — HTTP deployments build the product and site catalogs at startup
+  (`/readyz` reports `warming` until done); stdio builds them lazily.
+* `downloads.enabled` — downloads exist only on stdio; over HTTP the download tool is
+  not listed at all.
+
+## All settings
+
+<!-- BEGIN GENERATED CONFIG (scripts/gen_config_reference.py; do not edit) -->
+
+| Setting (YAML path) | Environment variable | Type | Default | Description |
+| --- | --- | --- | --- | --- |
+| `neon.base_url` | `NEON_MCP_NEON__BASE_URL` | str | `https://data.neonscience.org/api/v0` | NEON REST API base URL. |
+| `neon.graphql_url` | `NEON_MCP_NEON__GRAPHQL_URL` | str | `https://data.neonscience.org/graphql` | NEON GraphQL endpoint (not under /api/v0). |
+| `neon.api_token` | `NEON_MCP_NEON__API_TOKEN`<br>(or `NEON_TOKEN`, `NEON_API_TOKEN`) | SecretStr \| null | unset | NEON API token (https://data.neonscience.org/myaccount). Required for data files, data queries and sample views. Prefer the env var; never commit it. Fallbacks: NEON_TOKEN, NEON_API_TOKEN. |
+| `neon.token_for_public_endpoints` | `NEON_MCP_NEON__TOKEN_FOR_PUBLIC_ENDPOINTS` | bool \| null | unset | Also send the token to public endpoints (raises the rate limit). Unset: true on stdio, false on http. |
+| `neon.user_agent_suffix` | `NEON_MCP_NEON__USER_AGENT_SUFFIX` | str \| null | unset | Text appended to the User-Agent header. |
+| `neon.connect_timeout_s` | `NEON_MCP_NEON__CONNECT_TIMEOUT_S` | float | `10.0` | TCP/TLS connect timeout. |
+| `neon.read_timeout_s` | `NEON_MCP_NEON__READ_TIMEOUT_S` | float | `60.0` | Default read timeout. |
+| `neon.catalog_read_timeout_s` | `NEON_MCP_NEON__CATALOG_READ_TIMEOUT_S` | float | `180.0` | Read timeout for catalog-sized fetches (product/site lists). |
+| `neon.download_read_timeout_s` | `NEON_MCP_NEON__DOWNLOAD_READ_TIMEOUT_S` | float | `300.0` | Read timeout for file downloads. |
+| `neon.max_concurrency` | `NEON_MCP_NEON__MAX_CONCURRENCY` | int | `4` | Maximum simultaneous upstream requests. |
+| `neon.prefer_graphql` | `NEON_MCP_NEON__PREFER_GRAPHQL` | bool | `true` | Build catalogs and availability from GraphQL (REST is the fallback). |
+| `neon.graphql_breaker_failures` | `NEON_MCP_NEON__GRAPHQL_BREAKER_FAILURES` | int | `2` | Consecutive GraphQL failures that open the circuit breaker. |
+| `neon.graphql_breaker_cooldown_s` | `NEON_MCP_NEON__GRAPHQL_BREAKER_COOLDOWN_S` | float | `900.0` | How long an open GraphQL breaker routes everything to REST. |
+| `neon.rate_limit.anonymous_burst` | `NEON_MCP_NEON__RATE_LIMIT__ANONYMOUS_BURST` | int | `180` | Burst size for anonymous requests (NEON: 200 per IP). |
+| `neon.rate_limit.anonymous_rps` | `NEON_MCP_NEON__RATE_LIMIT__ANONYMOUS_RPS` | float | `1.8` | Sustained requests/second without a token (NEON: 2). |
+| `neon.rate_limit.token_burst` | `NEON_MCP_NEON__RATE_LIMIT__TOKEN_BURST` | int | `1800` | Burst size for requests carrying a token (NEON: 2000). |
+| `neon.rate_limit.token_rps` | `NEON_MCP_NEON__RATE_LIMIT__TOKEN_RPS` | float | `7.2` | Sustained requests/second with a token (NEON: 8). |
+| `neon.rate_limit.low_water` | `NEON_MCP_NEON__RATE_LIMIT__LOW_WATER` | int | `5` | When X-RateLimit-Remaining falls to this value, wait for the reset. |
+| `neon.rate_limit.max_wait_s` | `NEON_MCP_NEON__RATE_LIMIT__MAX_WAIT_S` | float | `10.0` | Longest the client sleeps for rate-limit headroom before failing with rate_limited. |
+| `neon.retries.max_attempts` | `NEON_MCP_NEON__RETRIES__MAX_ATTEMPTS` | int | `3` | Attempts per upstream call, including the first. |
+| `neon.retries.backoff_base_s` | `NEON_MCP_NEON__RETRIES__BACKOFF_BASE_S` | float | `0.5` | Base of the exponential backoff (0.5 * 2^n seconds). |
+| `neon.retries.backoff_max_s` | `NEON_MCP_NEON__RETRIES__BACKOFF_MAX_S` | float | `8.0` | Cap on a single backoff sleep. |
+| `neon.retries.retry_after_default_s` | `NEON_MCP_NEON__RETRIES__RETRY_AFTER_DEFAULT_S` | float | `1.0` | Wait used on HTTP 429 when NEON sends no RetryAfter header. |
+| `cache.enabled` | `NEON_MCP_CACHE__ENABLED` | bool | `true` | Cache upstream responses in memory. |
+| `cache.max_entries` | `NEON_MCP_CACHE__MAX_ENTRIES` | int | `1024` | Overall entry cap across families. |
+| `cache.max_index_entries` | `NEON_MCP_CACHE__MAX_INDEX_ENTRIES` | int | `4` | Cap on built catalog index objects (one per release). |
+| `cache.prewarm` | `NEON_MCP_CACHE__PREWARM` | bool \| null | unset | Build the catalogs at startup. Unset: true on http, false on stdio. |
+| `cache.refresh_ahead` | `NEON_MCP_CACHE__REFRESH_AHEAD` | float | `0.1` | Fraction of a TTL before expiry at which http mode refreshes in the background. |
+| `cache.stale_if_error_s` | `NEON_MCP_CACHE__STALE_IF_ERROR_S` | int | `86400` | How long an expired entry may be served when a refresh fails. |
+| `cache.ttl_s.catalog` | `NEON_MCP_CACHE__TTL_S__CATALOG` | int | `3600` | Product/site catalogs, releases list, prototype list, site locations. |
+| `cache.ttl_s.detail` | `NEON_MCP_CACHE__TTL_S__DETAIL` | int | `900` | Single product/site/release detail and GraphQL availability. |
+| `cache.ttl_s.locations` | `NEON_MCP_CACHE__TTL_S__LOCATIONS` | int | `21600` | Location records and hierarchies. |
+| `cache.ttl_s.releases` | `NEON_MCP_CACHE__TTL_S__RELEASES` | int | `21600` | Release records. |
+| `cache.ttl_s.taxonomy` | `NEON_MCP_CACHE__TTL_S__TAXONOMY` | int | `86400` | Taxonomy pages. |
+| `cache.ttl_s.samples_classes` | `NEON_MCP_CACHE__TTL_S__SAMPLES_CLASSES` | int | `86400` | Sample-class lists. |
+| `cache.ttl_s.samples_view` | `NEON_MCP_CACHE__TTL_S__SAMPLES_VIEW` | int | `60` | Sample views (token-scoped). |
+| `cache.ttl_s.data` | `NEON_MCP_CACHE__TTL_S__DATA` | int | `600` | Data-file listings (signed URLs live 7 days). |
+| `cache.ttl_s.prototype` | `NEON_MCP_CACHE__TTL_S__PROTOTYPE` | int | `21600` | Prototype dataset records. |
+| `cache.ttl_s.documents` | `NEON_MCP_CACHE__TTL_S__DOCUMENTS` | int | `86400` | Document metadata and extracted text. |
+| `limits.default_limit` | `NEON_MCP_LIMITS__DEFAULT_LIMIT` | int | `50` | Default page size where a tool does not set its own. |
+| `limits.max_limit` | `NEON_MCP_LIMITS__MAX_LIMIT` | int | `500` | Largest page size any tool accepts. |
+| `limits.max_result_bytes` | `NEON_MCP_LIMITS__MAX_RESULT_BYTES` | int | `50000` | Tool results are trimmed (with page.truncated) to fit this many bytes of compact JSON. |
+| `limits.hard_max_result_bytes` | `NEON_MCP_LIMITS__HARD_MAX_RESULT_BYTES` | int | `200000` | A result still larger than this after trimming fails with result_too_large. |
+| `limits.text_budget_summary` | `NEON_MCP_LIMITS__TEXT_BUDGET_SUMMARY` | int | `300` | Characters kept of long text fields in summaries. |
+| `limits.text_budget_detail` | `NEON_MCP_LIMITS__TEXT_BUDGET_DETAIL` | int | `4000` | Default characters kept of long text fields in detail views. |
+| `limits.max_sites_per_call` | `NEON_MCP_LIMITS__MAX_SITES_PER_CALL` | int | `30` | Most sites one neon_list_files / neon_download_files call accepts. |
+| `limits.max_site_months_per_query` | `NEON_MCP_LIMITS__MAX_SITE_MONTHS_PER_QUERY` | int | `500` | Largest sites x months product a data query may span. |
+| `limits.max_location_roots` | `NEON_MCP_LIMITS__MAX_LOCATION_ROOTS` | int | `20` | Most site codes one neon_find_locations call walks. |
+| `limits.graphql_max_query_chars` | `NEON_MCP_LIMITS__GRAPHQL_MAX_QUERY_CHARS` | int | `8000` | Longest query neon_graphql accepts. |
+| `limits.graphql_max_depth` | `NEON_MCP_LIMITS__GRAPHQL_MAX_DEPTH` | int | `8` | Deepest selection set neon_graphql accepts. |
+| `limits.graphql_max_response_bytes` | `NEON_MCP_LIMITS__GRAPHQL_MAX_RESPONSE_BYTES` | int | `50000` | Default neon_graphql response budget. |
+| `limits.graphql_hard_max_response_bytes` | `NEON_MCP_LIMITS__GRAPHQL_HARD_MAX_RESPONSE_BYTES` | int | `200000` | Largest max_bytes a neon_graphql caller may request. |
+| `limits.max_document_bytes` | `NEON_MCP_LIMITS__MAX_DOCUMENT_BYTES` | int | `26214400` | Largest document neon_get_document extracts text from (in memory). |
+| `limits.tools_list_max_bytes` | `NEON_MCP_LIMITS__TOOLS_LIST_MAX_BYTES` | int | `135000` | Conformance bound on the serialized tools/list result (measured 107,734 B with 20 tools, x1.25). |
+| `downloads.enabled` | `NEON_MCP_DOWNLOADS__ENABLED` | bool \| null | unset | Offer neon_download_files. Unset: true on stdio; never available over http. |
+| `downloads.directory` | `NEON_MCP_DOWNLOADS__DIRECTORY` | Path | `~/neon-downloads` | Directory every download is confined to (created on first use). |
+| `downloads.max_files_per_call` | `NEON_MCP_DOWNLOADS__MAX_FILES_PER_CALL` | int | `50` | Most files one neon_download_files call transfers. |
+| `downloads.max_bytes_per_call` | `NEON_MCP_DOWNLOADS__MAX_BYTES_PER_CALL` | int | `2147483648` | Most bytes one neon_download_files call transfers. |
+| `downloads.max_file_bytes` | `NEON_MCP_DOWNLOADS__MAX_FILE_BYTES` | int | `1073741824` | Largest single file neon_download_files accepts. |
+| `downloads.verify_checksums` | `NEON_MCP_DOWNLOADS__VERIFY_CHECKSUMS` | bool | `true` | Verify MD5 checksums NEON publishes. |
+| `downloads.allowed_hosts` | `NEON_MCP_DOWNLOADS__ALLOWED_HOSTS` | list[str] | `[data.neonscience.org, storage.googleapis.com, *.storage.googleapis.com]` | Hosts downloads (and their redirects) may come from; '*.' is a subdomain wildcard. |
+| `server.transport` | `NEON_MCP_SERVER__TRANSPORT` | `stdio` \| `http` | `stdio` | stdio (local clients) or http (stateless Streamable HTTP at /mcp). |
+| `server.bind_address` | `NEON_MCP_SERVER__BIND_ADDRESS` | str | `127.0.0.1` | HTTP bind address. |
+| `server.bind_port` | `NEON_MCP_SERVER__BIND_PORT` | int | `8080` | HTTP bind port. |
+| `server.public_base_url` | `NEON_MCP_SERVER__PUBLIC_BASE_URL` | str \| null | unset | Public URL of a hosted deployment; its host/origin join the allow-lists and https:// enables per-request tokens. |
+| `server.allowed_hosts` | `NEON_MCP_SERVER__ALLOWED_HOSTS` | list[str] | `[]` | Host header allow-list (DNS-rebinding protection). |
+| `server.allowed_origins` | `NEON_MCP_SERVER__ALLOWED_ORIGINS` | list[str] | `[]` | Origin header allow-list (DNS-rebinding protection). |
+| `server.dns_rebinding_protection` | `NEON_MCP_SERVER__DNS_REBINDING_PROTECTION` | bool \| null | unset | Force DNS-rebinding protection on/off. Unset: SDK default (on for loopback binds or when allow-lists are set). |
+| `server.json_response` | `NEON_MCP_SERVER__JSON_RESPONSE` | bool | `false` | Answer POST /mcp with application/json instead of a single SSE frame. |
+| `server.max_request_body_size` | `NEON_MCP_SERVER__MAX_REQUEST_BODY_SIZE` | int | `1048576` | Largest accepted request body in bytes. |
+| `server.accept_header_token` | `NEON_MCP_SERVER__ACCEPT_HEADER_TOKEN` | bool | `true` | HTTP: honour a per-request NEON token header (subject to the TLS gate). |
+| `server.request_token_header` | `NEON_MCP_SERVER__REQUEST_TOKEN_HEADER` | str | `X-API-Token` | Header carrying a caller's NEON token in HTTP mode. |
+| `server.allow_insecure_header_token` | `NEON_MCP_SERVER__ALLOW_INSECURE_HEADER_TOKEN` | bool | `false` | Accept header tokens when public_base_url is not https:// (development only). |
+| `server.share_config_token_over_http` | `NEON_MCP_SERVER__SHARE_CONFIG_TOKEN_OVER_HTTP` | bool | `false` | Lend the operator's configured token to anonymous HTTP callers (private deployments only). |
+| `server.tools_list_ttl_ms` | `NEON_MCP_SERVER__TOOLS_LIST_TTL_MS` | int | `300000` | ttlMs advertised on tools/list. |
+| `server.log_level` | `NEON_MCP_SERVER__LOG_LEVEL` | `debug` \| `info` \| `warning` \| `error` \| `critical` | `info` | Log verbosity. |
+| `server.instructions_extra` | `NEON_MCP_SERVER__INSTRUCTIONS_EXTRA` | str \| null | unset | Text appended to the server instructions. |
+
+<!-- END GENERATED CONFIG -->
+
+---8<--- https://idss-mesa.github.io/neon-mcp/getting-started/install/
+
+---
+title: "Install neon-mcp"
+description: "Install the neon-mcp server with uv or pip from GitHub (or PyPI once released), verify it with --version and --check, and run it from source."
+type: Guide
+tags:
+  - getting-started
+  - install
+  - uv
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: uv
+    resource: "https://docs.astral.sh/uv/"
+    title: "uv documentation"
+    author: "team:astral"
+  - id: repo
+    resource: "https://github.com/idss-mesa/neon-mcp"
+    title: "neon-mcp source repository"
+    author: "team:idss-mesa"
+status: stable
+stale_after: "2027-03-10T00:00:00Z"
+---
+
+# Install neon-mcp
+
+neon-mcp is a Python 3.11+ package with one command, `neon-mcp`. The recommended
+installer is [uv](https://docs.astral.sh/uv/){target=_blank}[^uv], which keeps the
+server in its own environment.
+
+!!! note "PyPI release"
+
+    Until the first PyPI release, install from GitHub as shown below. After it,
+    `uv tool install neon-mcp` and `uvx neon-mcp` work directly.
+
+=== "uv tool (recommended)"
+
+    ```bash
+    uv tool install git+https://github.com/idss-mesa/neon-mcp
+    uv tool install "neon-mcp[pdf] @ git+https://github.com/idss-mesa/neon-mcp"   # with PDF text extraction
+    ```
+
+    This puts `neon-mcp` on your `PATH` (`~/.local/bin`). Upgrade with
+    `uv tool upgrade neon-mcp`.
+
+=== "uvx (no install)"
+
+    ```bash
+    uvx --from git+https://github.com/idss-mesa/neon-mcp neon-mcp --version
+    ```
+
+=== "pipx / pip"
+
+    ```bash
+    pipx install git+https://github.com/idss-mesa/neon-mcp
+    # or, inside a virtual environment:
+    pip install "git+https://github.com/idss-mesa/neon-mcp"
+    ```
+
+=== "From source"
+
+    ```bash
+    git clone https://github.com/idss-mesa/neon-mcp
+    cd neon-mcp
+    uv sync --all-extras          # creates .venv with the package and dev tools
+    uv run neon-mcp --version
+    ```
+
+    MCP clients can then run `/absolute/path/to/neon-mcp/.venv/bin/neon-mcp`.
+
+## Verify
+
+```bash
+neon-mcp --version     # neon-mcp 0.1.0
+neon-mcp --check       # {"ok": true, "version": "0.1.0", "tokenConfigured": false, "apiReachable": true, ...}
+```
+
+`--check` loads your configuration, makes one small anonymous NEON request and
+exits 0 when NEON is reachable. `--print-config` shows the effective settings with
+the token masked.
+
+Next: [connect a client](clients.md) and [add your NEON API token](api-token.md).
+
+[^uv]: uv documentation. <https://docs.astral.sh/uv/>
+[^repo]: neon-mcp source repository. <https://github.com/idss-mesa/neon-mcp>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/getting-started/quickstart/
+
+---
+title: "Quickstart"
+description: "A first session with neon-mcp: register it with Claude Code, check it with neon_ping, then find a product, check availability, list files and cite."
+type: Tutorial
+tags:
+  - getting-started
+  - quickstart
+  - tutorial
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: claude-code-mcp
+    resource: "https://docs.claude.com/en/docs/claude-code/mcp"
+    title: "Claude Code — MCP"
+    author: "team:anthropic"
+  - id: neon-api
+    resource: "https://data.neonscience.org/data-api/"
+    title: "NEON Data API"
+    author: "team:neon"
+status: stable
+---
+
+# Quickstart
+
+This walks through a first session in Claude Code[^claude-code-mcp]; other clients
+work the same way once connected ([Clients](clients.md)).
+
+## 1. Register the server
+
+```bash
+claude mcp add neon -s user -e NEON_TOKEN="$NEON_TOKEN" -- neon-mcp --transport stdio
+```
+
+Leave out `-e NEON_TOKEN=…` to start without a token; everything except file
+listing, downloads and sample views works anonymously.
+
+## 2. Check it
+
+Ask the agent to "call neon_ping". The result shows the version, protocol
+`2026-07-28`, whether a token is configured and whether downloads are enabled.
+
+## 3. Five calls from question to citation
+
+The agent normally chains these on its own; the arguments below are what it sends.
+Results are abbreviated.
+
+1. **Find the product**
+
+    ```json
+    {"tool": "neon_search_products", "arguments": {"query": "breeding bird point counts"}}
+    ```
+
+    → `DP1.10003.001` *Breeding landbird point counts*, with `nextSteps` suggesting
+    `neon_get_availability(product='DP1.10003.001')`.
+
+2. **Check availability** (no token)
+
+    ```json
+    {"tool": "neon_get_availability", "arguments": {"product": "DP1.10003.001", "domain_code": "D01"}}
+    ```
+
+    → one row per site in domain D01 with month ranges such as `"2015-05/2024-06"`,
+    split by release in `byRelease` (`PROVISIONAL` months included and counted in
+    `notes`).
+
+3. **List the files** (token)
+
+    ```json
+    {"tool": "neon_list_files", "arguments": {"product": "DP1.10003.001", "site_codes": ["Harvard Forest"], "start_month": "2023-06", "kind": "data"}}
+    ```
+
+    → `resolved: [{"input": "Harvard Forest", "code": "HARV", ...}]` and the
+    `brd_countdata`, `brd_perpoint` … CSVs with sizes, MD5s and signed URLs valid for
+    about 7 days.
+
+4. **Download** (stdio)
+
+    ```json
+    {"tool": "neon_download_files", "arguments": {"product": "DP1.10003.001", "site_codes": ["HARV"], "start_month": "2023-06", "kind": "data"}}
+    ```
+
+    → files under `~/neon-downloads/DP1.10003.001/HARV/2023-06/`, MD5-verified, with
+    a `pandas.read_csv(...)` hint.
+
+5. **Cite**
+
+    ```json
+    {"tool": "neon_get_citation", "arguments": {"product": "DP1.10003.001"}}
+    ```
+
+    → NEON-format text and BibTeX with the newest release DOI.
+
+The `neon://guide/agent-workflow` resource carries the same recipe for agents.
+
+[^claude-code-mcp]: Claude Code — MCP. <https://docs.claude.com/en/docs/claude-code/mcp>
+[^neon-api]: NEON Data API. <https://data.neonscience.org/data-api/>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/availability-and-data/
+
+---
+title: "Availability and data files"
+description: "Check which sites and months have NEON data without a token, list data files with signed URLs using a token, and download them on stdio."
+type: Guide
+tags:
+  - tools
+  - availability
+  - data
+  - downloads
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-data
+    resource: "https://data.neonscience.org/data-api/endpoints/data/"
+    title: "NEON Data API — Data endpoint"
+    author: "team:neon"
+  - id: neon-data-query
+    resource: "https://data.neonscience.org/data-api/endpoints/data-query/"
+    title: "NEON Data API — Data query endpoint"
+    author: "team:neon"
+  - id: neon-auth
+    resource: "https://data.neonscience.org/data-api/authentication/"
+    title: "NEON Data API — Authentication"
+    author: "team:neon"
+status: stable
+stale_after: "2027-03-10T00:00:00Z"
+---
+
+# Availability and data files
+
+Three tools take you from "does data exist?" to files on disk:
+[`neon_get_availability`](reference.md#neon_get_availability) (no token),
+[`neon_list_files`](reference.md#neon_list_files) (token) and
+[`neon_download_files`](reference.md#neon_download_files) (token for data files; stdio
+only).
+
+## Availability (no token)
+
+```json
+{"product": "DP1.10003.001", "domain_code": "D01"}
+```
+
+* **Product mode** (`product` only): one row per site. **Site mode** (`site` only): one
+  row per product. **Cell mode** (both): one row, months listed explicitly by default.
+* Months are compressed to ISO-8601 intervals: `["2016-06/2025-06"]`; `format` can be
+  `ranges` (default), `months` or `counts`.
+* `byRelease` splits every row by release, with `PROVISIONAL` as its own key, and
+  `summary` totals site-months per release.
+* `start_month` / `end_month` window the result. NEON's GraphQL filter windows
+  `availableMonths` but not the per-release lists, so neon-mcp clips those locally
+  (a note says so).
+* Filters: `site_codes` or `domain_code` (product mode), `product_codes` (site mode),
+  `release`, and `provisional` = `include` (default), `exclude` or `only`.
+
+### PROVISIONAL is not a release
+
+Newer data are *provisional*: available but not yet in an annual release, and they may
+change. `release="PROVISIONAL"` is rejected (NEON rejects it too); use the
+`provisional` switch here and `include_provisional` when listing or downloading files.
+Defaults include provisional data everywhere, so what availability shows is what
+listing returns.
+
+## Listing files (token)
+
+Since June 2026 NEON's data endpoints require an API token[^neon-auth]; without one
+the tool fails with `auth_required` before any request
+([set one up](../getting-started/api-token.md)).
+
+```json
+{"product": "DP1.10003.001", "site_codes": ["HARV"], "start_month": "2023-06", "kind": "data"}
+```
+
+* One site and one month uses `GET /data/{product}/{site}/{month}` (which also returns
+  package ZIP links); anything wider uses `POST /data/query`[^neon-data-query].
+* Each file carries its name, `kind` (`data`, `variables`, `readme`,
+  `sensor_positions`, `eml`, `science_review_flags`, `categorical_codes`,
+  `validation`, `package`, `other`), `table`, `hor`/`ver`/`tmi` indices, size, MD5,
+  release and a signed URL. Filter with `kind`, `table`, `hor`, `ver`, `tmi`,
+  `name_contains` (see `neon://guide/product-code-anatomy` for the file-name grammar).
+* Signed URLs expire about 7 days after generation (`urlExpiresAt`); they need no
+  token. List again to refresh them, and never cite them.
+* `detail="summary"` or `"site_months"` sizes a request without listing files;
+  `include_urls=false` shrinks the result. Under the 50 KB result budget, URLs are
+  dropped from the end of the page before files are.
+* A request may span at most 500 site-months (30 sites × 16 months, for example);
+  wider requests fail with `query_too_large` before calling NEON.
+* `filename` returns the signed URL of one exact file for a single site-month.
+
+## Downloading (stdio)
+
+`neon_download_files` takes the same selectors, or `prototype_uuid` (+ `file_names`),
+or `spec_number` for a NEON document. It exists only on stdio: the files land on the
+machine running the server, under `downloads.directory` (`~/neon-downloads`):
+
+```text
+~/neon-downloads/DP1.10003.001/HARV/2023-06/NEON.D01.HARV.DP1.10003.001.brd_countdata.2023-06.basic.….csv
+~/neon-downloads/prototype/<uuid>/<file>
+~/neon-downloads/documents/NEON.DOC.014041vL.pdf
+```
+
+Safety rules: the whole plan is checked against 50 files and 2 GiB per call (1 GiB per
+file) *before* anything transfers; every destination must resolve inside the download
+directory (no `..`, no symlink escapes, plain file names); every URL and redirect must
+be on the host allow-list (`data.neonscience.org`, `storage.googleapis.com` and its
+subdomains); files stream to `.part` and are renamed only after the MD5 matches.
+Existing identical files are skipped (`if_exists="error"` refuses instead);
+`as_zip=true` fetches NEON's package ZIP per site-month.
+
+[^neon-data]: NEON Data API — Data endpoint. <https://data.neonscience.org/data-api/endpoints/data/>
+[^neon-data-query]: NEON Data API — Data query endpoint. <https://data.neonscience.org/data-api/endpoints/data-query/>
+[^neon-auth]: NEON Data API — Authentication. <https://data.neonscience.org/data-api/authentication/>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/graphql/
+
+---
+title: "GraphQL"
+description: "Use neon_graphql, a guard-railed read-only GraphQL tool, for NEON metadata shapes the dedicated tools do not cover, and its introspection mode."
+type: Guide
+tags:
+  - tools
+  - graphql
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-graphql
+    resource: "https://data.neonscience.org/data-api/graphql/"
+    title: "NEON Data API — GraphQL"
+    author: "team:neon"
+status: stable
+---
+
+# GraphQL
+
+NEON serves a public GraphQL endpoint at `https://data.neonscience.org/graphql`
+(not under `/api/v0`) for product, site, location and prototype metadata[^neon-graphql].
+[`neon_graphql`](reference.md#neon_graphql) runs your own query there when the
+dedicated tools do not produce the shape you need.
+
+```json
+{"query": "{ filterSites(filter: {siteCodes: [\"HARV\"], productCodes: [\"DP1.10003.001\"]}) { siteCode dataProducts { dataProductCode availableMonths } } }"}
+```
+
+Guard rails, all checked before the request:
+
+* read-only: `query` operations only (no mutations or subscriptions);
+* allowed roots: `products`, `product`, `demoProduct`, `filterProducts`, `sites`, `site`,
+  `filterSites`, `location`, `locationHierarchy`, `findLocations`,
+  `prototypeDatasets`, `prototypeDataset`, and one `__type` or `__schema` (NEON rejects
+  more as `BadFaithIntrospection`);
+* at most 8000 characters and a selection depth of 8;
+* no NEON token is ever sent; results are never cached.
+
+Responses larger than `max_bytes` (50 KB by default, up to 200 KB) have their largest
+lists shortened; `truncatedPaths` says where. `introspect_type="Site"` describes one
+type. The `neon://reference/graphql-schema` resource summarises the schema, including
+the `availableReleases` windowing caveat and the fields GraphQL lacks.
+
+[^neon-graphql]: NEON Data API — GraphQL. <https://data.neonscience.org/data-api/graphql/>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/locations/
+
+---
+title: "Locations"
+description: "Walk NEON location hierarchies by type with neon_find_locations (towers, plots, huts) and read one location in depth with neon_get_location."
+type: Guide
+tags:
+  - tools
+  - locations
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-locations
+    resource: "https://data.neonscience.org/data-api/endpoints/locations/"
+    title: "NEON Data API — Locations endpoint"
+    author: "team:neon"
+status: stable
+stale_after: "2027-09-10T00:00:00Z"
+---
+
+# Locations
+
+Every NEON measurement is tied to a named location in a tree: `REALM` → domain
+(`D01`) → site (`HARV`) → towers, huts, soil arrays, observation plots and the
+sensor positions under them[^neon-locations]. Tools:
+[`neon_find_locations`](reference.md#neon_find_locations) and
+[`neon_get_location`](reference.md#neon_get_location).
+
+## Finding locations of a type
+
+Give a `root` (`REALM`, a domain, a site or any location) or up to 20 `site_codes`,
+and usually a `location_type`. NEON prunes the hierarchy to that type, which keeps the
+walk small: Harvard Forest's full hierarchy is 1.2 MB with 595 top-level children,
+its `TOWER` walk about 12 KB.
+
+```json
+{"site_codes": ["HARV"], "location_type": "TOWER"}
+```
+
+* Under `REALM` or a domain, `location_type` is **required** (the unfiltered tree is
+  enormous). `REALM` + `SITE` and `REALM` + `DOMAIN` use fast paths.
+* A site walk without `location_type` returns `typesAvailable` (counts per type seen
+  in that one fetch) so you can narrow the next call.
+* Common types: `TOWER`, `LEVEL`, `BOOM`, `HUT`, `MEGAPIT`, `SOIL_PLOT`,
+  `SOIL_ARRAY`, `CONFIG`, and observation plots such as `OS Plot - mam` (small
+  mammals) or `OS Plot - brd` (birds). The full observed list is in
+  `neon://reference/vocabularies`; matching is case-insensitive.
+* `include_coordinates` (default on) looks up coordinates for the returned page in
+  one batched GraphQL call; `latitude`/`longitude`/`radius_km` filter by distance.
+
+## One location
+
+`neon_get_location` returns coordinates, UTM, elevation, orientation and offsets,
+active periods and (by default) properties folded into a name → value object.
+Optional: `hierarchy` (parent chain up to `REALM`), `children` (paged; prune with
+`location_type`), `history` (up to 100 past positions), `polygon`.
+
+## Pitfalls
+
+* Location names are case-sensitive (`HARV_001.basePlot.bet`); four-letter site codes
+  and domains are upper-cased for you.
+* Unknown names come back from NEON as HTTP 400 "Location not found", reported as
+  `not_found`.
+
+[^neon-locations]: NEON Data API — Locations endpoint. <https://data.neonscience.org/data-api/endpoints/locations/>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/products/
+
+---
+title: "Products"
+description: "Find NEON data products with neon_search_products and read one in depth with neon_get_product, including its opt-in detail sections."
+type: Guide
+tags:
+  - tools
+  - products
+  - catalog
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-products
+    resource: "https://data.neonscience.org/data-api/endpoints/products/"
+    title: "NEON Data API — Products endpoint"
+    author: "team:neon"
+  - id: neon-graphql
+    resource: "https://data.neonscience.org/data-api/graphql/"
+    title: "NEON Data API — GraphQL"
+    author: "team:neon"
+status: stable
+---
+
+# Products
+
+NEON publishes about 200 data products, each identified by a code such as
+`DP1.10003.001` (level 1, product 10003, revision 001). Two tools cover them:
+[`neon_search_products`](reference.md#neon_search_products) and
+[`neon_get_product`](reference.md#neon_get_product).
+
+## Searching
+
+The full REST product list is about 30 MB, so neon-mcp never sends it to an agent.
+It fetches a compact projection once over GraphQL (about 3.6 MB, cached for an
+hour, rebuilt from REST if GraphQL fails) and searches it locally[^neon-graphql].
+
+* `query` — every word must match a name, keyword, theme or description (small
+  typos are tolerated); a bare code such as `DP1.10003` matches exactly.
+* `theme` (prefix: `atmo`, `organisms`, ...), `science_team` (`TIS`, `TOS`, `AIS`,
+  `AOS`, `AOP`), `level` (1–4), `has_expanded`, `status` (`ACTIVE` by default;
+  `FUTURE`, `RETIRED` or `ALL`).
+* `site` or `domain_code` — only products with data there; `available_from` /
+  `available_to` — only products whose months overlap the range.
+
+```json
+{"query": "breeding bird point counts"}
+```
+
+Each hit carries its score, what matched (`matchedOn`), site count, overall month
+range and latest release; `facets` count themes, teams, levels and statuses over the
+whole filtered set, and `didYouMean` suggests terms when nothing matches.
+
+## One product in depth
+
+`neon_get_product` accepts a code or a name (`"breeding landbird"` resolves to
+`DP1.10003.001` and is echoed in `resolved`). With no `include`, it answers from the
+cached catalog without another request: codes, team, themes, keywords, releases with
+DOIs and an availability summary.
+
+Opt-in sections come from the REST detail record[^neon-products]:
+
+| `include` | Adds |
+| --- | --- |
+| `abstract`, `design`, `study`, `sensor`, `remarks`, `packages` | text, clipped to `text_budget` (4000 characters by default; clipped fields are listed in `textTruncated`) |
+| `specs` | the product's documents (ATBDs, protocols, user guides) with spec numbers and URLs |
+| `change_logs` | issue log entries, newest first, paged by `change_logs_offset` / `change_logs_limit` |
+| `availability` | one row per site with month ranges per release (see [Availability](availability-and-data.md)) |
+| `biorepository` | biorepository collections holding physical samples |
+| `all` | everything above |
+
+Pass `release` to see the product exactly as published in one release.
+
+## Pitfalls
+
+* Unknown codes: NEON answers HTTP 400 "Product code not found", which neon-mcp
+  reports as `not_found`.
+* `FUTURE` products have no data yet and are hidden by the default status filter.
+* A name that fits several products (`"wind"`) returns `ambiguous_input` with
+  candidates; retry with a code.
+
+[^neon-products]: NEON Data API — Products endpoint. <https://data.neonscience.org/data-api/endpoints/products/>
+[^neon-graphql]: NEON Data API — GraphQL. <https://data.neonscience.org/data-api/graphql/>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/prototype-datasets/
+
+---
+title: "Prototype datasets"
+description: "Search NEON's prototype datasets with neon_search_prototype_datasets and read one with its files, DOI and descriptions using neon_get_prototype_dataset."
+type: Guide
+tags:
+  - tools
+  - prototype-datasets
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-prototype
+    resource: "https://data.neonscience.org/data-api/endpoints/prototype/"
+    title: "NEON Data API — Prototype datasets"
+    author: "team:neon"
+status: stable
+---
+
+# Prototype datasets
+
+Prototype datasets are early, experimental or one-off NEON data outside the standard
+product catalogue, each with its own DOI and version[^neon-prototype]. Tools:
+[`neon_search_prototype_datasets`](reference.md#neon_search_prototype_datasets) and
+[`neon_get_prototype_dataset`](reference.md#neon_get_prototype_dataset). Neither
+needs a token.
+
+* Search by `query` (title, abstract, descriptions, keywords), `theme`, `science_team`,
+  `site_code`, `start_year`/`end_year` (overlap), `file_type` or `is_published`;
+  `facets` show the exact upstream theme, team and file-type strings.
+* Theme and team strings differ from the product catalogue (`Land Cover and
+  Processes`, `Aquatic Observational Systems (AOS)`): `theme` matches a prefix and
+  `science_team` a substring, so `land cover` and `AOS` both work.
+* `neon_get_prototype_dataset` returns the dataset with its files (sizes, MD5s,
+  signed URLs that expire in about 7 days) and locations by default; add
+  `descriptions`, `citations` and `related`, or `all`.
+* Download the files on stdio with `neon_download_files(prototype_uuid=...)`; cite
+  with `neon_get_citation(prototype_uuid=...)`.
+
+[^neon-prototype]: NEON Data API — Prototype datasets. <https://data.neonscience.org/data-api/endpoints/prototype/>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/reference/
+
+---
+title: "Tool reference"
+description: "Every neon-mcp tool with its inputs, result fields, NEON endpoints, token requirement and annotations, generated from the registry."
+type: MCP Tool Reference
+tags:
+  - tools
+  - reference
+  - generated
+generated:
+  by: "process:gen_tools_reference"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: registry
+    resource: "https://github.com/idss-mesa/neon-mcp/tree/main/src/neon_mcp/tools"
+    title: "neon-mcp tool registry"
+    author: "team:idss-mesa"
+  - id: neon-api
+    resource: "https://data.neonscience.org/data-api/"
+    title: "NEON Data API"
+    author: "team:neon"
+status: stable
+---
+
+# Tool reference
+
+Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edit by hand. 20 tools are registered; `neon_download_files` is offered only over stdio, so HTTP deployments list one fewer. Inputs are snake_case; NEON's camelCase spellings (`productCode`, `startDateMonth`) are accepted too. Every result also carries `resolved`, `notes`, `nextSteps` and `source`, and failures return `structuredContent.error` with a stable `code` (see [Utilities](utilities.md#error-codes)).
+
+| Tool | Title | Family | Token |
+| --- | --- | --- | --- |
+| [`neon_download_files`](#neon_download_files) | Download NEON files | [data](availability-and-data.md) | required |
+| [`neon_find_locations`](#neon_find_locations) | Find NEON locations | [locations](locations.md) | no |
+| [`neon_get_availability`](#neon_get_availability) | Get NEON data availability | [catalog](products.md) | no |
+| [`neon_get_citation`](#neon_get_citation) | Cite NEON data | [releases](releases.md) | no |
+| [`neon_get_document`](#neon_get_document) | Get a NEON document | [documents](utilities.md) | no |
+| [`neon_get_location`](#neon_get_location) | Get a NEON location | [locations](locations.md) | no |
+| [`neon_get_product`](#neon_get_product) | Get a NEON data product | [catalog](products.md) | no |
+| [`neon_get_prototype_dataset`](#neon_get_prototype_dataset) | Get a NEON prototype dataset | [prototype](prototype-datasets.md) | no |
+| [`neon_get_release`](#neon_get_release) | Get a NEON data release | [releases](releases.md) | no |
+| [`neon_get_sample`](#neon_get_sample) | Get a NEON sample | [samples](samples.md) | required |
+| [`neon_get_site`](#neon_get_site) | Get a NEON field site | [catalog](products.md) | no |
+| [`neon_graphql`](#neon_graphql) | Run a NEON GraphQL query | [graphql](graphql.md) | no |
+| [`neon_list_files`](#neon_list_files) | List NEON data files | [data](availability-and-data.md) | required |
+| [`neon_list_releases`](#neon_list_releases) | List NEON data releases | [releases](releases.md) | no |
+| [`neon_list_sample_classes`](#neon_list_sample_classes) | List NEON sample classes | [samples](samples.md) | no |
+| [`neon_ping`](#neon_ping) | Check neon-mcp status | [core](utilities.md) | no |
+| [`neon_search_products`](#neon_search_products) | Search NEON data products | [catalog](products.md) | no |
+| [`neon_search_prototype_datasets`](#neon_search_prototype_datasets) | Search NEON prototype datasets | [prototype](prototype-datasets.md) | no |
+| [`neon_search_sites`](#neon_search_sites) | Search NEON field sites | [catalog](products.md) | no |
+| [`neon_search_taxonomy`](#neon_search_taxonomy) | Search NEON taxonomy | [taxonomy](taxonomy.md) | no |
+
+## neon_download_files
+
+**Download NEON files.** Download data files (or package ZIPs), a prototype dataset's files, or a NEON document into the configured download directory (stdio only; data files need a token). The plan is checked against file/byte caps before any transfer; MD5s are verified; identical existing files are skipped. Next: read the CSVs (pandas.read_csv) and cite with neon_get_citation.
+
+| | |
+| --- | --- |
+| Surface | `data` |
+| NEON API token | required for NEON data files; prototype and document downloads need none |
+| Transports | stdio |
+| Annotations | readOnly=false, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /data/package/{productCode}/{siteCode}/{yearMonth}`<br>`GET /prototype/data/{uuid}`<br>`GET /documents/{specNumber}`<br>`POST /data/query` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `product` | string \\| null |  | null | Product code or name. |
+| `site_codes` | array of string \\| null |  | null | Site codes or names (up to 30). (min items 1) |
+| `start_month` | string \\| null |  | null | First month (YYYY-MM). |
+| `end_month` | string \\| null |  | null | Last month (YYYY-MM); defaults to start_month. |
+| `package` | `basic` \\| `expanded` |  | `"basic"` | basic (default) or expanded. |
+| `release` | string \\| null |  | null | Only files in this release (default: latest per month). |
+| `include_provisional` | boolean |  | true | Include PROVISIONAL (unreleased) months. |
+| `kind` | `data` \\| `variables` \\| `readme` \\| `sensor_positions` \\| `eml` \\| `science_review_flags` \\| `categorical_codes` \\| `validation` \\| `package` \\| `other` \\| null |  | null | data, variables, readme, sensor_positions, eml, ... or package. |
+| `table` | string \\| null |  | null | Table name, e.g. 2DWSD_30min or brd_countdata. |
+| `hor` | string \\| null |  | null | Horizontal index, e.g. 000. |
+| `ver` | string \\| null |  | null | Vertical index, e.g. 010. |
+| `tmi` | string \\| null |  | null | Temporal index in minutes, e.g. 030. |
+| `name_contains` | string \\| null |  | null | Substring the file name must contain. |
+| `as_zip` | boolean |  | false | Download NEON's package ZIP per site-month instead of files. |
+| `prototype_uuid` | string \\| null |  | null | Download a prototype dataset's files instead. |
+| `file_names` | array of string \\| null |  | null | With prototype_uuid: only these file names. |
+| `spec_number` | string \\| null |  | null | Download one NEON document (e.g. NEON.DOC.000780vD). |
+| `dest_subdir` | string \\| null |  | null | Relative sub-directory of the download directory. |
+| `if_exists` | `skip` \\| `error` |  | `"skip"` | skip identical existing files (default) or error. |
+| `max_bytes` | integer \\| null |  | null | Refuse the plan above this many bytes. (>= 1) |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `downloadDir` | string |  |
+| `requested` | integer |  |
+| `files` | array of DownloadedFileOut |  |
+| `totals` | DownloadTotals |  |
+
+## neon_find_locations
+
+**Find NEON locations.** Locations under a site, domain, REALM or named location, filtered by locationType (towers, huts, megapits, soil plots, observation plots, ...) or text, with coordinates and optional proximity. REALM and domain walks need location_type; site walks without it report typesAvailable. Next: call neon_get_location for one location's detail.
+
+| | |
+| --- | --- |
+| Surface | `locations` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /locations/{locationName}`<br>`GET /locations/sites`<br>`POST /graphql` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `root` | string \\| null |  | null | Walk the hierarchy under REALM, a domain (D01), a site (HARV) or any named location. (min length 1; max length 200) |
+| `site_codes` | array of string \\| null |  | null | Walk these sites instead (codes or names, up to 20). (min items 1; max items 20) |
+| `location_type` | string \\| null |  | null | Keep only this type: TOWER, HUT, MEGAPIT, SOIL_PLOT, 'OS Plot - mam', ... (see neon://reference/vocabularies). Required under REALM or a domain; prunes the walk upstream. |
+| `query` | string \\| null |  | null | Substring filter on name or description. |
+| `latitude` | number \\| null |  | null | With longitude: nearest first, within radius_km. (>= -90; <= 90) |
+| `longitude` | number \\| null |  | null | >= -180; <= 180 |
+| `radius_km` | number |  | `50.0` | > 0; <= 5000 |
+| `include_coordinates` | boolean |  | true | Look up coordinates for the returned page (batched). |
+| `max_depth` | integer |  | `6` | Deepest hierarchy level to return. (>= 1; <= 12) |
+| `limit` | integer |  | `50` | >= 1; <= 200 |
+| `offset` | integer |  | `0` | >= 0 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `roots` | array of LocationRoot |  |
+| `locationType` | string \\| null |  |
+| `typesAvailable` | object of integer \\| null |  |
+| `hierarchyNodesScanned` | integer |  |
+| `items` | array of LocationSummary |  |
+| `page` | Page |  |
+
+## neon_get_availability
+
+**Get NEON data availability.** Which sites and months have data for a product (one row per site), which products have data at a site (one row per product), or one product-site cell; month ranges per release including PROVISIONAL, optionally windowed and filtered. Works without a token and is small (GraphQL). Next: call neon_list_files for a product, site and month range.
+
+| | |
+| --- | --- |
+| Surface | `catalog` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `POST /graphql`<br>`GET /products/{productCode}`<br>`GET /sites/{siteCode}` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `product` | string \\| null |  | null | Product code or name. With no site: one row per site. |
+| `site` | string \\| null |  | null | Site code or name. With no product: one row per product. |
+| `site_codes` | array of string \\| null |  | null | Product mode: only these sites. (max items 81) |
+| `domain_code` | string \\| null |  | null | Product mode: only sites in this domain. |
+| `product_codes` | array of string \\| null |  | null | Site mode: only these products. (max items 200) |
+| `release` | string \\| null |  | null | Only months in this release (RELEASE-YYYY). |
+| `provisional` | `include` \\| `exclude` \\| `only` |  | `"include"` | PROVISIONAL months: include (default), exclude, or only (not with release). |
+| `start_month` | string \\| null |  | null | Window start (YYYY-MM). |
+| `end_month` | string \\| null |  | null | Window end (YYYY-MM). |
+| `format` | `ranges` \\| `months` \\| `counts` \\| null |  | null | ranges (default; 'YYYY-MM/YYYY-MM'), months (explicit lists), counts. Cell mode defaults to months. |
+| `limit` | integer |  | `100` | >= 1; <= 500 |
+| `offset` | integer |  | `0` | >= 0 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `mode` | `product` \\| `site` \\| `cell` |  |
+| `productCode` | string \\| null |  |
+| `productName` | string \\| null |  |
+| `siteCode` | string \\| null |  |
+| `siteName` | string \\| null |  |
+| `release` | string \\| null |  |
+| `provisional` | `include` \\| `exclude` \\| `only` |  |
+| `window` | Window \\| null |  |
+| `format` | `ranges` \\| `months` \\| `counts` |  |
+| `summary` | AvailabilityTotals |  |
+| `rows` | array of AvailabilityRow |  |
+| `page` | Page |  |
+
+## neon_get_citation
+
+**Cite NEON data.** NEON-format citation text and BibTeX for a data product in a release (DOI, default the newest release with a DOI), for provisional data (no DOI; archive what you used), or for a prototype dataset. Wording follows NEON's data policy (CC BY 4.0). Next: include the citation with any results; read neon://guide/citing-neon-data for the rules.
+
+| | |
+| --- | --- |
+| Surface | `releases` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /releases`<br>`GET /prototype/datasets/{uuid}` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `product` | string \\| null |  | null | Product code or name. |
+| `prototype_uuid` | string \\| null |  | null | Cite a prototype dataset instead. |
+| `release` | string |  | `"latest"` | RELEASE-YYYY, a release uuid, or 'latest' (newest with a DOI). |
+| `provisional` | boolean |  | false | Cite provisional data (no DOI). Not with an explicit release. |
+| `format` | `text` \\| `bibtex` \\| `all` |  | `"all"` |  |
+| `accessed_on` | string \\| null |  | null | Access date for the citation (default: today, UTC). |
+| `site_codes` | array of string \\| null |  | null | Sites the data came from (noted). (max items 81) |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `productCode` | string \\| null |  |
+| `prototypeUuid` | string \\| null |  |
+| `productName` | string \\| null |  |
+| `projectTitle` | string \\| null |  |
+| `release` | string \\| null |  |
+| `provisional` | boolean |  |
+| `doi` | string \\| null | Bare DOI, e.g. 10.48443/v6hs-mx57. |
+| `doiUrl` | string \\| null |  |
+| `accessedOn` | string |  |
+| `citationText` | string \\| null |  |
+| `bibtex` | string \\| null |  |
+| `dataPolicyUrl` | string |  |
+
+## neon_get_document
+
+**Get a NEON document.** Metadata of a NEON document (ATBD, protocol, user guide) by spec number or documents URL: type, size, file name, description and the products that reference it; optionally its text, extracted in memory and paged by character offset. No token. Next: page through text with char_offset, or call neon_download_files(spec_number=...) on stdio.
+
+| | |
+| --- | --- |
+| Surface | `documents` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /documents/{specNumber}` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `spec_number` | string \\| null |  | null | Document number, e.g. NEON.DOC.000780vD. |
+| `url` | string \\| null |  | null | A https://data.neonscience.org/api/v0/documents/... URL. |
+| `product` | string \\| null |  | null | Check the document belongs to this product (code or name). |
+| `extract_text` | boolean |  | false | Extract the text (PDF via pypdf; needs neon-mcp[pdf]). |
+| `max_chars` | integer |  | `20000` | >= 500; <= 100000 |
+| `char_offset` | integer |  | `0` | >= 0 |
+| `pages` | string \\| null |  | null | PDF pages to extract, e.g. '1-5' or '3'. |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `specNumber` | string |  |
+| `url` | string |  |
+| `contentType` | string \\| null |  |
+| `size` | integer \\| null |  |
+| `filename` | string \\| null |  |
+| `specDescription` | string \\| null |  |
+| `specType` | string \\| null |  |
+| `referencedByProducts` | array of string |  |
+| `text` | string \\| null |  |
+| `textTruncated` | boolean |  |
+| `nextCharOffset` | integer \\| null |  |
+| `charsTotal` | integer \\| null |  |
+| `pageCount` | integer \\| null |  |
+| `pages` | string \\| null |  |
+
+## neon_get_location
+
+**Get a NEON location.** One named location in depth: coordinates, UTM, elevation, orientation and offsets, properties, active periods; optionally its parent chain, location history, polygon and paged children (pruned by location_type). Names are case-sensitive. Next: call neon_find_locations to list locations of a type under it.
+
+| | |
+| --- | --- |
+| Surface | `locations` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /locations/{locationName}` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `name` | string | yes |  | Location name (case-sensitive), e.g. HARV, TOWER100450, D01. (min length 1; max length 200) |
+| `include` | array of `properties` \\| `hierarchy` \\| `history` \\| `children` \\| `polygon` \\| `all` |  |  | properties (default), hierarchy (parent chain), history, children (paged), polygon, all. |
+| `location_type` | string \\| null |  | null | Prune children to this type (required for REALM/domains). |
+| `children_limit` | integer |  | `50` | >= 1; <= 500 |
+| `children_offset` | integer |  | `0` | >= 0 |
+| `hierarchy_max_depth` | integer |  | `3` | >= 1; <= 12 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `locationName` | string |  |
+| `locationDescription` | string \\| null |  |
+| `locationType` | string \\| null |  |
+| `domainCode` | string \\| null |  |
+| `siteCode` | string \\| null |  |
+| `locationDecimalLatitude` | number \\| null |  |
+| `locationDecimalLongitude` | number \\| null |  |
+| `locationElevation` | number \\| null |  |
+| `locationUtmEasting` | number \\| null |  |
+| `locationUtmNorthing` | number \\| null |  |
+| `locationUtmHemisphere` | string \\| null |  |
+| `locationUtmZone` | integer \\| null |  |
+| `alphaOrientation` | number \\| null |  |
+| `betaOrientation` | number \\| null |  |
+| `gammaOrientation` | number \\| null |  |
+| `xOffset` | number \\| null |  |
+| `yOffset` | number \\| null |  |
+| `zOffset` | number \\| null |  |
+| `offsetLocation` | object \\| null |  |
+| `activePeriods` | array of object |  |
+| `hasPolygon` | boolean |  |
+| `propertyCount` | integer |  |
+| `locationProperties` | object \\| null |  |
+| `locationPropertiesRaw` | array of object \\| null |  |
+| `locationPolygon` | object \\| null |  |
+| `locationParent` | string \\| null |  |
+| `locationParentUrl` | string \\| null |  |
+| `parentChain` | array of ParentRef \\| null |  |
+| `childrenByType` | object of integer \\| null |  |
+| `children` | array of LocationSummary \\| null |  |
+| `childrenPage` | Page \\| null |  |
+| `hierarchyNodesScanned` | integer \\| null |  |
+| `locationHistory` | array of HistoryEntry \\| null |  |
+| `historyTruncated` | boolean |  |
+
+## neon_get_product
+
+**Get a NEON data product.** One data product: codes, name, team, status, themes, keywords, releases with DOIs and an availability summary; opt-in include[] sections add abstract and design text, packages, specs (ATBDs, protocols), change logs (paged), per-site availability rows and biorepository collections. Accepts a code or a name. Next: call neon_get_availability or neon_get_citation for the product.
+
+| | |
+| --- | --- |
+| Surface | `catalog` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `POST /graphql`<br>`GET /products/{productCode}` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `product` | string | yes |  | Product code (DP1.10003.001, DP1.10003) or name ('breeding landbird'). |
+| `release` | string \\| null |  | null | The product as published in one release. |
+| `include` | array of `abstract` \\| `design` \\| `study` \\| `sensor` \\| `remarks` \\| `packages` \\| `specs` \\| `releases` \\| `change_logs` \\| `availability` \\| `biorepository` \\| `all` |  |  | Opt-in sections: abstract, design, study, sensor, remarks, packages, specs, releases, change_logs, availability, biorepository, or all. Empty = compact base record. |
+| `change_logs_limit` | integer |  | `25` | >= 1; <= 200 |
+| `change_logs_offset` | integer |  | `0` | >= 0 |
+| `availability_limit` | integer |  | `100` | >= 1; <= 300 |
+| `availability_offset` | integer |  | `0` | >= 0 |
+| `text_budget` | integer |  | `4000` | Characters kept per text section. (>= 100; <= 20000) |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `productCode` | string |  |
+| `productCodeLong` | string |  |
+| `productCodePresentation` | string |  |
+| `productName` | string |  |
+| `productDescription` | string \\| null |  |
+| `productStatus` | string |  |
+| `productCategory` | string |  |
+| `productScienceTeam` | string \\| null |  |
+| `productScienceTeamAbbr` | string \\| null |  |
+| `productPublicationFormatType` | string \\| null |  |
+| `productHasExpanded` | boolean |  |
+| `themes` | array of string |  |
+| `keywords` | array of string |  |
+| `latestRelease` | string \\| null |  |
+| `releases` | array of ReleaseInfo |  |
+| `availability` | AvailabilitySummary |  |
+| `specsCount` | integer |  |
+| `changeLogCount` | integer \\| null | Absent when served from the catalog (no change logs there). |
+| `urls` | ProductUrls |  |
+| `productAbstract` | string \\| null |  |
+| `productDesignDescription` | string \\| null |  |
+| `productStudyDescription` | string \\| null |  |
+| `productSensor` | string \\| null |  |
+| `productRemarks` | string \\| null |  |
+| `productBasicDescription` | string \\| null |  |
+| `productExpandedDescription` | string \\| null |  |
+| `textTruncated` | array of string | Text fields clipped to text_budget. |
+| `specs` | array of SpecInfo \\| null |  |
+| `changeLogs` | array of ChangeLog \\| null |  |
+| `changeLogsPage` | Page \\| null |  |
+| `availabilityRows` | array of AvailabilityRow \\| null |  |
+| `availabilityPage` | Page \\| null |  |
+| `biorepositoryCollections` | array of BiorepositoryCollection \\| null |  |
+
+## neon_get_prototype_dataset
+
+**Get a NEON prototype dataset.** One prototype dataset: title, abstract, years, version, DOI, themes, teams, sites, and by default its files with sizes, MD5s and signed URLs; optional project/design/metadata descriptions, publication citations and related products. Next: call neon_download_files(prototype_uuid=...) on stdio, or neon_get_citation(prototype_uuid=...).
+
+| | |
+| --- | --- |
+| Surface | `prototype` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /prototype/datasets/{uuid}`<br>`GET /prototype/data/{uuid}` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `uuid` | string | yes |  | Prototype dataset uuid. |
+| `include` | array of `files` \\| `descriptions` \\| `locations` \\| `citations` \\| `related` \\| `all` |  |  | files (default; signed URLs), locations (default), descriptions, citations, related, all. |
+| `include_urls` | boolean |  | true | Include signed download URLs (valid ~7 days). |
+| `files_limit` | integer |  | `100` | >= 1; <= 500 |
+| `files_offset` | integer |  | `0` | >= 0 |
+| `text_budget` | integer |  | `4000` | >= 100; <= 20000 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `uuid` | string |  |
+| `projectTitle` | string |  |
+| `datasetAbstract` | string \\| null |  |
+| `abstractTruncated` | boolean |  |
+| `startYear` | integer \\| null |  |
+| `endYear` | integer \\| null |  |
+| `version` | string \\| null |  |
+| `isPublished` | boolean \\| null |  |
+| `doi` | DoiInfo \\| null |  |
+| `dataThemes` | array of string |  |
+| `scienceTeams` | array of string |  |
+| `siteCodes` | array of string |  |
+| `fileTypes` | array of string |  |
+| `keywords` | array of string |  |
+| `dateUploaded` | string \\| null |  |
+| `projectDescription` | string \\| null |  |
+| `designDescription` | string \\| null |  |
+| `metadataDescription` | string \\| null |  |
+| `studyAreaDescription` | string \\| null |  |
+| `versionDescription` | string \\| null |  |
+| `relatedVersions` | array of object |  |
+| `locations` | array of object \\| null |  |
+| `publicationCitations` | array of object \\| null |  |
+| `relatedDataProducts` | array of object \\| null |  |
+| `dataUrl` | string \\| null |  |
+| `dataLocations` | array of object |  |
+| `files` | array of PrototypeFile \\| null |  |
+| `filesPage` | Page \\| null |  |
+| `urlsElided` | boolean |  |
+
+## neon_get_release
+
+**Get a NEON data release.** One release (tag, uuid or 'latest'): its data products with DOIs (paged, filterable), optionally its sites and manifest artifacts, or one product/site exactly as published in that release. Unknown tags fail with the list of valid releases. Next: call neon_get_citation for a product in the release.
+
+| | |
+| --- | --- |
+| Surface | `releases` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /releases/{releaseIdentifier}`<br>`POST /graphql`<br>`GET /releases/{releaseTag}/products/{productCode}`<br>`GET /releases/{releaseTag}/sites/{siteCode}` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `release` | string | yes |  | RELEASE-YYYY, a release uuid, or 'latest'. |
+| `include` | array of `products` \\| `sites` \\| `artifacts` \\| `all` |  |  | products (default; codes, names, DOIs), sites (codes and names), artifacts (manifests), all. |
+| `product_query` | string \\| null |  | null | Filter products by code or name substring. |
+| `products_limit` | integer |  | `50` | >= 1; <= 500 |
+| `products_offset` | integer |  | `0` | >= 0 |
+| `product_code` | string \\| null |  | null | Also return this product as published in the release. |
+| `site_code` | string \\| null |  | null | Also return this site as published in the release. |
+| `include_artifact_urls` | boolean |  | false | Include signed manifest URLs. |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `release` | string |  |
+| `uuid` | string \\| null |  |
+| `generationDate` | string \\| null |  |
+| `productCount` | integer |  |
+| `artifacts` | array of Artifact \\| null |  |
+| `dataProducts` | array of ReleaseProduct \\| null |  |
+| `productsPage` | Page \\| null |  |
+| `sites` | array of ReleaseSite \\| null |  |
+| `product` | ProductCore \\| null |  |
+| `site` | SiteCore \\| null |  |
+
+## neon_get_sample
+
+**Get a NEON sample.** A physical sample's custody chain (NEON API token required): identifiers, events with their field values, parents and children; degree=N adds relatives N steps away. Identify it by tag (+class), UUID, barcode or archive GUID; an ambiguous tag asks which class (MRTR) or lists candidates. Next: follow parent or child identifiers with another neon_get_sample call.
+
+| | |
+| --- | --- |
+| Surface | `samples` |
+| NEON API token | required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| Multi round-trip | may return `input_required` (elicitation) |
+| NEON endpoints | `GET /samples/view`<br>`GET /samples/download`<br>`GET /samples/classes` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `sample_tag` | string \\| null |  | null | Sample tag (use with sample_class when it is ambiguous). |
+| `sample_class` | string \\| null |  | null | Sample class of the tag, e.g. bet_IDandpinning_in.individualID. |
+| `sample_uuid` | string \\| null |  | null | Sample UUID. |
+| `barcode` | string \\| null |  | null | Sample barcode. |
+| `archive_guid` | string \\| null |  | null | Biorepository archive GUID. |
+| `degree` | integer \\| null |  | null | Also return relatives up to this many degrees away. (>= 1; <= 5) |
+| `include_events` | boolean |  | true | Include custody events (field entries folded into objects). |
+| `events_limit` | integer |  | `50` | >= 1; <= 500 |
+| `fields` | array of string \\| null |  | null | Keep only these smsKey fields in events. |
+| `limit` | integer |  | `20` | >= 1; <= 100 |
+| `offset` | integer |  | `0` | >= 0 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `items` | array of SampleView |  |
+| `degree` | integer \\| null |  |
+| `identifier` | object of string |  |
+| `page` | Page |  |
+
+## neon_get_site
+
+**Get a NEON field site.** One field site: name, type, state, domain, coordinates, DEIMS id, and (by default) every data product available there with month ranges and provisional counts; optional releases, full description and location record (elevation, UTM, properties). Next: call neon_get_availability or neon_list_files for a product at this site.
+
+| | |
+| --- | --- |
+| Surface | `catalog` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /sites/{siteCode}`<br>`GET /locations/{locationName}` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `site` | string | yes |  | Site code (HARV) or name ('Harvard Forest'). |
+| `release` | string \\| null |  | null | The site as of one release. |
+| `include` | array of `products` \\| `releases` \\| `description` \\| `location` \\| `all` |  |  | Sections: products (default; per-product month ranges), releases, description (full text), location (elevation, UTM, properties), all. |
+| `products_query` | string \\| null |  | null | Filter products by code or title substring. |
+| `products_limit` | integer |  | `100` | >= 1; <= 300 |
+| `products_offset` | integer |  | `0` | >= 0 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `siteCode` | string |  |
+| `siteName` | string |  |
+| `siteDescription` | string \\| null |  |
+| `siteType` | string |  |
+| `siteLatitude` | number \\| null |  |
+| `siteLongitude` | number \\| null |  |
+| `stateCode` | string |  |
+| `stateName` | string |  |
+| `domainCode` | string |  |
+| `domainName` | string |  |
+| `deimsId` | string \\| null |  |
+| `productCount` | integer |  |
+| `latestRelease` | string \\| null |  |
+| `urls` | SiteUrls |  |
+| `releases` | array of SiteReleaseInfo \\| null |  |
+| `dataProducts` | array of SiteProduct \\| null |  |
+| `dataProductsPage` | Page \\| null |  |
+| `location` | SiteLocation \\| null |  |
+
+## neon_graphql
+
+**Run a NEON GraphQL query.** Read-only GraphQL against NEON's public metadata endpoint for shapes the other tools do not cover. Guard rails: queries only, allow-listed root fields, depth <= 8, one __type/__schema, results pruned to max_bytes with truncatedPaths. No token is sent. Prefer the dedicated tools for products, sites and availability. Next: read neon://reference/graphql-schema for types.
+
+| | |
+| --- | --- |
+| Surface | `graphql` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `POST /graphql` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `query` | string \\| null |  | null | A read-only GraphQL query against https://data.neonscience.org/graphql (roots: products, product, filterProducts, sites, site, filterSites, location, locationHierarchy, findLocations, prototypeDatasets, prototypeDataset, one __type). |
+| `introspect_type` | string \\| null |  | null | Instead of a query: describe one GraphQL type (e.g. Site, DataProductFilter). (pattern `^[_A-Za-z][_0-9A-Za-z]*$`) |
+| `variables` | object \\| null |  | null | GraphQL variables. |
+| `operation_name` | string \\| null |  | null | Operation to run when the document has several. |
+| `max_bytes` | integer |  | `50000` | Response budget; larger lists are pruned. (>= 1000; <= 200000) |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `data` | any |  |
+| `errors` | array of object \\| null |  |
+| `bytesTotal` | integer |  |
+| `truncated` | boolean |  |
+| `truncatedPaths` | array of string |  |
+| `schemaHint` | string |  |
+
+## neon_list_files
+
+**List NEON data files.** Data files for a product at sites over months (NEON API token required): names, kinds, tables, HOR/VER/TMI, sizes, MD5s and signed URLs (~7 days), plus package ZIP links for a single site-month. detail='summary' or 'site_months' sizes a pull without listing files. Next: call neon_download_files with the same selectors (stdio), or use the URLs.
+
+| | |
+| --- | --- |
+| Surface | `data` |
+| NEON API token | required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /data/{productCode}/{siteCode}/{yearMonth}`<br>`GET /data/{productCode}/{siteCode}/{yearMonth}/{filename}`<br>`POST /data/query` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `product` | string | yes |  | Product code or name. |
+| `site_codes` | array of string | yes |  | Site codes or names (up to 30). (min items 1) |
+| `start_month` | string | yes |  | First month (YYYY-MM). |
+| `end_month` | string \\| null |  | null | Last month (YYYY-MM); defaults to start_month. |
+| `package` | `basic` \\| `expanded` |  | `"basic"` | basic (default) or expanded. |
+| `release` | string \\| null |  | null | Only files in this release (default: latest per month). |
+| `include_provisional` | boolean |  | true | Include PROVISIONAL (unreleased) months. |
+| `kind` | `data` \\| `variables` \\| `readme` \\| `sensor_positions` \\| `eml` \\| `science_review_flags` \\| `categorical_codes` \\| `validation` \\| `package` \\| `other` \\| null |  | null | data, variables, readme, sensor_positions, eml, ... or package. |
+| `table` | string \\| null |  | null | Table name, e.g. 2DWSD_30min or brd_countdata. |
+| `hor` | string \\| null |  | null | Horizontal index, e.g. 000. |
+| `ver` | string \\| null |  | null | Vertical index, e.g. 010. |
+| `tmi` | string \\| null |  | null | Temporal index in minutes, e.g. 030. |
+| `name_contains` | string \\| null |  | null | Substring the file name must contain. |
+| `detail` | `files` \\| `site_months` \\| `summary` |  | `"files"` | files (default), site_months (one row per site-month), summary (totals only). |
+| `include_urls` | boolean |  | true | Include signed URLs (valid ~7 days; they dominate result size). |
+| `filename` | string \\| null |  | null | One exact NEON file name (single site and month): its URL. |
+| `limit` | integer |  | `50` | >= 1; <= 200 |
+| `offset` | integer |  | `0` | >= 0 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `productCode` | string |  |
+| `package` | string |  |
+| `release` | string \\| null |  |
+| `includeProvisional` | boolean |  |
+| `siteCodes` | array of string |  |
+| `window` | Window |  |
+| `detail` | `files` \\| `site_months` \\| `summary` |  |
+| `summary` | FileSummary |  |
+| `siteMonths` | array of SiteMonthRow \\| null |  |
+| `files` | array of FileRecord \\| null |  |
+| `packages` | array of PackageLink |  |
+| `externalData` | array of ExternalData |  |
+| `urlExpiresAt` | string \\| null |  |
+| `urlsElided` | boolean |  |
+| `curlHint` | string \\| null |  |
+| `page` | Page \\| null |  |
+
+## neon_list_releases
+
+**List NEON data releases.** All NEON data releases (RELEASE-2021 ... RELEASE-2026 today), newest first, with generation dates, product counts and manifest artifacts. Releases are immutable and carry per-product DOIs; newer data are PROVISIONAL. Next: call neon_get_release for one release's products and DOIs.
+
+| | |
+| --- | --- |
+| Surface | `releases` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /releases` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `include_artifact_urls` | boolean |  | false | Include signed manifest URLs (large, expire in 7 days). |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `items` | array of ReleaseSummary |  |
+| `latestRelease` | string \\| null |  |
+| `page` | Page |  |
+
+## neon_list_sample_classes
+
+**List NEON sample classes.** NEON's supported sample classes (e.g. bet_IDandpinning_in.individualID) with descriptions, filterable by text, or the classes one sample tag belongs to. No token. Next: call neon_get_sample with a tag and class, a sample UUID, a barcode or an archive GUID.
+
+| | |
+| --- | --- |
+| Surface | `samples` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /samples/supportedClasses`<br>`GET /samples/classes` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `sample_tag` | string \\| null |  | null | List the classes this sample tag belongs to. |
+| `query` | string \\| null |  | null | Substring filter on class key or description. |
+| `limit` | integer |  | `50` | >= 1; <= 500 |
+| `offset` | integer |  | `0` | >= 0 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `sampleTag` | string \\| null |  |
+| `items` | array of SampleClass |  |
+| `page` | Page |  |
+| `sourceEndpoint` | `classes` \\| `supportedClasses` |  |
+
+## neon_ping
+
+**Check neon-mcp status.** Liveness and capability report: server version and protocol, whether a NEON API token is available (it unlocks data files and sample views), whether downloads are enabled, catalog warmth, cache and rate-limit headroom. With check_api=true it makes one ~1 KB NEON request. Never reveals the token. Next: call neon_search_products to find a data product.
+
+| | |
+| --- | --- |
+| Surface | `core` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /taxonomy` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `check_api` | boolean |  | false | Also make one tiny NEON request (~1 KB) to test reachability and read rate-limit headers. |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `pong` | `ok` |  |
+| `version` | string |  |
+| `protocolVersion` | string |  |
+| `transport` | `stdio` \\| `http` |  |
+| `tokenConfigured` | boolean | True when this call has a NEON API token available. |
+| `tokenSource` | `config` \\| `request` \\| `none` |  |
+| `downloadsEnabled` | boolean |  |
+| `downloadDir` | string \\| null |  |
+| `apiBaseUrl` | string |  |
+| `graphqlUrl` | string |  |
+| `catalog` | CatalogStatus |  |
+| `cache` | CacheInfo |  |
+| `rateLimit` | RateLimitInfo \\| null |  |
+| `api` | ApiCheck \\| null |  |
+
+## neon_search_products
+
+**Search NEON data products.** Find NEON data products by keywords, theme, science team, level, status, site, domain or date coverage; ranked results with facets and each product's site count and month range. Served from a cached catalog (no token). A bare code such as DP1.10003.001 matches exactly. Next: call neon_get_availability with a productCode, or neon_get_product for detail.
+
+| | |
+| --- | --- |
+| Surface | `catalog` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `POST /graphql`<br>`GET /products` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `query` | string \\| null |  | null | Free text (all words must match names, keywords, themes or descriptions; small typos tolerated) or a product code such as DP1.10003.001. |
+| `theme` | string \\| null |  | null | Theme prefix, case-insensitive: Atmosphere, Biogeochemistry, Ecohydrology, 'Land Use', 'Organisms'. |
+| `science_team` | `AIS` \\| `AOP` \\| `AOS` \\| `TIS` \\| `TOS` \\| null |  | null | TIS, TOS, AIS, AOS or AOP. |
+| `status` | `ACTIVE` \\| `FUTURE` \\| `RETIRED` \\| `ALL` |  | `"ACTIVE"` | ACTIVE (default), FUTURE, RETIRED or ALL. |
+| `level` | integer \\| null |  | null | Data product level 1-4. (>= 1; <= 4) |
+| `has_expanded` | boolean \\| null |  | null | Only products with (or without) an expanded package. |
+| `site` | string \\| null |  | null | Only products with data at this site (code or name). |
+| `domain_code` | string \\| null |  | null | Only products with data in this domain (D01-D20). |
+| `release` | string \\| null |  | null | Evaluate availability within one release (RELEASE-YYYY). |
+| `available_from` | string \\| null |  | null | Only products with data on or after this month. |
+| `available_to` | string \\| null |  | null | Only products with data on or before this month. |
+| `sort` | `relevance` \\| `productCode` \\| `productName` |  | `"relevance"` |  |
+| `limit` | integer |  | `25` | >= 1; <= 100 |
+| `offset` | integer |  | `0` | >= 0 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `items` | array of ProductSummary |  |
+| `page` | Page |  |
+| `facets` | object of object of integer |  |
+| `didYouMean` | array of string \\| null |  |
+| `indexSource` | `graphql` \\| `rest` |  |
+| `indexAgeSeconds` | integer |  |
+
+## neon_search_prototype_datasets
+
+**Search NEON prototype datasets.** Search NEON's prototype datasets (early or experimental data outside the standard products) by text, theme, science team, site, years, file type or publication flag, with facets. Each has its own DOI and version. No token. Next: call neon_get_prototype_dataset with a uuid for files.
+
+| | |
+| --- | --- |
+| Surface | `prototype` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /prototype/datasets` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `query` | string \\| null |  | null | Words in the title, abstract, descriptions or keywords. |
+| `theme` | string \\| null |  | null | Data theme prefix, case-insensitive (e.g. 'ecohydrology'). |
+| `science_team` | string \\| null |  | null | Team abbreviation or text, e.g. AOS or 'Terrestrial'. |
+| `site_code` | string \\| null |  | null | Only datasets covering this site. |
+| `start_year` | integer \\| null |  | null | Overlaps this year or later. (>= 1900; <= 2100) |
+| `end_year` | integer \\| null |  | null | Overlaps this year or earlier. (>= 1900; <= 2100) |
+| `file_type` | string \\| null |  | null | File type such as CSV, PDF, SHP (case-insensitive). |
+| `is_published` | boolean \\| null |  | null | Filter on NEON's isPublished flag. |
+| `limit` | integer |  | `25` | >= 1; <= 200 |
+| `offset` | integer |  | `0` | >= 0 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `items` | array of PrototypeDatasetSummary |  |
+| `page` | Page |  |
+| `facets` | object of object of integer |  |
+
+## neon_search_sites
+
+**Search NEON field sites.** Find NEON's 81 field sites by code, name, state, domain, site type, product availability or proximity (latitude/longitude + radius_km, nearest first); optional elevation and UTM. Cached catalog, no token. Next: call neon_get_site or neon_get_availability(site=...) for a siteCode.
+
+| | |
+| --- | --- |
+| Surface | `catalog` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `POST /graphql`<br>`GET /sites`<br>`GET /locations/sites` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `query` | string \\| null |  | null | Site code, name words, or state/domain names ('Harvard', 'Alaska'). |
+| `domain_code` | string \\| null |  | null | NEON domain D01-D20. |
+| `state_code` | string \\| null |  | null | Two-letter state code (e.g. MA, AK, PR). |
+| `site_type` | `CORE` \\| `GRADIENT` \\| null |  | null | CORE or GRADIENT. |
+| `product` | string \\| null |  | null | Only sites with data for this product (code or name). |
+| `release` | string \\| null |  | null | Sites and products as of one release. |
+| `latitude` | number \\| null |  | null | With longitude: nearest sites first. (>= -90; <= 90) |
+| `longitude` | number \\| null |  | null | >= -180; <= 180 |
+| `radius_km` | number |  | `100.0` | Proximity radius when latitude/longitude are set. (> 0; <= 5000) |
+| `include_elevation` | boolean |  | false | Add elevation and UTM (one extra cached request). |
+| `limit` | integer |  | `50` | >= 1; <= 100 |
+| `offset` | integer |  | `0` | >= 0 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `items` | array of SiteSummary |  |
+| `page` | Page |  |
+| `facets` | object of object of integer |  |
+| `didYouMean` | array of string \\| null |  |
+| `indexSource` | `graphql` \\| `rest` |  |
+| `indexAgeSeconds` | integer |  |
+
+## neon_search_taxonomy
+
+**Search NEON taxonomy.** NEON's taxonomy lists, paged: every taxon of a type (BIRD, PLANT, SMALL_MAMMAL, ...) or taxa by rank (kingdom ... genus) or exact scientific name with a genus fallback. Rows keep NEON's Darwin Core keys (dwc:scientificName, dwc:vernacularName, ...). No token. Next: follow page.nextOffset, or call neon_search_products for data about the taxa.
+
+| | |
+| --- | --- |
+| Surface | `taxonomy` |
+| NEON API token | not required |
+| Transports | http, stdio |
+| Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
+| NEON endpoints | `GET /taxonomy` |
+
+**Inputs**
+
+| Name | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `taxon_type_code` | `ALGAE` \\| `BEETLE` \\| `BIRD` \\| `FISH` \\| `HERPETOLOGY` \\| `MACROINVERTEBRATE` \\| `MOSQUITO` \\| `MOSQUITO_PATHOGENS` \\| `PLANT` \\| `SMALL_MAMMAL` \\| `TICK` \\| null |  | null | ALGAE, BEETLE, BIRD, FISH, HERPETOLOGY, MACROINVERTEBRATE, MOSQUITO, MOSQUITO_PATHOGENS, PLANT, SMALL_MAMMAL or TICK. Cannot be combined with a rank filter. |
+| `kingdom` | string \\| null |  | null |  |
+| `phylum` | string \\| null |  | null |  |
+| `division` | string \\| null |  | null |  |
+| `class_` | string \\| null |  | null | Class (e.g. Aves). |
+| `order` | string \\| null |  | null |  |
+| `family` | string \\| null |  | null |  |
+| `genus` | string \\| null |  | null | Genus, e.g. Quercus. |
+| `scientific_name` | string \\| null |  | null | Exact scientific name (NEON matches exactly; a genus fallback runs when nothing matches). |
+| `verbose` | boolean |  | false | All ranks and extra fields (nulls dropped); limit capped at 100. |
+| `fuzzy_genus_fallback` | boolean |  | true | Retry an unmatched 'Genus species' by genus and filter. |
+| `limit` | integer |  | `25` | >= 1; <= 500 |
+| `offset` | integer |  | `0` | >= 0 |
+
+**Result fields** (besides the common envelope)
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `items` | array of object |  |
+| `page` | Page |  |
+| `filters` | object |  |
+| `fuzzyFallbackUsed` | boolean |  |
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/releases/
+
+---
+title: "Releases and citations"
+description: "Browse NEON's annual data releases and their DOIs with neon_list_releases and neon_get_release, and cite data correctly with neon_get_citation."
+type: Guide
+tags:
+  - tools
+  - releases
+  - citation
+  - DOI
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-releases
+    resource: "https://data.neonscience.org/data-api/endpoints/releases/"
+    title: "NEON Data API — Releases endpoint"
+    author: "team:neon"
+  - id: neon-citation
+    resource: "https://www.neonscience.org/data-samples/data-policies-citation"
+    title: "NEON — Data Policies and Citation Guidelines"
+    author: "team:neon"
+status: stable
+stale_after: "2027-02-01T00:00:00Z"
+---
+
+# Releases and citations
+
+Every January NEON publishes an immutable **release** with a DOI for each data
+product; six exist as of September 2026 (`RELEASE-2021` … `RELEASE-2026`)[^neon-releases].
+Tools: [`neon_list_releases`](reference.md#neon_list_releases),
+[`neon_get_release`](reference.md#neon_get_release) and
+[`neon_get_citation`](reference.md#neon_get_citation).
+
+## Releases
+
+`neon_list_releases` returns every release newest first with its generation date,
+product count and manifest artifacts (signed manifest URLs only with
+`include_artifact_urls`). `neon_get_release` takes a tag, a release UUID or
+`latest` and returns its products with DOIs (paged, filterable with `product_query`);
+`include` adds `sites` (codes and names) and `artifacts`. `product_code` or `site_code`
+return that product or site exactly as published in the release.
+
+An unknown tag fails with `not_found` and `validReleases`.
+
+!!! note "Why the release site and product lists are never fetched"
+
+    NEON's `/releases/{tag}/sites` and `/releases/{tag}/products` return 22 MB and
+    26 MB. neon-mcp builds the release site list from a codes-only GraphQL query
+    instead and never calls those endpoints.
+
+## Citations
+
+`neon_get_citation` renders NEON's recommended wording[^neon-citation] with the DOI of
+the newest release that has one (or the `release` you name), plus a BibTeX entry:
+
+```text
+NEON (National Ecological Observatory Network). Breeding landbird point counts (DP1.10003.001), RELEASE-2026. https://doi.org/10.48443/v6hs-mx57. Dataset accessed from https://data.neonscience.org on September 10, 2026.
+```
+
+* `provisional=true` produces the provisional form (no DOI; archive what you used).
+* `prototype_uuid` cites a prototype dataset by its own DOI and version.
+* The DOI is cross-checked against the release record; a mismatch is reported in
+  `notes`.
+* The templates live in the `neon://guide/citing-neon-data` resource and
+  [Citing NEON data](../about/citing-neon.md).
+
+[^neon-releases]: NEON Data API — Releases endpoint. <https://data.neonscience.org/data-api/endpoints/releases/>
+[^neon-citation]: NEON — Data Policies and Citation Guidelines. <https://www.neonscience.org/data-samples/data-policies-citation>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/resources-and-prompts/
+
+---
+title: "Resources and prompts"
+description: "The neon:// guide and reference resources, the three resource templates backed by tools, and the three task prompts neon-mcp exposes."
+type: Reference
+tags:
+  - tools
+  - resources
+  - prompts
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: resources-module
+    resource: "https://github.com/idss-mesa/neon-mcp/blob/main/src/neon_mcp/resources.py"
+    title: "neon-mcp resources (resources.py)"
+    author: "team:idss-mesa"
+  - id: mcp-spec
+    resource: "https://modelcontextprotocol.io/specification/2026-07-28"
+    title: "Model Context Protocol specification, 2026-07-28"
+    author: "team:modelcontextprotocol"
+status: stable
+---
+
+# Resources and prompts
+
+## Resources
+
+Static guides are cached by clients for 24 hours, derived references for one hour
+(`ttlMs` on each read; `cacheScope` is always `public`)[^mcp-spec].
+
+| URI | Kind | Content |
+| --- | --- | --- |
+| `neon://guide/agent-workflow` | static | The five-call recipe (search → availability → files → download → cite), input rules, error remedies |
+| `neon://guide/api-token` | static | Which endpoints need a token, how to set it, rate limits |
+| `neon://guide/citing-neon-data` | static | Data policy and the citation templates `neon_get_citation` renders |
+| `neon://guide/product-code-anatomy` | static | Product codes, packages, the file-name grammar, releases and PROVISIONAL |
+| `neon://reference/vocabularies` | static | Valid filter values: themes, teams, domains, taxon types, location types, releases, file kinds |
+| `neon://reference/graphql-schema` | static | Root fields, inputs and object fields for `neon_graphql` |
+| `neon://reference/sites` | derived | All 81 field sites with codes, names, domains, states and coordinates |
+| `neon://reference/releases` | derived | Every release with its date and product count, plus the latest tag |
+
+## Resource templates
+
+| Template | Reads as |
+| --- | --- |
+| `neon://products/{productCode}` | the `neon_get_product` result |
+| `neon://sites/{siteCode}` | the `neon_get_site` result (with products) |
+| `neon://releases/{release}` | the `neon_get_release` result |
+
+An unknown URI is a JSON-RPC `-32602` error with `data.code = "not_found"` and
+`data.didYouMean`.
+
+## Prompts
+
+| Prompt | Arguments | Steers the agent to |
+| --- | --- | --- |
+| `neon_find_data` | `question` (required), `region`, `timeframe`, `organism_or_variable` | search products and sites, check availability, size the data (with a token) and cite |
+| `neon_cite_dataset` | `product` (required), `release`, `site_codes` | produce citation text and BibTeX, with the provisional caveat when needed |
+| `neon_plan_download` | `product`, `sites`, `start_month` (required), `end_month`, `package` | check the token, availability and size, then download (stdio) or hand back URLs, and cite |
+
+[^mcp-spec]: Model Context Protocol specification, 2026-07-28. <https://modelcontextprotocol.io/specification/2026-07-28>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/samples/
+
+---
+title: "Samples"
+description: "Look up NEON sample classes and trace a physical sample's custody chain; neon_get_sample is the one tool that may ask the user a question (MRTR)."
+type: Guide
+tags:
+  - tools
+  - samples
+  - MRTR
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-samples
+    resource: "https://data.neonscience.org/data-api/endpoints/samples/"
+    title: "NEON Data API — Samples endpoint"
+    author: "team:neon"
+  - id: mcp-spec
+    resource: "https://modelcontextprotocol.io/specification/2026-07-28"
+    title: "Model Context Protocol specification, 2026-07-28"
+    author: "team:modelcontextprotocol"
+status: stable
+stale_after: "2027-03-10T00:00:00Z"
+---
+
+# Samples
+
+NEON tracks physical samples (beetle pinnings, soil cores, DNA extracts, …) from
+collection through subsampling and archiving[^neon-samples]. Tools:
+[`neon_list_sample_classes`](reference.md#neon_list_sample_classes) (no token) and
+[`neon_get_sample`](reference.md#neon_get_sample) (token).
+
+## Sample classes
+
+A **sample class** such as `bet_IDandpinning_in.individualID` names the NEON table
+and field an identifier comes from. `neon_list_sample_classes` lists all supported
+classes with descriptions (filter with `query`), or the classes one `sample_tag`
+belongs to. A tag with no classes returns an empty list, not an error.
+
+## One sample
+
+Identify a sample by exactly one of `sample_tag` (+ `sample_class`), `sample_uuid`,
+`barcode` or `archive_guid`. The result lists its custody events (each event's field
+entries folded into an object; keep only some with `fields`), and its parent and child
+samples. `degree=N` (1–5) also returns relatives up to N steps away.
+
+## Asking which class (MRTR)
+
+A sample tag can belong to several classes. When you pass a tag without a class:
+
+* if the client supports elicitation, neon-mcp returns an MCP **input_required**
+  result asking the user to pick one of the candidate classes; the client retries
+  with the answer and neon-mcp re-checks that it is still a valid class for the
+  tag[^mcp-spec];
+* otherwise the call fails with `ambiguous_input` and lists the candidates.
+
+The continuation (`requestState`) holds only the question — never the token.
+
+[^neon-samples]: NEON Data API — Samples endpoint. <https://data.neonscience.org/data-api/endpoints/samples/>
+[^mcp-spec]: Model Context Protocol specification, 2026-07-28. <https://modelcontextprotocol.io/specification/2026-07-28>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/sites/
+
+---
+title: "Sites"
+description: "Find NEON's field sites with neon_search_sites by name, state, domain, type, product or proximity, and read one site with neon_get_site."
+type: Guide
+tags:
+  - tools
+  - sites
+  - catalog
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-sites
+    resource: "https://data.neonscience.org/data-api/endpoints/sites/"
+    title: "NEON Data API — Sites endpoint"
+    author: "team:neon"
+  - id: neon-field-sites
+    resource: "https://www.neonscience.org/field-sites/explore-field-sites"
+    title: "NEON — Explore field sites"
+    author: "team:neon"
+status: stable
+---
+
+# Sites
+
+NEON operates 81 field sites (terrestrial and aquatic, `CORE` and `GRADIENT`) in 20
+ecoclimatic domains `D01`–`D20`[^neon-field-sites]. Sites have four-letter codes
+(`HARV` is Harvard Forest). Tools:
+[`neon_search_sites`](reference.md#neon_search_sites) and
+[`neon_get_site`](reference.md#neon_get_site).
+
+## Searching
+
+Served from a cached site catalog (about 0.6 MB over GraphQL instead of the 27 MB
+REST list). Filters combine:
+
+* `query` — code, name words, state or domain names (`"Harvard"`, `"Alaska"`);
+* `domain_code`, `state_code` (two letters), `site_type` (`CORE` or `GRADIENT`);
+* `product` — only sites with data for that product (code or name);
+* `latitude` + `longitude` (+ `radius_km`, default 100) — nearest first, each result
+  with `distanceKm`;
+* `include_elevation` — adds elevation and UTM coordinates from one extra cached
+  request (`/locations/sites`, 2.7 MB upstream).
+
+## One site
+
+`neon_get_site` accepts a code or a name and returns the site record plus, by
+default, every data product available there with its month ranges and the number of
+provisional months[^neon-sites]. Other sections: `releases`, `description` (the full
+text; summaries are clipped), `location` (elevation, UTM, location properties,
+active periods) or `all`. Filter the product list with `products_query` and page it
+with `products_offset`.
+
+## Pitfalls
+
+* Some locations of type `SITE` are not field sites (headquarters, mobile
+  deployment platforms); `neon_search_sites` covers only the 81 field sites.
+* A misspelled or partial name that fits several sites returns `ambiguous_input`;
+  similar-looking names do not resolve silently ("Blue Ridge" is not "Blue River").
+
+[^neon-sites]: NEON Data API — Sites endpoint. <https://data.neonscience.org/data-api/endpoints/sites/>
+[^neon-field-sites]: NEON — Explore field sites. <https://www.neonscience.org/field-sites/explore-field-sites>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/taxonomy/
+
+---
+title: "Taxonomy"
+description: "Page through NEON's taxon lists with neon_search_taxonomy by type code or rank, with exact scientific names, a genus fallback and Darwin Core keys."
+type: Guide
+tags:
+  - tools
+  - taxonomy
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-taxonomy
+    resource: "https://data.neonscience.org/data-api/endpoints/taxonomy/"
+    title: "NEON Data API — Taxonomy endpoint"
+    author: "team:neon"
+status: stable
+---
+
+# Taxonomy
+
+[`neon_search_taxonomy`](reference.md#neon_search_taxonomy) pages through NEON's
+taxonomy lists — the names NEON field staff use for birds, beetles, plants, small
+mammals, ticks and other groups[^neon-taxonomy].
+
+* Either a `taxon_type_code` (`ALGAE`, `BEETLE`, `BIRD`, `FISH`, `HERPETOLOGY`,
+  `MACROINVERTEBRATE`, `MOSQUITO`, `MOSQUITO_PATHOGENS`, `PLANT`, `SMALL_MAMMAL`,
+  `TICK`) **or** rank filters (`kingdom`, `phylum`, `division`, `class`, `order`,
+  `family`, `genus`, `scientific_name`) — NEON rejects both together, and neon-mcp
+  refuses the combination before calling.
+* `scientific_name` must match exactly upstream; if an exact `"Genus species"` finds
+  nothing, neon-mcp retries by genus and keeps names starting with your text
+  (`fuzzyFallbackUsed: true`).
+* Rows keep NEON's Darwin Core keys verbatim (`dwc:scientificName`,
+  `dwc:vernacularName`, `dwc:family`, …). `verbose=true` adds every rank and extra
+  field, drops null ones, and caps `limit` at 100.
+* Paging follows NEON's own `next` link: continue with `offset=page.nextOffset`.
+
+```json
+{"taxon_type_code": "BIRD", "limit": 25}
+```
+
+[^neon-taxonomy]: NEON Data API — Taxonomy endpoint. <https://data.neonscience.org/data-api/endpoints/taxonomy/>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/tools/utilities/
+
+---
+title: "Utilities and errors"
+description: "neon_ping for status and connectivity, neon_get_document for NEON documents, and the error codes every neon-mcp tool can return with their remedies."
+type: Reference
+tags:
+  - tools
+  - errors
+  - documents
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: errors-module
+    resource: "https://github.com/idss-mesa/neon-mcp/blob/main/src/neon_mcp/errors.py"
+    title: "neon-mcp error model (errors.py)"
+    author: "team:idss-mesa"
+status: stable
+---
+
+# Utilities and errors
+
+## neon_ping
+
+[`neon_ping`](reference.md#neon_ping) reports the version, protocol, transport,
+whether a token is available (never the token), whether downloads are enabled,
+catalog warmth, cache statistics and rate-limit headroom. It makes no request unless
+`check_api=true`, which sends one ~1 KB taxonomy request. `neon-mcp --check` runs the
+same check from the command line.
+
+## neon_get_document
+
+[`neon_get_document`](reference.md#neon_get_document) returns a NEON document's
+metadata (type, size, file name, description, the products that reference it) by
+spec number (`NEON.DOC.000780vD`) or documents URL. `extract_text=true` downloads it
+into memory (up to 25 MiB), extracts PDF text with pypdf (install
+`neon-mcp[pdf]`), and pages it with `char_offset` / `max_chars`; `pages` selects PDF
+pages. Nothing is written to disk.
+
+## Error codes
+
+A failed call returns `isError: true` with
+`structuredContent = {"error": {"code", "message", "details", "hint"}}`. Codes are stable:
+
+| Code | Meaning | Remedy |
+| --- | --- | --- |
+| `invalid_argument` | An argument is missing, malformed, unknown or conflicts with another; also NEON 400s that are not "not found" | Read the message: it names the field (and lists valid ones for unknown fields) |
+| `not_found` | Unknown code, name or file (NEON answers 400 "… not found") | Use `details.didYouMean` or `details.validReleases` |
+| `ambiguous_input` | A name matched several codes | Retry with a code from `details.candidates` |
+| `auth_required` | The endpoint needs a NEON API token and none is available | [NEON API token](../getting-started/api-token.md) |
+| `forbidden` | NEON rejected the token | Create a new token |
+| `rate_limited` | NEON's rate limit is exhausted | Wait `details.retryAfterSeconds`; a token raises the limit |
+| `upstream_error` | NEON failed (5xx) or returned something unexpected | Retry later |
+| `upstream_unavailable` | NEON unreachable or timed out | Retry; `neon_ping(check_api=true)` |
+| `graphql_error` | NEON rejected a GraphQL query | Check field names in `neon://reference/graphql-schema` |
+| `query_too_large` | More than 500 site-months, or too many locations for proximity | Narrow sites, months or types |
+| `download_limit_exceeded` | A download plan exceeds the file or byte caps | Narrow the selectors or call again for the rest |
+| `download_denied` | Unsafe destination, disallowed host, or existing files with `if_exists="error"` | Fix the path or options |
+| `checksum_mismatch` | A downloaded file's MD5 differed (the partial file was removed) | Retry the download |
+| `result_too_large` | A result stays above 200 KB after trimming, or a document is too large to read | Narrow the request |
+| `feature_unavailable` | Downloads disabled, or pypdf missing | Enable the feature or install the extra |
+| `not_available_in_http_mode` | Downloads were requested over HTTP | Use the signed URLs from `neon_list_files` |
+| `catalog_unavailable` | The product or site catalog could not be built | Retry later |
+| `unknown_tool` | No tool by that name | See `tools/list` |
+| `internal_error` | A bug; `details.correlationId` matches the server log | Report it with the correlation id |
+
+---8<--- https://idss-mesa.github.io/neon-mcp/mcp/spec-2026-07-28/
+
+---
+title: "MCP 2026-07-28 conformance"
+description: "How neon-mcp implements the MCP 2026-07-28 stateless core: discovery, cache hints, result metadata, MRTR, header routing and the conformance tests."
+type: Reference
+tags:
+  - mcp
+  - protocol
+  - conformance
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: mcp-changelog
+    resource: "https://blog.modelcontextprotocol.io/posts/2026-07-28/"
+    title: "MCP 2026-07-28 release notes"
+    author: "team:modelcontextprotocol"
+  - id: mcp-spec
+    resource: "https://modelcontextprotocol.io/specification/2026-07-28"
+    title: "Model Context Protocol specification, 2026-07-28"
+    author: "team:modelcontextprotocol"
+  - id: python-sdk
+    resource: "https://github.com/modelcontextprotocol/python-sdk"
+    title: "MCP Python SDK"
+    author: "team:modelcontextprotocol"
+status: stable
+stale_after: "2027-07-28T00:00:00Z"
+---
+
+# MCP 2026-07-28 conformance
+
+neon-mcp targets the **2026-07-28** revision of the Model Context Protocol, the
+*stateless core*[^mcp-changelog], on the Python `mcp` SDK 2.x (2.2.0 at release) through
+its low-level `Server` API[^python-sdk]. The SDK serves both eras on stdio, so clients
+on earlier revisions (2024-11-05 … 2025-11-25) still work.
+
+## What the server does
+
+| Requirement | neon-mcp |
+| --- | --- |
+| No `initialize` handshake, no sessions | Streamable HTTP runs with `stateless_http=True`: no `Mcp-Session-Id`, any instance answers any request |
+| `server/discover` | answered by the SDK with supported versions, capabilities (tools, resources, prompts) and the server instructions |
+| Per-request `_meta` envelope | `io.modelcontextprotocol/clientCapabilities` decides whether MRTR elicitation may be used |
+| Cacheable list results | `tools/list` 5 min, `resources/list` and `resources/templates/list` 1 h, `prompts/list` 24 h, `server/discover` 5 min, `resources/read` 1 h (24 h for static guides); `cacheScope` is always `public` because nothing depends on the caller |
+| `resultType` | `complete` on every result; `input_required` only from `neon_get_sample` |
+| Result `_meta` | the SDK's `io.modelcontextprotocol/serverInfo` plus `io.neon-mcp/upstream` (NEON requests, cache hits, rate-limit headroom, identity) |
+| JSON Schema 2020-12 | every `inputSchema` and `outputSchema` declares the dialect; outputs match `structuredContent` |
+| Tool annotations and `_meta` | all four hints on every tool; `io.neon-mcp/surface`, `requiresToken`, `endpoints`, `stdioOnly` |
+| Header routing | `Mcp-Method` / `Mcp-Name` must match the body (400, `-32020`); an unsupported version is `-32022` |
+| Deprecated features | none: no roots, sampling, `logging/setLevel`, SSE transport or sessions (a CI job greps for them) |
+
+## MRTR and requestState
+
+Only `neon_get_sample` asks the user a question, and only when the client declares
+elicitation support: a sample tag that belongs to several classes produces an
+`InputRequiredResult` with a form listing the candidates. The continuation
+(`requestState`) is base64url JSON of at most 16 KiB holding the question and
+candidates; it never contains a token, a path or an authorization decision, it expires
+after an hour, and the answer is re-validated against a fresh lookup on resume. It is
+unsigned by design: tampering can only change the caller's own question.
+
+## Measured sizes
+
+With all 20 tools (stdio), `tools/list` is **107,734 bytes** of compact JSON: input
+schemas 25,347 B, output schemas 67,661 B, descriptions 6,581 characters. HTTP lists 19
+tools in 102,342 B. Pydantic's generated `title` keys are dropped from both schemas and
+descriptions from output schemas (the [tool reference](../tools/reference.md) keeps
+them). The conformance bound is 135,000 B (measured × 1.25).
+
+## SDK behaviour worth knowing
+
+* A request whose `MCP-Protocol-Version` header names an **older** revision
+  (e.g. `2025-11-25`) is served in the legacy era even if its body carries a 2026-07-28
+  envelope; a modern header with a different envelope version is rejected with `-32020`.
+* `resources/read` and `prompts/get` require `Mcp-Name` (the URI or prompt name).
+
+## Conformance tests
+
+`tests/test_spec_conformance_2026_07_28.py` and `tests/transport/` run in their own CI
+job: schema dialect and validity, annotations and `_meta`, sorted and stable
+`tools/list` within its size bound, cache hints on every list and read, discovery,
+stateless requests in both eras, result `_meta`, header routing, protocol-version
+errors, host allow-lists, resources and prompts over HTTP, an MRTR round trip with a
+tampered continuation, and a real stdio subprocess speaking both protocol eras.
+
+[^mcp-changelog]: MCP 2026-07-28 release notes. <https://blog.modelcontextprotocol.io/posts/2026-07-28/>
+[^mcp-spec]: Model Context Protocol specification, 2026-07-28. <https://modelcontextprotocol.io/specification/2026-07-28>
+[^python-sdk]: MCP Python SDK. <https://github.com/modelcontextprotocol/python-sdk>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/mcp/transports/
+
+---
+title: "Transports"
+description: "The stdio and stateless Streamable HTTP transports: endpoints, health checks, DNS-rebinding protection and per-request NEON tokens."
+type: Reference
+tags:
+  - mcp
+  - transports
+  - http
+  - stdio
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: mcp-transports
+    resource: "https://modelcontextprotocol.io/specification/2026-07-28/basic/transports"
+    title: "MCP specification — Transports"
+    author: "team:modelcontextprotocol"
+status: stable
+---
+
+# Transports
+
+## stdio (default)
+
+`neon-mcp` (or `neon-mcp --transport stdio`) serves one client over standard input
+and output — the usual setup for Claude Code, Claude Desktop, Codex CLI, OpenCode and
+Antigravity. Only MCP framing goes to stdout; logs go to stderr. The configured token
+is used for every NEON request, and `neon_download_files` is available.
+
+## Streamable HTTP (stateless)
+
+`neon-mcp --transport http` serves[^mcp-transports]:
+
+| Route | Behaviour |
+| --- | --- |
+| `POST /mcp` (and `/mcp/`) | JSON-RPC over Streamable HTTP; one response per request (a single SSE frame, or JSON with `server.json_response`) |
+| `GET /mcp`, `DELETE /mcp` | 405 — the server sends no server-initiated messages and keeps no sessions |
+| `GET /healthz` | liveness: `{"status": "ok", "version", "protocolVersion", "transport"}` |
+| `GET /readyz` | 503 `{"status": "warming"}` while the catalogs prewarm, then 200 with catalog warmth, `degraded` and `tokenConfigured` |
+
+Every response carries `X-Request-Id` (yours, if you sent a well-formed one). Request
+bodies are capped at 1 MiB.
+
+### Host and origin checks
+
+DNS-rebinding protection is on automatically for loopback binds. For a public
+deployment set `server.public_base_url` (its host and origin join the allow-lists)
+and optionally `server.allowed_hosts` / `server.allowed_origins`; a request with any
+other `Host` gets 421. Behind a proxy that rewrites `Host`, set
+`server.dns_rebinding_protection = false`.
+
+### Per-request NEON tokens
+
+Callers send their own NEON token in `X-API-Token` (configurable with
+`server.request_token_header`). It is honoured only when `server.public_base_url`
+starts with `https://` — i.e. TLS terminates in front of the server — or when
+`server.allow_insecure_header_token` is set for development; otherwise the header is
+stripped and one warning is logged. Over HTTP the token is sent only to NEON's
+token-only endpoints, and the operator's configured token is not used for anonymous
+callers unless `server.share_config_token_over_http` is set.
+
+[^mcp-transports]: MCP specification — Transports. <https://modelcontextprotocol.io/specification/2026-07-28/basic/transports>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/deploy/hosted-http/
+
+---
+title: "Hosted HTTP deployment"
+description: "Run neon-mcp as a stateless Streamable HTTP service with uvicorn behind nginx or Caddy, systemd or Docker, health checks and horizontal scaling."
+type: Guide
+tags:
+  - deploy
+  - http
+  - docker
+  - systemd
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: uvicorn
+    resource: "https://www.uvicorn.org/deployment/"
+    title: "Uvicorn — Deployment"
+    author: "team:encode"
+  - id: caddy
+    resource: "https://caddyserver.com/docs/caddyfile/directives/reverse_proxy"
+    title: "Caddy — reverse_proxy"
+    author: "team:caddy"
+status: stable
+---
+
+# Hosted HTTP deployment
+
+A hosted neon-mcp lets many users connect with
+`claude mcp add --transport http neon https://neon-mcp.example.org/mcp`. The
+server is stateless, so any number of instances can sit behind a plain load
+balancer.
+
+## Configuration essentials
+
+```bash
+NEON_MCP_SERVER__TRANSPORT=http
+NEON_MCP_SERVER__BIND_ADDRESS=127.0.0.1        # the proxy connects locally
+NEON_MCP_SERVER__BIND_PORT=8080
+NEON_MCP_SERVER__PUBLIC_BASE_URL=https://neon-mcp.example.org   # enables per-request tokens, sets host allow-list
+```
+
+Users bring their own NEON token in `X-API-Token`; see [Security](security.md) before
+configuring an operator token.
+
+## Behind a reverse proxy
+
+Terminate TLS at the proxy (the token is a bearer secret), forward `Host` unchanged,
+and pass `X-API-Token` through. Caddy[^caddy]:
+
+```text
+neon-mcp.example.org {
+    reverse_proxy 127.0.0.1:8080
+}
+```
+
+nginx:
+
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:8080;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_http_version 1.1;
+    proxy_buffering off;          # single SSE frame per response
+}
+```
+
+## systemd
+
+```ini
+[Unit]
+Description=neon-mcp (Streamable HTTP)
+After=network-online.target
+
+[Service]
+User=neon
+EnvironmentFile=/etc/neon-mcp.env
+ExecStart=/opt/neon-mcp/.venv/bin/neon-mcp --transport http
+Restart=on-failure
+NoNewPrivileges=true
+ProtectSystem=strict
+
+[Install]
+WantedBy=multi-user.target
+```
+
+## Docker
+
+The repository ships a `Dockerfile` (Python 3.13 slim, non-root user, `HEALTHCHECK`
+on `/healthz`) and `docker-compose.yml`:
+
+```bash
+docker build -t neon-mcp .
+docker run -p 127.0.0.1:8080:8080 -e NEON_MCP_SERVER__PUBLIC_BASE_URL=https://neon-mcp.example.org neon-mcp
+```
+
+## Health, readiness and scaling
+
+* `/healthz` is liveness only. `/readyz` returns 503 while the product and site
+  catalogs prewarm at startup (a few seconds), then 200; `degraded: true` means the
+  prewarm failed and catalogs will build lazily.
+* Each instance keeps its own in-memory cache (catalogs about 4 MB, one-hour TTL,
+  refreshed in the background before expiry, served stale for up to 24 h if NEON is
+  down). Allow roughly 300 MB of memory per instance, more if GraphQL falls back to the
+  30 MB REST product list.
+* Anonymous callers share the server's IP-based NEON quota (200 burst, 2 requests/s);
+  callers with tokens use their own. For busy public deployments, require users to
+  send tokens.
+
+[^uvicorn]: Uvicorn — Deployment. <https://www.uvicorn.org/deployment/>
+[^caddy]: Caddy — reverse_proxy. <https://caddyserver.com/docs/caddyfile/directives/reverse_proxy>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/deploy/security/
+
+---
+title: "Security"
+description: "How neon-mcp protects NEON tokens, confines downloads, validates hosts and limits requests, and what operators must configure."
+type: Policy
+tags:
+  - deploy
+  - security
+  - tokens
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: mcp-security
+    resource: "https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices"
+    title: "MCP specification — Security best practices"
+    author: "team:modelcontextprotocol"
+status: stable
+---
+
+# Security
+
+## NEON tokens
+
+* A token is used only as the `X-API-Token` header to data.neonscience.org — never in a
+  URL, never to a storage host (signed download URLs need no token).
+* It never appears in logs (a redaction processor masks credential-like keys and every
+  token the process has seen), results, error details, cache keys (a 12-character
+  SHA-256 prefix identifies it instead), `/healthz`, `/readyz`, or MRTR
+  `requestState`.
+* There is no command-line flag for it (process lists and shell history would expose it).
+* Over HTTP a per-request token is accepted only when `server.public_base_url` is
+  `https://`, and the operator's own token is not lent to anonymous callers unless
+  `server.share_config_token_over_http` is set — only do that on private deployments.
+
+## Requests
+
+* DNS-rebinding protection: loopback binds are protected automatically; public
+  deployments get a `Host`/`Origin` allow-list from `public_base_url`,
+  `allowed_hosts` and `allowed_origins`[^mcp-security].
+* Request bodies are capped at 1 MiB; `GET`/`DELETE` on `/mcp` are refused (no idle
+  streams); results are capped at 50 KB (trimmed) and 200 KB (hard).
+* Every NEON call goes through a per-identity rate limiter kept 10 % under NEON's limits.
+* `neon_graphql` accepts only read-only queries against allow-listed roots, bounded in
+  length and depth.
+
+## Downloads (stdio only)
+
+* The download tool is not listed and refuses to run over HTTP.
+* Destinations must resolve (following symlinks) inside `downloads.directory`; file
+  names must match `^[A-Za-z0-9._-]+$`; `dest_subdir` must be relative without `..`.
+* Every URL and redirect hop must be on `downloads.allowed_hosts`; the plan is refused
+  before any transfer above 50 files / 2 GiB per call or 1 GiB per file.
+* Files stream to `.part` and are renamed only after the MD5 check passes.
+
+## Reporting
+
+Report vulnerabilities privately through GitHub's security advisories for
+[idss-mesa/neon-mcp](https://github.com/idss-mesa/neon-mcp/security){target=_blank}.
+
+[^mcp-security]: MCP specification — Security best practices. <https://modelcontextprotocol.io/specification/2026-07-28/basic/security_best_practices>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/develop/adding-tools/
+
+---
+title: "Adding a tool"
+description: "A walkthrough of adding a neon-mcp tool: input and output models, registration, annotations, a fixture route, tests and docs regeneration."
+type: Tutorial
+tags:
+  - develop
+  - tools
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: registry
+    resource: "https://github.com/idss-mesa/neon-mcp/blob/main/src/neon_mcp/registry.py"
+    title: "neon-mcp registry (registry.py)"
+    author: "team:idss-mesa"
+status: stable
+---
+
+# Adding a tool
+
+`neon_list_releases` is the smallest real example; this is its shape.
+
+## 1. Models
+
+```python
+class ListReleasesIn(NeonInput):          # snake_case fields; camelCase accepted; extras rejected
+    include_artifact_urls: bool = Field(False, description="Include signed manifest URLs.")
+
+
+class ReleaseList(ToolResultBase):        # envelope: resolved, notes, nextSteps, source
+    items: list[ReleaseSummary]
+    latest_release: str | None = None     # dumped as latestRelease
+    page: Page
+```
+
+Every input field needs a `description` (it is what the model reads). Output keys use
+NEON's own camelCase names where NEON has the field. Long lists declare
+`budget_list` so results can be trimmed to the size budget.
+
+## 2. Register the handler
+
+```python
+@register_tool(
+    "neon_list_releases",
+    title="List NEON data releases",
+    description="... Next: call neon_get_release for one release's products and DOIs.",
+    input_model=ListReleasesIn,
+    output_model=ReleaseList,
+    surface="releases",
+    endpoints=["GET /releases"],
+)
+async def neon_list_releases(args: ListReleasesIn, ctx: ToolContext) -> ReleaseList:
+    releases = await ctx.catalog.releases(token=ctx.token, stats=ctx.stats)
+    ...
+```
+
+Rules the registry enforces at import: names match `^neon_[a-z_]+$`, descriptions are
+at most 600 characters and end with a `Next:` sentence. Declare `requires_token=True`
+for token-only endpoints (the registry then fails fast without one), keep annotations
+honest, and list every NEON endpoint the handler calls. Import the module from
+`tools/__init__.py`.
+
+## 3. Fixtures and tests
+
+Add recorded, shrunk, scrubbed responses to `tests/fixtures/` and routes to
+`tests/fixture_router.py` (unrouted requests fail the test). Test through
+`tests.helpers.call_ok`, which also validates the result against the tool's
+`outputSchema`: happy path, each filter, paging, error mapping, token fail-fast, cache
+reuse.
+
+## 4. Regenerate
+
+```bash
+python scripts/gen_tools_reference.py      # docs/tools/reference.md
+python scripts/gen_llms_txt.py             # docs/llms.txt, docs/llms-full.txt
+```
+
+Mention the tool on its family page and add a `docs/log.md` entry.
+
+---8<--- https://idss-mesa.github.io/neon-mcp/develop/architecture/
+
+---
+title: "Architecture"
+description: "The module map of neon-mcp: registry and SDK adapter, the NEON client, cache and catalogs, projections, and the transports."
+type: Reference
+tags:
+  - develop
+  - architecture
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: repo
+    resource: "https://github.com/idss-mesa/neon-mcp/tree/main/src/neon_mcp"
+    title: "neon-mcp source (src/neon_mcp)"
+    author: "team:idss-mesa"
+status: stable
+---
+
+# Architecture
+
+```mermaid
+flowchart LR
+  client[MCP client] -->|stdio / Streamable HTTP| transport[transport/]
+  transport --> adapter[server.py\nNeonServer]
+  adapter --> registry[registry.py\nvalidate · auth · budget]
+  registry --> tools[tools/*]
+  tools --> resolve[neon/resolve.py]
+  tools --> catalog[neon/catalog.py]
+  tools --> proj[projections/*]
+  catalog --> client2[neon/client.py]
+  tools --> client2
+  client2 --> limiter[neon/ratelimit.py]
+  client2 --> cache[neon/cache.py]
+  client2 -->|X-API-Token only where required| neon[(NEON REST + GraphQL)]
+```
+
+| Module | Role |
+| --- | --- |
+| `__main__.py` | CLI: flags → config → logging → serve; `--check`, `--print-config` |
+| `config.py` | pydantic settings; flag > `NEON_MCP_*` env > YAML > defaults; token fallbacks |
+| `server.py` | the only SDK-coupled module: `tools/list` (sorted, 2020-12 schemas, cache hints), `tools/call` (text + `structuredContent` + upstream `_meta`), MRTR, resources, prompts |
+| `registry.py` | `@register_tool`, argument validation, fail-fast `auth_required`, result budget (`fit_to_budget`), `requestState` codec |
+| `context.py` | `ToolContext` handed to handlers; request-scoped context variables |
+| `errors.py` | `ToolError` codes and the NEON error mapping (400 "not found" → `not_found`) |
+| `neon/client.py` | one `httpx` client: token placement, retries, redirects via the host allow-list, envelope unwrapping |
+| `neon/ratelimit.py`, `neon/cache.py` | per-identity token buckets; TTL cache with single-flight, refresh-ahead, stale-if-error |
+| `neon/catalog.py` | GraphQL-first product/site indexes (REST fallback, circuit breaker), availability, batched locations |
+| `neon/resolve.py` | code-or-name resolution with an acceptance margin |
+| `neon/filenames.py`, `neon/downloads.py` | NEON file-name grammar; confined plan-before-transfer downloads |
+| `projections/` | NEON payloads → compact output models (NEON camelCase keys, month ranges, paging) |
+| `tools/` | one module per family; each handler is `async (args, ctx) -> Model` |
+| `resources.py`, `prompts.py`, `resources_static/` | `neon://` resources, templates and prompts |
+| `transport/` | stdio; stateless Streamable HTTP with `/healthz`, `/readyz` and a request-context middleware |
+
+Design decisions and their reasons are recorded in `DESIGN.md` and `RESEARCH.md` at
+the repository root.
+
+---8<--- https://idss-mesa.github.io/neon-mcp/develop/contributing/
+
+---
+title: "Contributing"
+description: "Branch and pull-request rules, lint and type checks, documentation regeneration, the two change logs, versioning and releases."
+type: Policy
+tags:
+  - develop
+  - contributing
+  - releases
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: keepachangelog
+    resource: "https://keepachangelog.com/en/1.1.0/"
+    title: "Keep a Changelog 1.1.0"
+    author: "team:keepachangelog"
+  - id: semver
+    resource: "https://semver.org/"
+    title: "Semantic Versioning"
+    author: "team:semver"
+status: stable
+---
+
+# Contributing
+
+1. Branch from `main`; open a pull request. CI must be green.
+2. Before pushing:
+
+    ```bash
+    uv run ruff check src tests scripts && uv run ruff format --check src tests
+    uv run mypy --strict src
+    uv run pytest
+    python scripts/record_fixtures.py check
+    python scripts/gen_tools_reference.py && python scripts/gen_config_reference.py
+    python scripts/gen_llms_txt.py && python scripts/okf_validate.py docs
+    ```
+
+3. Documentation follows OKF v0.2 (see `AGENTS.md`): frontmatter on every content page,
+   no frontmatter on section `index.md` files, a dated entry in `docs/log.md`, and the
+   generated files committed.
+
+## Two change logs
+
+* `CHANGELOG.md` (repository root) is the package release log, in the Keep a
+  Changelog format[^keepachangelog].
+* `docs/log.md` is the OKF log of the documentation bundle; each release adds one
+  "docs for neon-mcp vX.Y.Z" entry.
+
+## Versioning and releases
+
+neon-mcp follows Semantic Versioning[^semver] from 0.1.0. The version lives in
+`src/neon_mcp/__init__.py`. Pushing a `vX.Y.Z` tag runs `.github/workflows/release.yml`:
+tests, `uv build`, PyPI trusted publishing and a GitHub release with the artifacts.
+
+[^keepachangelog]: Keep a Changelog 1.1.0. <https://keepachangelog.com/en/1.1.0/>
+[^semver]: Semantic Versioning. <https://semver.org/>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/develop/testing/
+
+---
+title: "Testing"
+description: "The neon-mcp test layout: hermetic fixtures and the FixtureRouter, the conformance suite, live tests, coverage and the CI jobs."
+type: Reference
+tags:
+  - develop
+  - testing
+generated:
+  by: "claude/opus-5"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: tests
+    resource: "https://github.com/idss-mesa/neon-mcp/tree/main/tests"
+    title: "neon-mcp tests"
+    author: "team:idss-mesa"
+status: stable
+---
+
+# Testing
+
+```bash
+uv run pytest                      # unit + conformance, no network (about 350 tests, a few seconds)
+uv run pytest --cov=neon_mcp       # with coverage (95 % at 0.1.0)
+NEON_MCP_LIVE=1 NEON_TOKEN=... uv run pytest -m live tests/live   # against the real API
+```
+
+## Hermetic by default
+
+Unit tests never touch the network. `tests/fixture_router.py` is an
+`httpx.MockTransport` handler over `tests/fixtures/` (real NEON responses recorded on
+2026-09-10, shrunk and scrubbed; see `tests/fixtures/MANIFEST.md`). It replays NEON's
+rate-limit headers, answers token endpoints with NEON's real 403 when `X-API-Token` is
+missing, records every call (tests assert call counts, cache hits and that tokens never
+reach storage hosts) and fails the test on any unrouted request. Sleeps and clocks are
+injected, so retries and rate limits run instantly.
+
+## Layout
+
+| Path | Covers |
+| --- | --- |
+| `tests/test_*.py` | config, errors, redaction, registry and budget, adapter, CLI, resources, prompts, conformance |
+| `tests/neon/` | client, rate limiter, cache, auth, months, catalog, resolution, GraphQL guard, file names, download manager |
+| `tests/tools/` | every tool family through `call_ok` / `call_err` (results validated against `outputSchema`) |
+| `tests/transport/` | Streamable HTTP app, health checks, token passthrough, a real stdio subprocess in both protocol eras |
+
+## CI
+
+`.github/workflows/ci.yml` runs ruff, `mypy --strict`, pytest with coverage and the
+fixture scrub check on Python 3.11–3.13, a macOS subset, a separate MCP 2026-07-28
+conformance job (SDK major version, deprecated-feature grep), and nightly live tests.
+`.github/workflows/docs.yml` validates the OKF bundle, checks that generated docs are
+current, builds the site and deploys it.
 
 ---8<--- https://idss-mesa.github.io/neon-mcp/about/ai-agents/
 
@@ -220,6 +2937,7 @@ All URLs are under `https://idss-mesa.github.io/neon-mcp/`.
 | [`llms-full.txt`](../llms-full.txt) — `https://idss-mesa.github.io/neon-mcp/llms-full.txt` | The entire corpus in one file: every page's Markdown with frontmatter, each prefixed by its canonical URL |
 | Any page URL + `index.md` | That page's Markdown source with full OKF frontmatter, e.g. `https://idss-mesa.github.io/neon-mcp/getting-started/api-token/index.md` |
 | `https://idss-mesa.github.io/neon-mcp/sitemap.xml`, `https://idss-mesa.github.io/neon-mcp/robots.txt` | Standard crawl surface; `robots.txt` welcomes AI fetchers and repeats these pointers |
+| [`tools/reference/`](../tools/reference.md) — `https://idss-mesa.github.io/neon-mcp/tools/reference/` | The tool catalogue generated from the server's registry: every tool's inputs, result fields, endpoints and token requirement |
 | [Source repository](https://github.com/idss-mesa/neon-mcp){target=_blank} | The bundle itself under `docs/`, plus `AGENTS.md` with the rules coding agents follow when editing it |
 
 Every rendered page also declares its Markdown twin and OKF signals in its
@@ -302,8 +3020,8 @@ tags:
   - data-policy
   - CC-BY
 generated:
-  by: "claude/fable-5.1"
-  at: "2026-09-10T00:00:00Z"
+  by: "claude/opus-5"
+  at: "2026-09-10T12:00:00Z"
 sources:
   - id: neon-guidelines
     resource: "https://www.neonscience.org/data-samples/guidelines-policies"
@@ -362,32 +3080,34 @@ The Data API exposes the DOI wherever a product meets a release[^neon-api-releas
 * `GET /releases/{releaseTag}` returns `dataProducts[]`, each with
   `productCode`, `productName` and `productDoi`.
 
-For example, the product *2D wind speed and direction* (`DP1.00001.001`) in
-`RELEASE-2021` carries `productDoi.url` =
-[https://doi.org/10.48443/s9ya-zc81](https://doi.org/10.48443/s9ya-zc81){target=_blank}.
+For example, *Breeding landbird point counts* (`DP1.10003.001`) in
+`RELEASE-2026` carries `productDoi.url` =
+[https://doi.org/10.48443/v6hs-mx57](https://doi.org/10.48443/v6hs-mx57){target=_blank}
+(and `RELEASE-2025` carries `https://doi.org/10.48443/3nka-yg96`).
 neon-mcp's product and release tools surface these fields, so an agent can
 assemble a citation without a second lookup.
 
 ## How to cite a data product
 
 NEON's recommended pattern[^neon-citation] names the product, its code, the
-release, the DOI and the access date:
+release, the DOI and the access date. neon-mcp's `neon_get_citation` tool renders
+exactly this wording (from the `neon://guide/citing-neon-data` resource), plus a
+BibTeX entry:
 
 > NEON (National Ecological Observatory Network). *Product name*
-> (DPx.xxxxx.xxx), RELEASE-YYYY. https://doi.org/xx.xxxxx/xxxx-xxxx.
-> Dataset accessed from https://data.neonscience.org/data-products/DPx.xxxxx.xxx/RELEASE-YYYY
-> on Month DD, YYYY.
+> (DPx.xxxxx.xxx), RELEASE-YYYY. https://doi.org/10.48443/xxxx-xxxx. Dataset
+> accessed from https://data.neonscience.org on Month D, YYYY.
 
-Filled in for the example above:
+Filled in for *Breeding landbird point counts* in `RELEASE-2026`:
 
-> NEON (National Ecological Observatory Network). 2D wind speed and direction
-> (DP1.00001.001), RELEASE-2021. https://doi.org/10.48443/s9ya-zc81. Dataset
-> accessed from https://data.neonscience.org/data-products/DP1.00001.001/RELEASE-2021
-> on September 10, 2026.
+> NEON (National Ecological Observatory Network). Breeding landbird point counts
+> (DP1.10003.001), RELEASE-2026. https://doi.org/10.48443/v6hs-mx57. Dataset
+> accessed from https://data.neonscience.org on September 10, 2026.
 
 Cite every product you used, each at the release you actually downloaded.
 If you retrieved data through neon-mcp you may mention the tool in your
 methods, but the citation of record is always the NEON data product DOI.
+Never cite the signed download URLs: they expire after about seven days.
 
 ## Provisional data
 
@@ -404,7 +3124,7 @@ provisional data, say so and cite them by access date:
 
 > NEON (National Ecological Observatory Network). *Product name*
 > (DPx.xxxxx.xxx), provisional data. Dataset accessed from
-> https://data.neonscience.org on Month DD, YYYY.
+> https://data.neonscience.org on Month D, YYYY. Data archived at [your DOI].
 
 ## Acknowledging NEON and NSF
 
@@ -518,6 +3238,11 @@ owners; this site uses its own original artwork.
 # Directory Update Log
 
 ## 2026-09-10
+* **Creation**: [Getting started](getting-started/index.md) pages [Install neon-mcp](getting-started/install.md), [Quickstart](getting-started/quickstart.md), [Clients](getting-started/clients.md) and [Configuration](getting-started/configuration.md) (its settings table generated by `scripts/gen_config_reference.py`).
+* **Creation**: [Tools](tools/index.md) section: the generated [Tool reference](tools/reference.md) (`scripts/gen_tools_reference.py`) and eleven family pages from products to resources and prompts.
+* **Creation**: [MCP protocol](mcp/index.md) ([MCP 2026-07-28 conformance](mcp/spec-2026-07-28.md), [Transports](mcp/transports.md)), [Deploy](deploy/index.md) ([Hosted HTTP deployment](deploy/hosted-http.md), [Security](deploy/security.md)) and [Develop](develop/index.md) ([Architecture](develop/architecture.md), [Adding a tool](develop/adding-tools.md), [Testing](develop/testing.md), [Contributing](develop/contributing.md)) sections.
+* **Update**: [NEON API token](getting-started/api-token.md) — the `NEON_TOKEN` / `NEON_API_TOKEN` fallbacks, the TLS-gated `X-API-Token` header for hosted servers, the three token-only tools; removed a command-line token flag that the server does not provide.
+* **Update**: [Citing NEON data](about/citing-neon.md) — citation wording aligned with the `neon://guide/citing-neon-data` templates that `neon_get_citation` renders.
 * **Creation**: Established the neon-mcp documentation bundle (OKF v0.2): root [index](index.md), this log, the Zensical site configuration, the OKF validator, the `llms.txt` generator and the post-build agent surface (Markdown mirror, `okf:*` head metadata, `robots.txt`).
 * **Creation**: [Getting started](getting-started/index.md) section with [NEON API token](getting-started/api-token.md) — why the data endpoints need a token, how to obtain one, how neon-mcp reads it, and the rate limits with and without it.
 * **Creation**: [About](about/index.md) section with [For AI agents](about/ai-agents.md), [Citing NEON data](about/citing-neon.md) and [License](about/license.md).

@@ -95,7 +95,7 @@ ignore = [
 max-line-length = 120  # the formatter targets 100; long description strings may run to 120
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101", "S105", "S106", "S108", "S311", "B011", "RUF012"]
+"tests/**" = ["S101", "S105", "S106", "S108", "S311", "S603", "B011", "RUF012"]
 "scripts/**" = ["S603", "S607", "S101"]
 
 [tool.pytest.ini_options]
