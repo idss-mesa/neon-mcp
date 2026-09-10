@@ -76,7 +76,8 @@ async def test_releases_and_citation(live: NeonServer) -> None:
     cite = await call_ok(
         live, "neon_get_citation", {"product": "DP1.10003.001", "release": "RELEASE-2026"}
     )
-    assert cite["doi"] == "10.48443/v6hs-mx57"
+    # Shape only; the exact DOI is pinned against recorded fixtures in the hermetic tests.
+    assert cite["doi"].startswith("10.48443/")
 
 
 async def test_taxonomy_samples_prototype(live: NeonServer) -> None:
