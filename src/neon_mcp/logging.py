@@ -92,10 +92,20 @@ class _StdlibSecretFilter(logging.Filter):
         return True
 
 
+class _Stderr:
+    """File-like proxy resolving ``sys.stderr`` at write time (survives stream swaps)."""
+
+    def write(self, text: str) -> int:
+        return sys.stderr.write(text)
+
+    def flush(self) -> None:
+        sys.stderr.flush()
+
+
 def setup_logging(level: str = "info", transport: str = "stdio") -> None:
     """Configure structlog + stdlib logging for ``transport`` at ``level``."""
     log_level = _LEVEL_MAP.get(level.lower(), logging.INFO)
-    logging.basicConfig(level=log_level, format="%(message)s", stream=sys.stderr, force=True)
+    logging.basicConfig(level=log_level, format="%(message)s", stream=_Stderr(), force=True)
     for handler in logging.getLogger().handlers:
         handler.addFilter(_StdlibSecretFilter())
     # httpx/httpcore log full request URLs (signed URLs, query strings) at INFO.
@@ -119,7 +129,7 @@ def setup_logging(level: str = "info", transport: str = "stdio") -> None:
             renderer,
         ],
         wrapper_class=structlog.make_filtering_bound_logger(log_level),
-        logger_factory=structlog.PrintLoggerFactory(file=sys.stderr),
+        logger_factory=structlog.PrintLoggerFactory(file=_Stderr()),  # type: ignore[arg-type]
         cache_logger_on_first_use=False,
     )
 

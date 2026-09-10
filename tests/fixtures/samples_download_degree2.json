@@ -1,0 +1,149 @@
+{
+ "data": {
+  "sampleViews": [
+   {
+    "sampleUuid": "5e2b4c1a-0000-4000-8000-000000000001",
+    "sampleTag": "A00000123456",
+    "sampleClass": "bet_IDandpinning_in.individualID",
+    "barcode": null,
+    "archiveGuid": null,
+    "sampleEvents": [
+     {
+      "ingestTableName": "bet_table_0",
+      "smsFieldEntries": [
+       {
+        "smsKey": "collectDate",
+        "smsValue": "2023-06-01"
+       },
+       {
+        "smsKey": "siteID",
+        "smsValue": "HARV"
+       }
+      ]
+     },
+     {
+      "ingestTableName": "bet_table_1",
+      "smsFieldEntries": [
+       {
+        "smsKey": "collectDate",
+        "smsValue": "2023-07-01"
+       },
+       {
+        "smsKey": "siteID",
+        "smsValue": "HARV"
+       }
+      ]
+     }
+    ],
+    "parentSampleIdentifiers": [],
+    "childSampleIdentifiers": [
+     {
+      "sampleUuid": "5e2b4c1a-0000-4000-8000-000000000002",
+      "sampleTag": "A00000123456.1",
+      "sampleClass": "bet_sorting_in.subsampleID",
+      "barcode": null,
+      "archiveGuid": null
+     }
+    ]
+   },
+   {
+    "sampleUuid": "5e2b4c1a-0000-4000-8000-000000000002",
+    "sampleTag": "A00000123456.1",
+    "sampleClass": "bet_sorting_in.subsampleID",
+    "barcode": null,
+    "archiveGuid": null,
+    "sampleEvents": [
+     {
+      "ingestTableName": "bet_table_0",
+      "smsFieldEntries": [
+       {
+        "smsKey": "collectDate",
+        "smsValue": "2023-06-01"
+       },
+       {
+        "smsKey": "siteID",
+        "smsValue": "HARV"
+       }
+      ]
+     },
+     {
+      "ingestTableName": "bet_table_1",
+      "smsFieldEntries": [
+       {
+        "smsKey": "collectDate",
+        "smsValue": "2023-07-01"
+       },
+       {
+        "smsKey": "siteID",
+        "smsValue": "HARV"
+       }
+      ]
+     },
+     {
+      "ingestTableName": "bet_table_2",
+      "smsFieldEntries": [
+       {
+        "smsKey": "collectDate",
+        "smsValue": "2023-08-01"
+       },
+       {
+        "smsKey": "siteID",
+        "smsValue": "HARV"
+       }
+      ]
+     }
+    ],
+    "parentSampleIdentifiers": [
+     {
+      "sampleUuid": "5e2b4c1a-0000-4000-8000-000000000001",
+      "sampleTag": "A00000123456",
+      "sampleClass": "bet_IDandpinning_in.individualID",
+      "barcode": null,
+      "archiveGuid": null
+     }
+    ],
+    "childSampleIdentifiers": [
+     {
+      "sampleUuid": "5e2b4c1a-0000-4000-8000-000000000003",
+      "sampleTag": "A00000123456.1.a",
+      "sampleClass": "bet_archivepooling_in.archiveID",
+      "barcode": null,
+      "archiveGuid": null
+     }
+    ]
+   },
+   {
+    "sampleUuid": "5e2b4c1a-0000-4000-8000-000000000003",
+    "sampleTag": "A00000123456.1.a",
+    "sampleClass": "bet_archivepooling_in.archiveID",
+    "barcode": null,
+    "archiveGuid": null,
+    "sampleEvents": [
+     {
+      "ingestTableName": "bet_table_0",
+      "smsFieldEntries": [
+       {
+        "smsKey": "collectDate",
+        "smsValue": "2023-06-01"
+       },
+       {
+        "smsKey": "siteID",
+        "smsValue": "HARV"
+       }
+      ]
+     }
+    ],
+    "parentSampleIdentifiers": [
+     {
+      "sampleUuid": "5e2b4c1a-0000-4000-8000-000000000002",
+      "sampleTag": "A00000123456.1",
+      "sampleClass": "bet_sorting_in.subsampleID",
+      "barcode": null,
+      "archiveGuid": null
+     }
+    ],
+    "childSampleIdentifiers": []
+   }
+  ]
+ }
+}

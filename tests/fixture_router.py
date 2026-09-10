@@ -323,6 +323,16 @@ def default_routes(router: FixtureRouter) -> list[Route]:
         ),
         Route("GET", "/locations/HARV", F("location_HARV.json"), params={}),
         Route("GET", "/locations/D01", F("location_D01.json"), params={}),
+        Route(
+            "GET",
+            "/locations/REALM",
+            F("location_REALM_hierarchy_DOMAIN.json"),
+            params={"hierarchy": "true", "locationType": "DOMAIN"},
+        ),
+        Route("GET", "/locations/TOWER100450", F("location_TOWER100450.json"), params={}),
+        Route(
+            "GET", "/locations/HARV", F("location_HARV_history.json"), params={"history": "true"}
+        ),
         Route("GET", "/locations/NOPE_NOT_A_LOCATION", F("location_404.json", 400)),
         # data (token)
         Route(
@@ -399,6 +409,25 @@ def default_routes(router: FixtureRouter) -> list[Route]:
         Route("GET", "/prototype/datasets", F("prototype_datasets.json")),
         Route("GET", f"/prototype/datasets/{PROTOTYPE_UUID}", F("prototype_dataset_07dccab1.json")),
         Route("GET", f"/prototype/data/{PROTOTYPE_UUID}", F("prototype_data_07dccab1.json")),
+        Route(
+            "GET",
+            "/taxonomy",
+            F("taxonomy_genus_Quercus.json"),
+            params={"genus": "Quercus", "verbose": "false", "offset": "0", "limit": "100"},
+        ),
+        Route(
+            "GET",
+            "/taxonomy",
+            F("taxonomy_empty.json"),
+            params={"scientificname": ANY, "verbose": "false", "offset": "0", "limit": ANY},
+        ),
+        Route(
+            "POST",
+            "/data/query",
+            F("dataquery_DP1.00001.001_ABBY_HARV.json"),
+            body=is_query("DP1.00001.001", ["ABBY", "HARV"]),
+            token=True,
+        ),
         # GraphQL, keyed by operationName
         Route("POST", "graphql:NeonMcpProductsCatalog", products_catalog),
         Route("POST", "graphql:NeonMcpSitesCatalog", gql("graphql_sites_catalog.json")),

@@ -1,0 +1,236 @@
+{
+ "data": {
+  "locationName": "HARV",
+  "locationDescription": "Harvard Forest & Quabbin Watershed NEON",
+  "locationType": "SITE",
+  "domainCode": "D01",
+  "siteCode": "HARV",
+  "locationDecimalLatitude": 42.53691,
+  "locationDecimalLongitude": -72.17265,
+  "locationElevation": 348.12784,
+  "locationUtmEasting": 732183.97796,
+  "locationUtmNorthing": 4713266.17907,
+  "locationUtmHemisphere": "N",
+  "locationUtmZone": 18,
+  "alphaOrientation": 0.0,
+  "betaOrientation": 0.0,
+  "gammaOrientation": 0.0,
+  "xOffset": 0.0,
+  "yOffset": 0.0,
+  "zOffset": 0.0,
+  "offsetLocation": null,
+  "activePeriods": [
+   {
+    "activatedDate": null,
+    "deactivatedDate": null
+   }
+  ],
+  "locationProperties": [
+   {
+    "locationPropertyName": "Value for AERONET_XREF",
+    "locationPropertyValue": "NEON_Harvard"
+   },
+   {
+    "locationPropertyName": "Value for AngAzWindPrim",
+    "locationPropertyValue": "190-335"
+   },
+   {
+    "locationPropertyName": "Value for AngAzWindScnd",
+    "locationPropertyValue": "NA"
+   },
+   {
+    "locationPropertyName": "Value for AngAzWindTrty",
+    "locationPropertyValue": "NA"
+   },
+   {
+    "locationPropertyName": "Value for BOLD_XREF",
+    "locationPropertyValue": "Harvard Forest"
+   },
+   {
+    "locationPropertyName": "Value for Country",
+    "locationPropertyValue": "USA"
+   },
+   {
+    "locationPropertyName": "Value for County",
+    "locationPropertyValue": "Worcester"
+   },
+   {
+    "locationPropertyName": "Value for DEIMS-SDR Site ID",
+    "locationPropertyValue": "https://deims.org/9dbbd9ea-21dc-43e3-b55d-42623427e642"
+   },
+   {
+    "locationPropertyName": "Value for DistZaxsCnpy",
+    "locationPropertyValue": "23"
+   },
+   {
+    "locationPropertyName": "Value for DistZaxsDisp",
+    "locationPropertyValue": "14.95"
+   },
+   {
+    "locationPropertyName": "Value for Dom",
+    "locationPropertyValue": "D01"
+   },
+   {
+    "locationPropertyName": "Value for DURATION",
+    "locationPropertyValue": "Core"
+   },
+   {
+    "locationPropertyName": "Value for Geodetic datum",
+    "locationPropertyValue": "WGS84"
+   },
+   {
+    "locationPropertyName": "Value for HABITAT",
+    "locationPropertyValue": "Terrestrial"
+   },
+   {
+    "locationPropertyName": "Value for NEONSCI_FIELD_SITE_URL_PATH",
+    "locationPropertyValue": "harvard-forest"
+   },
+   {
+    "locationPropertyName": "Value for Pf$AngEnuXaxs",
+    "locationPropertyValue": "NA"
+   },
+   {
+    "locationPropertyName": "Value for Pf$AngEnuYaxs",
+    "locationPropertyValue": "NA"
+   },
+   {
+    "locationPropertyName": "Value for Pf$Ofst",
+    "locationPropertyValue": "NA"
+   },
+   {
+    "locationPropertyName": "Value for PrdDcmpMax",
+    "locationPropertyValue": "3"
+   },
+   {
+    "locationPropertyName": "Value for PrdIncrAgrDcmp",
+    "locationPropertyValue": "1"
+   },
+   {
+    "locationPropertyName": "Value for PrdIncrCalc",
+    "locationPropertyValue": "1"
+   },
+   {
+    "locationPropertyName": "Value for PrdIncrPf",
+    "locationPropertyValue": "1"
+   },
+   {
+    "locationPropertyName": "Value for PrdWndwAgrDcmp",
+    "locationPropertyValue": "5"
+   },
+   {
+    "locationPropertyName": "Value for PrdWndwCalc",
+    "locationPropertyValue": "3"
+   },
+   {
+    "locationPropertyName": "Value for PrdWndwPf",
+    "locationPropertyValue": "9"
+   },
+   {
+    "locationPropertyName": "Value for PresAtmSite",
+    "locationPropertyValue": "97210"
+   },
+   {
+    "locationPropertyName": "Value for Private",
+    "locationPropertyValue": "FALSE"
+   },
+   {
+    "locationPropertyName": "Value for Read",
+    "locationPropertyValue": "HDF5"
+   },
+   {
+    "locationPropertyName": "Value for Required Asset Management Location Code",
+    "locationPropertyValue": "HARV"
+   },
+   {
+    "locationPropertyName": "Value for Site Timezone",
+    "locationPropertyValue": "US/Eastern"
+   },
+   {
+    "locationPropertyName": "Value for State Abbreviation",
+    "locationPropertyValue": "MA"
+   },
+   {
+    "locationPropertyName": "Value for State province",
+    "locationPropertyValue": "MA"
+   },
+   {
+    "locationPropertyName": "Value for TypeEco",
+    "locationPropertyValue": "Eastern Deciduous forest"
+   },
+   {
+    "locationPropertyName": "Value for TypeSoil",
+    "locationPropertyValue": "Becket-Skerry association, 3 to 15 percent slopes, extremely stony"
+   },
+   {
+    "locationPropertyName": "Value for UTM Zone",
+    "locationPropertyValue": "18N"
+   },
+   {
+    "locationPropertyName": "Value for ZoneTime",
+    "locationPropertyValue": "EST"
+   }
+  ],
+  "locationParent": "D01",
+  "locationParentUrl": "https://data.neonscience.org/api/v0/locations/D01",
+  "locationChildren": [
+   "HARV_006.basePlot.bgc",
+   "TOWER100450",
+   "HARV_004.basePlot.bet",
+   "HARV_005.basePlot.hbp",
+   "HARV_005.basePlot.sme"
+  ],
+  "locationChildrenUrls": [
+   "https://data.neonscience.org/api/v0/locations/HARV_006.basePlot.bgc",
+   "https://data.neonscience.org/api/v0/locations/TOWER100450",
+   "https://data.neonscience.org/api/v0/locations/HARV_004.basePlot.bet",
+   "https://data.neonscience.org/api/v0/locations/HARV_005.basePlot.hbp",
+   "https://data.neonscience.org/api/v0/locations/HARV_005.basePlot.sme"
+  ],
+  "locationHistory": [
+   {
+    "current": true,
+    "locationStartDate": "2014-06-10T00:00:00Z",
+    "locationEndDate": null,
+    "locationDecimalLatitude": 42.53691,
+    "locationDecimalLongitude": -72.17265,
+    "locationElevation": 348.12784,
+    "locationUtmEasting": 732183.97796,
+    "locationUtmNorthing": 4713266.17907,
+    "locationUtmHemisphere": "N",
+    "locationUtmZone": 18,
+    "alphaOrientation": 0.0,
+    "betaOrientation": 0.0,
+    "gammaOrientation": 0.0,
+    "xOffset": 0.0,
+    "yOffset": 0.0,
+    "zOffset": 0.0,
+    "locationProperties": [
+     {
+      "locationPropertyName": "Value for Site Timezone",
+      "locationPropertyValue": "EST"
+     }
+    ]
+   },
+   {
+    "current": false,
+    "locationStartDate": "2012-01-01T00:00:00Z",
+    "locationEndDate": "2014-06-10T00:00:00Z",
+    "locationDecimalLatitude": 42.5369,
+    "locationDecimalLongitude": -72.1727,
+    "locationElevation": 348.0,
+    "locationUtmEasting": 732184.0,
+    "locationUtmNorthing": 4713266.0,
+    "locationUtmHemisphere": "N",
+    "locationUtmZone": 18,
+    "alphaOrientation": 0.0,
+    "betaOrientation": 0.0,
+    "gammaOrientation": 0.0,
+    "xOffset": 0.0,
+    "yOffset": 0.0,
+    "zOffset": 0.0,
+    "locationProperties": []
+   }
+  ]
+ }
+}

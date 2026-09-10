@@ -222,7 +222,9 @@ class LimitsConfig(_Section):
         description="Largest document neon_get_document extracts text from (in memory).",
     )
     tools_list_max_bytes: int = Field(
-        64_000, ge=1000, description="Conformance bound on the serialized tools/list result."
+        135_000,
+        ge=1000,
+        description="Conformance bound on the serialized tools/list result (measured 107,734 B with 20 tools, x1.25).",
     )
 
 

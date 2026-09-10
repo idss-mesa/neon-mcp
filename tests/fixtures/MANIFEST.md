@@ -13,5 +13,13 @@ Hand-written or derived (not recorded verbatim):
 | `data_DP1.00001.001_ABBY_2023-01.json`, `dataquery_DP1.00001.001_ABBY.json`, `samples_view_barcode.json`, `samples_classes_ok.json` | hand-written in the documented response shapes (token-only endpoints) |
 | `release_400_not_found.json` | NEON's 400 body for an unknown release (shape verified live) |
 | `taxonomy_TICK_ping.json` | the `neon_ping(check_api=true)` probe response |
+| `location_REALM_hierarchy_DOMAIN.json` | REALM with its 20 DOMAIN children (names from the live site catalog) |
+| `location_TOWER100450.json` | minimal REST location record (REST coordinate fallback) |
+| `location_HARV_history.json` | `location_HARV.json` plus two `locationHistory` entries |
+| `taxonomy_empty.json` | empty taxonomy page (first step of the genus fallback) |
+| `taxonomy_400_conflict.json` | NEON's 400 for type code + rank together (mapping test only) |
+| `graphql_introspect_Site.json` | the `Site` type from the recorded introspection |
 | `rate_limited_429.headers`, `error_500.txt` | retry/backoff paths |
 | `release_RELEASE-2025_products.json`, `release_RELEASE-2025_sites.json` | payload-hazard samples; **no route serves them** (neon-mcp never calls these endpoints) |
+| `dataquery_DP1.00001.001_ABBY_HARV.json` | hand-written query response: ABBY+HARV x 2023-01..02, a RELEASE-2025 block and a PROVISIONAL block |
+| `samples_download_degree2.json` | hand-written `/samples/download?degree=2` response: a sample, its child and grandchild |

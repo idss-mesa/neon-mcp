@@ -222,3 +222,6 @@ config.yaml
 *.local.yaml
 downloads/
 .neon-mcp/
+neon-downloads/
+tests/fixtures/_raw/
+.coverage*

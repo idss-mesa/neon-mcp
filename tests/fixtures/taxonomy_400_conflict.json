@@ -1,0 +1,1 @@
+{"error": {"status": 400, "detail": "Taxon type code and taxon rank parameters must not both be specified"}, "data": null}

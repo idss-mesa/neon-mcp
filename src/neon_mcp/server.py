@@ -89,6 +89,19 @@ def _dumps(payload: Any) -> str:
     return json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
 
 
+def compact_schema(schema: Any, keywords: tuple[str, ...]) -> Any:
+    """Drop annotation keywords (string-valued only, so a property *named* ``title`` survives)."""
+    if isinstance(schema, dict):
+        return {
+            k: compact_schema(v, keywords)
+            for k, v in schema.items()
+            if not (k in keywords and isinstance(v, str))
+        }
+    if isinstance(schema, list):
+        return [compact_schema(v, keywords) for v in schema]
+    return schema
+
+
 def _plain_responses(responses: Mapping[str, Any] | None) -> dict[str, Any] | None:
     """MRTR answers arrive as SDK models (``ElicitResult``); handlers get plain JSON."""
     if not responses:
@@ -132,14 +145,18 @@ class NeonServer:
 
     @staticmethod
     def input_schema(spec: ToolSpec) -> dict[str, Any]:
-        schema = spec.input_model.model_json_schema(by_alias=True, mode="validation")
-        schema.setdefault("$schema", JSON_SCHEMA_DIALECT)
+        """Validation schema by alias; pydantic's auto titles dropped, descriptions kept for the model."""
+        raw = spec.input_model.model_json_schema(by_alias=True, mode="validation")
+        schema: dict[str, Any] = dict(compact_schema(raw, ("title",)))
+        schema["$schema"] = JSON_SCHEMA_DIALECT
         return schema
 
     @staticmethod
     def output_schema(spec: ToolSpec) -> dict[str, Any]:
-        schema = spec.output_model.model_json_schema(by_alias=True, mode="serialization")
-        schema.setdefault("$schema", JSON_SCHEMA_DIALECT)
+        """Serialization schema by alias, without titles/descriptions (docs render them from the models)."""
+        raw = spec.output_model.model_json_schema(by_alias=True, mode="serialization")
+        schema: dict[str, Any] = dict(compact_schema(raw, ("title", "description")))
+        schema["$schema"] = JSON_SCHEMA_DIALECT
         return schema
 
     def tool_definitions(self) -> list[t.Tool]:

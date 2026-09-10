@@ -37,6 +37,7 @@ async def _exchange(
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
         env=env,
+        limit=4 * 1024 * 1024,  # one tools/list line exceeds asyncio's 64 KiB default
     )
     assert proc.stdin and proc.stdout and proc.stderr
     replies: list[dict[str, Any]] = []

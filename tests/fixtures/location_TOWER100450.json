@@ -1,0 +1,29 @@
+{
+ "data": {
+  "locationName": "TOWER100450",
+  "locationDescription": "Harvard Forest Tower",
+  "locationType": "TOWER",
+  "domainCode": "D01",
+  "siteCode": "HARV",
+  "locationDecimalLatitude": 42.537454,
+  "locationDecimalLongitude": -72.172666,
+  "locationElevation": 342.39,
+  "locationUtmEasting": 732183.0,
+  "locationUtmNorthing": 4713265.0,
+  "locationUtmHemisphere": "N",
+  "locationUtmZone": 18,
+  "activePeriods": [
+   {
+    "activatedDate": "2012-10-01T00:00:00Z",
+    "deactivatedDate": null
+   }
+  ],
+  "locationProperties": [],
+  "locationParent": "HARV",
+  "locationParentUrl": "https://data.neonscience.org/api/v0/locations/HARV",
+  "locationChildren": [
+   "LEVEL100452"
+  ],
+  "locationChildrenUrls": []
+ }
+}

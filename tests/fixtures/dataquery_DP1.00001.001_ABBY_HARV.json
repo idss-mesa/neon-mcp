@@ -1,0 +1,118 @@
+{
+ "data": {
+  "productCode": "DP1.00001.001",
+  "siteCodes": [
+   "ABBY",
+   "HARV"
+  ],
+  "startDate": "2023-01-01T00:00:00Z",
+  "endDate": "2023-02-28T23:59:59Z",
+  "packageType": "basic",
+  "releases": [
+   {
+    "release": "RELEASE-2025",
+    "generationDate": "2025-01-29T00:07:30Z",
+    "packages": [
+     {
+      "domainCode": "D16",
+      "siteCode": "ABBY",
+      "month": "2023-01",
+      "packageType": "basic",
+      "generationDate": "2025-01-28T00:00:00Z",
+      "files": [
+       {
+        "name": "NEON.D16.ABBY.DP1.00001.001.000.010.030.2DWSD_30min.2023-01.basic.20250128T000000Z.csv",
+        "size": 112233,
+        "md5": "00000000000000000000000000000000",
+        "crc32c": "AAAAAA==",
+        "url": "https://storage.googleapis.com/neon-publication/NEON.DOM.SITE.DP1.00001.001/ABBY/2023-01/basic/NEON.D16.ABBY.DP1.00001.001.000.010.030.2DWSD_30min.2023-01.basic.20250128T000000Z.csv?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T000000Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED"
+       },
+       {
+        "name": "NEON.D16.ABBY.DP1.00001.001.readme.20250128T000000Z.txt",
+        "size": 4567,
+        "md5": "00000000000000000000000000000000",
+        "crc32c": "AAAAAA==",
+        "url": "https://storage.googleapis.com/neon-publication/NEON.DOM.SITE.DP1.00001.001/ABBY/2023-01/basic/NEON.D16.ABBY.DP1.00001.001.readme.20250128T000000Z.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T000000Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED"
+       }
+      ]
+     },
+     {
+      "domainCode": "D01",
+      "siteCode": "HARV",
+      "month": "2023-01",
+      "packageType": "basic",
+      "generationDate": "2025-01-28T00:00:00Z",
+      "files": [
+       {
+        "name": "NEON.D01.HARV.DP1.00001.001.000.010.030.2DWSD_30min.2023-01.basic.20250128T000000Z.csv",
+        "size": 112233,
+        "md5": "00000000000000000000000000000000",
+        "crc32c": "AAAAAA==",
+        "url": "https://storage.googleapis.com/neon-publication/NEON.DOM.SITE.DP1.00001.001/HARV/2023-01/basic/NEON.D01.HARV.DP1.00001.001.000.010.030.2DWSD_30min.2023-01.basic.20250128T000000Z.csv?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T000000Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED"
+       },
+       {
+        "name": "NEON.D01.HARV.DP1.00001.001.readme.20250128T000000Z.txt",
+        "size": 4567,
+        "md5": "00000000000000000000000000000000",
+        "crc32c": "AAAAAA==",
+        "url": "https://storage.googleapis.com/neon-publication/NEON.DOM.SITE.DP1.00001.001/HARV/2023-01/basic/NEON.D01.HARV.DP1.00001.001.readme.20250128T000000Z.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T000000Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED"
+       }
+      ]
+     },
+     {
+      "domainCode": "D16",
+      "siteCode": "ABBY",
+      "month": "2023-02",
+      "packageType": "basic",
+      "generationDate": "2025-01-28T00:00:00Z",
+      "files": [
+       {
+        "name": "NEON.D16.ABBY.DP1.00001.001.000.010.030.2DWSD_30min.2023-02.basic.20250128T000000Z.csv",
+        "size": 112233,
+        "md5": "00000000000000000000000000000000",
+        "crc32c": "AAAAAA==",
+        "url": "https://storage.googleapis.com/neon-publication/NEON.DOM.SITE.DP1.00001.001/ABBY/2023-02/basic/NEON.D16.ABBY.DP1.00001.001.000.010.030.2DWSD_30min.2023-02.basic.20250128T000000Z.csv?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T000000Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED"
+       },
+       {
+        "name": "NEON.D16.ABBY.DP1.00001.001.readme.20250128T000000Z.txt",
+        "size": 4567,
+        "md5": "00000000000000000000000000000000",
+        "crc32c": "AAAAAA==",
+        "url": "https://storage.googleapis.com/neon-publication/NEON.DOM.SITE.DP1.00001.001/ABBY/2023-02/basic/NEON.D16.ABBY.DP1.00001.001.readme.20250128T000000Z.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T000000Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED"
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "release": "PROVISIONAL",
+    "generationDate": null,
+    "packages": [
+     {
+      "domainCode": "D01",
+      "siteCode": "HARV",
+      "month": "2023-02",
+      "packageType": "basic",
+      "generationDate": "2025-01-28T00:00:00Z",
+      "files": [
+       {
+        "name": "NEON.D01.HARV.DP1.00001.001.000.010.030.2DWSD_30min.2023-02.basic.20260801T000000Z.csv",
+        "size": 112233,
+        "md5": "00000000000000000000000000000000",
+        "crc32c": "AAAAAA==",
+        "url": "https://storage.googleapis.com/neon-publication/NEON.DOM.SITE.DP1.00001.001/HARV/2023-02/basic/NEON.D01.HARV.DP1.00001.001.000.010.030.2DWSD_30min.2023-02.basic.20260801T000000Z.csv?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T000000Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED"
+       },
+       {
+        "name": "NEON.D01.HARV.DP1.00001.001.readme.20260801T000000Z.txt",
+        "size": 4567,
+        "md5": "00000000000000000000000000000000",
+        "crc32c": "AAAAAA==",
+        "url": "https://storage.googleapis.com/neon-publication/NEON.DOM.SITE.DP1.00001.001/HARV/2023-02/basic/NEON.D01.HARV.DP1.00001.001.readme.20260801T000000Z.txt?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T000000Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,131 @@
+{
+ "data": {
+  "locationName": "REALM",
+  "locationDescription": "Realm",
+  "locationType": "FIELD",
+  "locationParent": null,
+  "locationParentUrl": null,
+  "locationChildHierarchy": [
+   {
+    "locationName": "D01",
+    "locationType": "DOMAIN",
+    "locationDescription": "Northeast",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D02",
+    "locationType": "DOMAIN",
+    "locationDescription": "Mid-Atlantic",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D03",
+    "locationType": "DOMAIN",
+    "locationDescription": "Southeast",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D04",
+    "locationType": "DOMAIN",
+    "locationDescription": "Atlantic Neotropical",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D05",
+    "locationType": "DOMAIN",
+    "locationDescription": "Great Lakes",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D06",
+    "locationType": "DOMAIN",
+    "locationDescription": "Prairie Peninsula",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D07",
+    "locationType": "DOMAIN",
+    "locationDescription": "Appalachians and Cumberland Plateau",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D08",
+    "locationType": "DOMAIN",
+    "locationDescription": "Ozarks Complex",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D09",
+    "locationType": "DOMAIN",
+    "locationDescription": "Northern Plains",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D10",
+    "locationType": "DOMAIN",
+    "locationDescription": "Central Plains",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D11",
+    "locationType": "DOMAIN",
+    "locationDescription": "Southern Plains",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D12",
+    "locationType": "DOMAIN",
+    "locationDescription": "Northern Rockies",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D13",
+    "locationType": "DOMAIN",
+    "locationDescription": "Southern Rockies and Colorado Plateau",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D14",
+    "locationType": "DOMAIN",
+    "locationDescription": "Desert Southwest",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D15",
+    "locationType": "DOMAIN",
+    "locationDescription": "Great Basin",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D16",
+    "locationType": "DOMAIN",
+    "locationDescription": "Pacific Northwest",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D17",
+    "locationType": "DOMAIN",
+    "locationDescription": "Pacific Southwest",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D18",
+    "locationType": "DOMAIN",
+    "locationDescription": "Tundra",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D19",
+    "locationType": "DOMAIN",
+    "locationDescription": "Taiga",
+    "locationChildHierarchy": []
+   },
+   {
+    "locationName": "D20",
+    "locationType": "DOMAIN",
+    "locationDescription": "Pacific Tropical",
+    "locationChildHierarchy": []
+   }
+  ]
+ }
+}
