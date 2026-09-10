@@ -48,7 +48,7 @@ def split_frontmatter(text: str):
         data = yaml.safe_load(m.group(1))
     except yaml.YAMLError as e:
         raise ValueError(f"unparseable YAML frontmatter: {e}")
-    return (data if isinstance(data, dict) else {}), text[m.end():]
+    return (data if isinstance(data, dict) else {}), text[m.end() :]
 
 
 def check_concept(path: Path, rel: str):
@@ -72,7 +72,7 @@ def check_concept(path: Path, rel: str):
     if stale:
         try:
             when = datetime.datetime.fromisoformat(str(stale).replace("Z", "+00:00"))
-            if datetime.datetime.now(datetime.timezone.utc) >= when:
+            if datetime.datetime.now(datetime.UTC) >= when:
                 warnings.append(f"{rel}: stale (stale_after {stale})")
         except ValueError:
             errors.append(f"{rel}: stale_after {stale!r} is not an ISO 8601 datetime")
@@ -98,8 +98,10 @@ def check_index(path: Path, rel: str, is_root: bool):
         warnings.append(f"{rel}: bundle root index.md frontmatter lacks okf_version (§12)")
     extra = set(fm) - {"okf_version"} - ROOT_INDEX_ALLOWED_EXTRA
     if extra:
-        warnings.append(f"{rel}: root index.md carries extra frontmatter keys {sorted(extra)} "
-                        f"(tolerated by consumers, §11)")
+        warnings.append(
+            f"{rel}: root index.md carries extra frontmatter keys {sorted(extra)} "
+            f"(tolerated by consumers, §11)"
+        )
 
 
 def check_log(path: Path, rel: str):

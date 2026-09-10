@@ -1,0 +1,141 @@
+{
+ "data": {
+  "sites": [
+   {
+    "siteCode": "ABBY",
+    "siteName": "Abby Road NEON",
+    "siteDescription": "Abby Road NEON",
+    "siteType": "GRADIENT",
+    "siteLatitude": 45.762439,
+    "siteLongitude": -122.330317,
+    "stateCode": "WA",
+    "stateName": "Washington",
+    "domainCode": "D16",
+    "domainName": "Pacific Northwest",
+    "deimsId": "https://deims.org/0e39569d-ff81-4b78-9c34-b07309504d80",
+    "releases": [
+     {
+      "release": "RELEASE-2025",
+      "generationDate": "2025-01-29T00:07:30Z"
+     },
+     {
+      "release": "RELEASE-2026",
+      "generationDate": "2026-01-23T00:07:49Z"
+     }
+    ],
+    "dataProducts": [
+     {
+      "dataProductCode": "DP1.00001.001",
+      "dataProductTitle": "2D wind speed and direction"
+     },
+     {
+      "dataProductCode": "DP1.00002.001",
+      "dataProductTitle": "Single aspirated air temperature"
+     },
+     {
+      "dataProductCode": "DP1.00003.001",
+      "dataProductTitle": "Triple aspirated air temperature"
+     },
+     {
+      "dataProductCode": "DP1.00004.001",
+      "dataProductTitle": "Barometric pressure"
+     },
+     {
+      "dataProductCode": "DP1.00005.001",
+      "dataProductTitle": "IR biological temperature"
+     }
+    ]
+   },
+   {
+    "siteCode": "HARV",
+    "siteName": "Harvard Forest & Quabbin Watershed NEON",
+    "siteDescription": "Harvard Forest & Quabbin Watershed NEON",
+    "siteType": "CORE",
+    "siteLatitude": 42.53691,
+    "siteLongitude": -72.17265,
+    "stateCode": "MA",
+    "stateName": "Massachusetts",
+    "domainCode": "D01",
+    "domainName": "Northeast",
+    "deimsId": "https://deims.org/9dbbd9ea-21dc-43e3-b55d-42623427e642",
+    "releases": [
+     {
+      "release": "RELEASE-2025",
+      "generationDate": "2025-01-29T00:07:30Z"
+     },
+     {
+      "release": "RELEASE-2026",
+      "generationDate": "2026-01-23T00:07:49Z"
+     }
+    ],
+    "dataProducts": [
+     {
+      "dataProductCode": "DP1.00001.001",
+      "dataProductTitle": "2D wind speed and direction"
+     },
+     {
+      "dataProductCode": "DP1.00002.001",
+      "dataProductTitle": "Single aspirated air temperature"
+     },
+     {
+      "dataProductCode": "DP1.00003.001",
+      "dataProductTitle": "Triple aspirated air temperature"
+     },
+     {
+      "dataProductCode": "DP1.00004.001",
+      "dataProductTitle": "Barometric pressure"
+     },
+     {
+      "dataProductCode": "DP1.00005.001",
+      "dataProductTitle": "IR biological temperature"
+     }
+    ]
+   },
+   {
+    "siteCode": "SRER",
+    "siteName": "Santa Rita Experimental Range NEON",
+    "siteDescription": "Santa Rita Experimental Range NEON",
+    "siteType": "CORE",
+    "siteLatitude": 31.91068,
+    "siteLongitude": -110.83549,
+    "stateCode": "AZ",
+    "stateName": "Arizona",
+    "domainCode": "D14",
+    "domainName": "Desert Southwest",
+    "deimsId": "https://deims.org/8976fdd3-aaf3-4fc0-8861-67a93a00a39a",
+    "releases": [
+     {
+      "release": "RELEASE-2025",
+      "generationDate": "2025-01-29T00:07:30Z"
+     },
+     {
+      "release": "RELEASE-2026",
+      "generationDate": "2026-01-23T00:07:49Z"
+     }
+    ],
+    "dataProducts": [
+     {
+      "dataProductCode": "DP1.00001.001",
+      "dataProductTitle": "2D wind speed and direction"
+     },
+     {
+      "dataProductCode": "DP1.00002.001",
+      "dataProductTitle": "Single aspirated air temperature"
+     },
+     {
+      "dataProductCode": "DP1.00003.001",
+      "dataProductTitle": "Triple aspirated air temperature"
+     },
+     {
+      "dataProductCode": "DP1.00004.001",
+      "dataProductTitle": "Barometric pressure"
+     },
+     {
+      "dataProductCode": "DP1.00005.001",
+      "dataProductTitle": "IR biological temperature"
+     }
+    ]
+   }
+  ]
+ }
+}

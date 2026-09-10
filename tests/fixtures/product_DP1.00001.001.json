@@ -1,0 +1,228 @@
+{
+ "data": {
+  "productCodeLong": "NEON.DOM.SITE.DP1.00001.001",
+  "productCode": "DP1.00001.001",
+  "productCodePresentation": "NEON.DP1.00001",
+  "productName": "2D wind speed and direction",
+  "productDescription": "Two-dimensional wind speed and direction, available as two- and thirty-minute aggregations of 1 Hz observations.  Observations are made by 2-D sonic anemometer sensors located at multiple heights on the tower infrastructure and by 2-D sonic anemometer sensors located on the aquatic meteorological station.",
+  "productStatus": "ACTIVE",
+  "productCategory": "Level 1 Data Product",
+  "productHasExpanded": true,
+  "productScienceTeamAbbr": "TIS",
+  "productScienceTeam": "Terrestrial Instrument System (TIS)",
+  "productPublicationFormatType": "TIS Data Product Type",
+  "productAbstract": "Wind plays an important role in atmospheric and environmental sciences. A function of differential heating of Earth’s surface and subsequent pressure gradients, horizontal and vertical winds are responsible for advection of atmospheric pollutants, moisture, heat and momentum (Stull 1988). As such, horizontal and vertical winds will be measured throughout the Observatory.\n\nLatency:\nData collected i…",
+  "productDesignDescription": "Multiple 2D anemometers are deployed at tower sites. They are located on each boom arm below the tower-top level at terrestrial sites. A single 2D anemometer is located at the top of the aquatic met station at a standard height of 3m above ground level. Two- and thirty-minute averages of horizontal wind speed and direction are calculated. Each 2D anemometer represents the point at which it is plac…",
+  "productStudyDescription": "2D wind speed is measured at all NEON terrestrial and aquatic sites except for BLWA and TOMB.",
+  "productBasicDescription": "Includes the data product, summary statistics, expanded uncertainty, and final quality flag.",
+  "productExpandedDescription": "Includes the basic package information plus quality metrics for all of the quality assessment and quality control analyses.",
+  "productSensor": "Gill - Wind Observer II; Extreme Weather Wind Observer",
+  "productRemarks": "Note that the final quality flag for wind direction (windDirFinalQF) in the basic download package includes a test for calm winds, under which the computed wind direction is unreliable (due to light wind speed) though the data quality may still be adequate for scientific purposes. To distinguish between data flagged for calm winds and other quality tests, please download the expanded package.",
+  "themes": [
+   "Atmosphere"
+  ],
+  "changeLogs": [
+   {
+    "id": 506,
+    "parentIssueID": null,
+    "issueDate": "2018-01-05T00:00:00Z",
+    "resolvedDate": "2018-01-05T00:00:00Z",
+    "dateRangeStart": "2017-12-28T00:00:00Z",
+    "dateRangeEnd": "2018-03-19T00:00:00Z",
+    "locationAffected": "DEJU (HOR.VER: 000.020)",
+    "issue": "Ice-forming conditions on 2D wind sensor tines.",
+    "resolution": "Applied manual flagging."
+   },
+   {
+    "id": 601,
+    "parentIssueID": 506,
+    "issueDate": "2018-01-05T00:00:00Z",
+    "resolvedDate": "2018-01-05T00:00:00Z",
+    "dateRangeStart": "2017-09-15T00:00:00Z",
+    "dateRangeEnd": "2017-12-14T00:00:00Z",
+    "locationAffected": "TOOK",
+    "issue": "Ice-forming conditions on 2D wind sensor tines.",
+    "resolution": "Applied manual flagging."
+   }
+  ],
+  "specs": [
+   {
+    "specId": "8365",
+    "specNumber": "NEON.DOC.000780vD",
+    "specType": "application/pdf",
+    "specSize": 715529,
+    "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD) – 2D Wind Speed and Direction",
+    "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.000780vD"
+   },
+   {
+    "specId": "7604",
+    "specNumber": "NEON.DOC.011081vD",
+    "specType": "application/pdf",
+    "specSize": 488215,
+    "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD) –  QA/QC Plausibility Testing",
+    "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.011081vD"
+   }
+  ],
+  "keywords": [
+   "sonic anemometer",
+   "horizontal wind",
+   "tower",
+   "wind speed",
+   "met station",
+   "meteorological station",
+   "wind direction"
+  ],
+  "biorepositoryCollections": null,
+  "releases": [
+   {
+    "release": "RELEASE-2025",
+    "generationDate": "2025-01-29T00:07:30Z",
+    "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2025",
+    "productDoi": {
+     "generationDate": "2025-01-29T01:02:59Z",
+     "url": "https://doi.org/10.48443/te3v-2m97"
+    }
+   },
+   {
+    "release": "RELEASE-2026",
+    "generationDate": "2026-01-23T00:07:49Z",
+    "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2026",
+    "productDoi": {
+     "generationDate": "2026-01-23T01:10:15Z",
+     "url": "https://doi.org/10.48443/d4h5-ys70"
+    }
+   }
+  ],
+  "siteCodes": [
+   {
+    "siteCode": "ABBY",
+    "availableMonths": [
+     "2026-03",
+     "2026-04",
+     "2026-05",
+     "2026-06",
+     "2026-07",
+     "2026-08"
+    ],
+    "availableDataUrls": [
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-03",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-04",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-05",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-06",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-07",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-08"
+    ],
+    "availableReleases": [
+     {
+      "release": "PROVISIONAL",
+      "availableMonths": [
+       "2026-03",
+       "2026-04",
+       "2026-05",
+       "2026-06",
+       "2026-07",
+       "2026-08"
+      ]
+     },
+     {
+      "release": "RELEASE-2026",
+      "availableMonths": [
+       "2025-01",
+       "2025-02",
+       "2025-03",
+       "2025-04",
+       "2025-05",
+       "2025-06"
+      ]
+     }
+    ]
+   },
+   {
+    "siteCode": "ARIK",
+    "availableMonths": [
+     "2026-03",
+     "2026-04",
+     "2026-05",
+     "2026-06",
+     "2026-07",
+     "2026-08"
+    ],
+    "availableDataUrls": [
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-03",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-04",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-05",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-06",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-07",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-08"
+    ],
+    "availableReleases": [
+     {
+      "release": "PROVISIONAL",
+      "availableMonths": [
+       "2026-03",
+       "2026-04",
+       "2026-05",
+       "2026-06",
+       "2026-07",
+       "2026-08"
+      ]
+     },
+     {
+      "release": "RELEASE-2026",
+      "availableMonths": [
+       "2025-01",
+       "2025-02",
+       "2025-03",
+       "2025-04",
+       "2025-05",
+       "2025-06"
+      ]
+     }
+    ]
+   },
+   {
+    "siteCode": "BARC",
+    "availableMonths": [
+     "2026-03",
+     "2026-04",
+     "2026-05",
+     "2026-06",
+     "2026-07",
+     "2026-08"
+    ],
+    "availableDataUrls": [
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-03",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-04",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-05",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-06",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-07",
+     "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-08"
+    ],
+    "availableReleases": [
+     {
+      "release": "PROVISIONAL",
+      "availableMonths": [
+       "2026-03",
+       "2026-04",
+       "2026-05",
+       "2026-06",
+       "2026-07",
+       "2026-08"
+      ]
+     },
+     {
+      "release": "RELEASE-2026",
+      "availableMonths": [
+       "2025-01",
+       "2025-02",
+       "2025-03",
+       "2025-04",
+       "2025-05",
+       "2025-06"
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

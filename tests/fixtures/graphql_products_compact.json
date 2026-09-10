@@ -1,0 +1,16 @@
+{
+ "errors": [
+  {
+   "message": "Validation error (FieldUndefined@[products/productScienceTeamAbbr]) : Field 'productScienceTeamAbbr' in type 'DataProduct' is undefined",
+   "locations": [
+    {
+     "line": 1,
+     "column": 52
+    }
+   ],
+   "extensions": {
+    "classification": "ValidationError"
+   }
+  }
+ ]
+}

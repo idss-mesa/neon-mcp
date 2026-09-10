@@ -1,0 +1,6 @@
+HTTP/2 429 
+content-type: application/json
+x-ratelimit-limit: 200
+x-ratelimit-remaining: 0
+x-ratelimit-reset: 1
+retryafter: 1

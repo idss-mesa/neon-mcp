@@ -1,0 +1,38 @@
+{
+ "data": {
+  "entries": [
+   {
+    "key": "wdp_collection_in.sampleID",
+    "value": "Wet deposition sample from automated collector"
+   },
+   {
+    "key": "wdp_collection_in.chemSubsampleID",
+    "value": "Wet deposition subsample for chemical analysis"
+   },
+   {
+    "key": "inv_dnaExtraction_in.dnaSampleID",
+    "value": "Subsample for macroinvertebrate DNA extraction"
+   },
+   {
+    "key": "zoo_dnaExtraction_in.dnaSampleID",
+    "value": "Subsample for zooplankton DNA extraction"
+   },
+   {
+    "key": "cdw_fieldtally_in.individualID",
+    "value": "Coarse downed wood individual log measured in the field"
+   },
+   {
+    "key": "apc_voucher_in.herbariumSubsampleID",
+    "value": null
+   },
+   {
+    "key": "apc_perTaxon_in.herbariumSubsampleID",
+    "value": null
+   },
+   {
+    "key": "apl_domainLab_in.herbariumSampleID",
+    "value": null
+   }
+  ]
+ }
+}

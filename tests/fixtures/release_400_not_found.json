@@ -1,0 +1,1 @@
+{"error":{"status":400,"detail":"Release not found. See data response element for valid releases."},"data":{"validReleases":["RELEASE-2021","RELEASE-2022","RELEASE-2023","RELEASE-2024","RELEASE-2025","RELEASE-2026"]}}

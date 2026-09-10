@@ -1,0 +1,502 @@
+{
+ "data": {
+  "locationName": "HARV",
+  "locationDescription": "Harvard Forest & Quabbin Watershed NEON",
+  "locationType": "SITE",
+  "locationDecimalLatitude": 42.53691,
+  "locationDecimalLongitude": -72.17265,
+  "locationElevation": 348.12784,
+  "locationUtmEasting": 732183.97796,
+  "locationUtmNorthing": 4713266.17907,
+  "locationUtmHemisphere": "N",
+  "locationUtmZone": 18,
+  "alphaOrientation": 0.0,
+  "betaOrientation": 0.0,
+  "gammaOrientation": 0.0,
+  "xOffset": 0.0,
+  "yOffset": 0.0,
+  "zOffset": 0.0,
+  "offsetLocation": null,
+  "locationProperties": [
+   {
+    "locationPropertyName": "Value for Country",
+    "locationPropertyValue": "USA"
+   },
+   {
+    "locationPropertyName": "Value for County",
+    "locationPropertyValue": "Worcester"
+   },
+   {
+    "locationPropertyName": "Value for DistZaxsCnpy",
+    "locationPropertyValue": "23"
+   },
+   {
+    "locationPropertyName": "Value for DistZaxsDisp",
+    "locationPropertyValue": "14.95"
+   },
+   {
+    "locationPropertyName": "Value for Geodetic datum",
+    "locationPropertyValue": "WGS84"
+   },
+   {
+    "locationPropertyName": "Value for State province",
+    "locationPropertyValue": "MA"
+   },
+   {
+    "locationPropertyName": "Value for TypeEco",
+    "locationPropertyValue": "Eastern Deciduous forest"
+   },
+   {
+    "locationPropertyName": "Value for UTM Zone",
+    "locationPropertyValue": "18N"
+   }
+  ],
+  "locationParent": "D01",
+  "locationParentUrl": "https://data.neonscience.org/api/v0/locations/D01",
+  "locationParentHierarchy": {
+   "locationName": "D01",
+   "locationDescription": "Northeast Domain",
+   "locationType": "DOMAIN",
+   "locationParent": "REALM",
+   "locationParentUrl": "https://data.neonscience.org/api/v0/locations/REALM",
+   "locationParentHierarchy": {
+    "locationName": "REALM",
+    "locationDescription": "Realm",
+    "locationType": "FIELD"
+   }
+  },
+  "locationChildHierarchy": [
+   {
+    "locationName": "TOWER100450",
+    "locationDescription": "Harvard Forest Tower",
+    "locationType": "TOWER",
+    "locationChildHierarchy": [
+     {
+      "locationName": "LEVEL100452",
+      "locationDescription": "Harvard Forest Tower Level, L1",
+      "locationType": "LEVEL",
+      "locationChildHierarchy": [
+       {
+        "locationName": "BOOM100458",
+        "locationDescription": "Harvard Forest Level 1 Combined Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100471",
+          "locationDescription": "Harvard Forest Single Aspirated Air Temperature L1",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC100472",
+          "locationDescription": "Harvard Forest 2D Wind L1",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC108313",
+          "locationDescription": "Harvard Forest ECSE Inlet Pressure L1",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "BOOM100459",
+        "locationDescription": "Harvard Forest Level 1 Radiation Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100473",
+          "locationDescription": "Harvard Forest PAR Radiation and IR Biological Temp L1",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "locationName": "LEVEL100453",
+      "locationDescription": "Harvard Forest Tower Level, L2",
+      "locationType": "LEVEL",
+      "locationChildHierarchy": [
+       {
+        "locationName": "BOOM100460",
+        "locationDescription": "Harvard Forest Level 2 Combined Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100474",
+          "locationDescription": "Harvard Forest Single Aspirated Air Temperature L2",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC100475",
+          "locationDescription": "Harvard Forest 2D Wind L2",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC108314",
+          "locationDescription": "Harvard Forest ECSE Inlet Pressure L2",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "BOOM100461",
+        "locationDescription": "Harvard Forest Level 2 Radiation Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100476",
+          "locationDescription": "Harvard Forest PAR Radiation and IR Biological Temp L2",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "locationName": "LEVEL100454",
+      "locationDescription": "Harvard Forest Tower Level, L3",
+      "locationType": "LEVEL",
+      "locationChildHierarchy": [
+       {
+        "locationName": "BOOM100462",
+        "locationDescription": "Harvard Forest Level 3 Combined Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100477",
+          "locationDescription": "Harvard Forest Single Aspirated Air Temperature L3",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC100478",
+          "locationDescription": "Harvard Forest 2D Wind L3",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC108315",
+          "locationDescription": "Harvard Forest ECSE Inlet Pressure L3",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "BOOM100463",
+        "locationDescription": "Harvard Forest Level 3 Radiation Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100479",
+          "locationDescription": "Harvard Forest PAR Radiation and IR Biological Temp L3",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "locationName": "LEVEL100455",
+      "locationDescription": "Harvard Forest Tower Level, L4",
+      "locationType": "LEVEL",
+      "locationChildHierarchy": [
+       {
+        "locationName": "BOOM100464",
+        "locationDescription": "Harvard Forest Level 4 Combined Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100480",
+          "locationDescription": "Harvard Forest Single Aspirated Air Temperature L4",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC100481",
+          "locationDescription": "Harvard Forest 2D Wind L4",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC108316",
+          "locationDescription": "Harvard Forest ECSE Inlet Pressure L4",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "BOOM100465",
+        "locationDescription": "Harvard Forest Level 4 Radiation Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100482",
+          "locationDescription": "Harvard Forest PAR Radiation and IR Biological Temp L4",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "locationName": "LEVEL100456",
+      "locationDescription": "Harvard Forest Tower Level, L5",
+      "locationType": "LEVEL",
+      "locationChildHierarchy": [
+       {
+        "locationName": "BOOM100466",
+        "locationDescription": "Harvard Forest Level 5 Combined Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100483",
+          "locationDescription": "Harvard Forest Single Aspirated Air Temperature L5",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC100484",
+          "locationDescription": "Harvard Forest 2D Wind L5",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC108317",
+          "locationDescription": "Harvard Forest ECSE Inlet Pressure L5",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "BOOM100467",
+        "locationDescription": "Harvard Forest Level 5 Radiation Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100485",
+          "locationDescription": "Harvard Forest PAR Radiation and IR Biological Temp L5",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "locationName": "LEVEL100457",
+      "locationDescription": "Harvard Forest Tower Level, L6",
+      "locationType": "LEVEL",
+      "locationChildHierarchy": [
+       {
+        "locationName": "BOOM100468",
+        "locationDescription": "Harvard Forest Level 6 Triple Temperature Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100486",
+          "locationDescription": "Harvard Forest Triple Aspirated Air Temperature L6",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC100486.101",
+          "locationDescription": "Harvard Forest Triple Aspirated Air Temperature L6 Replicate 1",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC100486.102",
+          "locationDescription": "Harvard Forest Triple Aspirated Air Temperature L6 Replicate 2",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC100486.103",
+          "locationDescription": "Harvard Forest Triple Aspirated Air Temperature L6 Replicate 3",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "BOOM100469",
+        "locationDescription": "Harvard Forest Level 6 Southeast Radiation Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100487",
+          "locationDescription": "Harvard Forest Sunshine Pyranometer Radiation Southeast",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "BOOM100470",
+        "locationDescription": "Harvard Forest Level 6 Southwest Radiation Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC100488",
+          "locationDescription": "Harvard Forest Net Radiation Southwest",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC100489",
+          "locationDescription": "Harvard Forest PAR Radiation Up",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC100490",
+          "locationDescription": "Harvard Forest PAR Radiation Down",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "BOOM108318",
+        "locationDescription": "Harvard Forest Eddy Covariance Turbulent Exchange Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC108319",
+          "locationDescription": "Harvard Forest ECSE Inlet Pressure L6",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC108320",
+          "locationDescription": "Harvard Forest ECTE IRGA L6",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC108321",
+          "locationDescription": "Harvard Forest 3D Wind L6",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         },
+         {
+          "locationName": "CFGLOC108322",
+          "locationDescription": "Harvard Forest 3D Wind AMRS L6",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "BOOM108323",
+        "locationDescription": "Harvard Forest Level 6 Short Boom",
+        "locationType": "BOOM",
+        "locationChildHierarchy": [
+         {
+          "locationName": "CFGLOC108324",
+          "locationDescription": "Harvard Forest Secondary Precipitation",
+          "locationType": "CONFIG",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "CFGLOC100491",
+        "locationDescription": "Harvard Forest Spectral Photometer",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       },
+       {
+        "locationName": "CFGLOC100959",
+        "locationDescription": "Harvard Forest Barometric Pressure",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       },
+       {
+        "locationName": "CFGLOC101011",
+        "locationDescription": "Harvard Forest Relative Humidity, Tower",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       },
+       {
+        "locationName": "CFGLOC108325",
+        "locationDescription": "Harvard Forest Above Canopy Phenology Camera",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       },
+       {
+        "locationName": "CFGLOC108326",
+        "locationDescription": "Harvard Forest Under Canopy Snow Depth Camera",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       },
+       {
+        "locationName": "CFGLOC108327",
+        "locationDescription": "Harvard Forest Wet Deposition",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": [
+         {
+          "locationName": "HARV.TOS.wet.deposition",
+          "locationDescription": "Wet deposition samples",
+          "locationType": "TOS wet deposition named location type",
+          "locationChildHierarchy": []
+         }
+        ]
+       },
+       {
+        "locationName": "CFGLOC108328",
+        "locationDescription": "Harvard Forest ECTE Sample MFC",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       },
+       {
+        "locationName": "CFGLOC108329",
+        "locationDescription": "Harvard Forest ECTE Validation MFC",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       },
+       {
+        "locationName": "CFGLOC108330",
+        "locationDescription": "Harvard Forest ECTE Water Trap",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       },
+       {
+        "locationName": "CFGLOC108331",
+        "locationDescription": "Harvard Forest ECTE Water Trap Pressure Sensor",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       },
+       {
+        "locationName": "CFGLOC108332",
+        "locationDescription": "Harvard Forest ECTE Pump",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       },
+       {
+        "locationName": "CFGLOC108333",
+        "locationDescription": "Harvard Forest ECTE NEMA Validation Solenoid",
+        "locationType": "CONFIG",
+        "locationChildHierarchy": []
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

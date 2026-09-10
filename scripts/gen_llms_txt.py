@@ -48,7 +48,7 @@ def frontmatter(path: Path):
         data = yaml.safe_load(m.group(1)) or {}
     except yaml.YAMLError:
         data = {}
-    return (data if isinstance(data, dict) else {}), text[m.end():]
+    return (data if isinstance(data, dict) else {}), text[m.end() :]
 
 
 def page_url(base: str, rel: Path) -> str:
@@ -131,16 +131,22 @@ def main():
         lines.append("")
 
     # Root pages
-    lines += ["## Meta", "",
-              f"- [Documentation update log]({base}log/): dated history of changes to this bundle.", ""]
+    lines += [
+        "## Meta",
+        "",
+        f"- [Documentation update log]({base}log/): dated history of changes to this bundle.",
+        "",
+    ]
     log = DOCS / "log.md"
     if log.exists():
         full += [f"---8<--- {base}log/", "", log.read_text(encoding="utf-8").rstrip(), ""]
 
     (DOCS / "llms.txt").write_text("\n".join(lines).rstrip() + "\n", encoding="utf-8")
     (DOCS / "llms-full.txt").write_text("\n".join(full).rstrip() + "\n", encoding="utf-8")
-    print(f"llms.txt: {n} pages indexed; llms-full.txt: "
-          f"{(DOCS / 'llms-full.txt').stat().st_size // 1024} KB")
+    print(
+        f"llms.txt: {n} pages indexed; llms-full.txt: "
+        f"{(DOCS / 'llms-full.txt').stat().st_size // 1024} KB"
+    )
 
 
 if __name__ == "__main__":

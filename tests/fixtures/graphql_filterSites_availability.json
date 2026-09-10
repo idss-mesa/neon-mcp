@@ -1,0 +1,21 @@
+{
+ "data": {
+  "filterSites": [
+   {
+    "siteCode": "ABBY",
+    "siteName": "Abby Road NEON",
+    "dataProducts": [
+     {
+      "dataProductCode": "DP1.00001.001",
+      "dataProductTitle": "2D wind speed and direction",
+      "availableMonths": [
+       "2024-01",
+       "2024-02",
+       "2024-03"
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

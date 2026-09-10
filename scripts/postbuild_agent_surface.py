@@ -71,10 +71,12 @@ def trust_tier(fm: dict) -> str:
 
 
 def head_block(fm: dict) -> str:
-    lines = ['<meta name="robots" content="index, follow, max-snippet:-1, '
-             'max-image-preview:large, max-video-preview:-1">',
-             '<link rel="alternate" type="text/markdown" '
-             'title="Markdown source (OKF v0.2 frontmatter)" href="index.md">']
+    lines = [
+        '<meta name="robots" content="index, follow, max-snippet:-1, '
+        'max-image-preview:large, max-video-preview:-1">',
+        '<link rel="alternate" type="text/markdown" '
+        'title="Markdown source (OKF v0.2 frontmatter)" href="index.md">',
+    ]
 
     def meta(name, value):
         if value:
@@ -137,20 +139,33 @@ def main():
         injected += 1
 
     # 3. robots.txt — explicitly welcome AI fetchers alongside the blanket allow.
-    ai_agents = ["Googlebot", "Google-Extended", "GoogleOther", "Google-CloudVertexBot",
-                 "GPTBot", "OAI-SearchBot", "ChatGPT-User",
-                 "ClaudeBot", "Claude-User", "Claude-SearchBot", "PerplexityBot",
-                 "cohere-ai", "Applebot-Extended", "CCBot", "meta-externalagent",
-                 "Amazonbot", "DuckAssistBot", "MistralAI-User"]
+    ai_agents = [
+        "Googlebot",
+        "Google-Extended",
+        "GoogleOther",
+        "Google-CloudVertexBot",
+        "GPTBot",
+        "OAI-SearchBot",
+        "ChatGPT-User",
+        "ClaudeBot",
+        "Claude-User",
+        "Claude-SearchBot",
+        "PerplexityBot",
+        "cohere-ai",
+        "Applebot-Extended",
+        "CCBot",
+        "meta-externalagent",
+        "Amazonbot",
+        "DuckAssistBot",
+        "MistralAI-User",
+    ]
     ai_block = "".join(f"User-agent: {a}\nAllow: /\n\n" for a in ai_agents)
     (site / "robots.txt").write_text(
         f"# neon-mcp documentation — {base}\n"
         "# This documentation is published for people AND for AI agents.\n"
         "User-agent: *\n"
         "Allow: /\n"
-        "\n"
-        + ai_block +
-        f"Sitemap: {base}sitemap.xml\n"
+        "\n" + ai_block + f"Sitemap: {base}sitemap.xml\n"
         "\n"
         "# AI agents and harnesses:\n"
         f"#   Machine-readable outline:  {base}llms.txt\n"
@@ -160,10 +175,13 @@ def main():
         f"#   Agent guide:               {base}about/ai-agents/\n"
         "#   For NEON data itself, connect to the neon-mcp server (stdio or\n"
         "#   Streamable HTTP) rather than scraping these pages.\n",
-        encoding="utf-8")
+        encoding="utf-8",
+    )
 
-    print(f"agent surface: mirrored {mirrored} markdown files, "
-          f"annotated {injected} pages, wrote robots.txt")
+    print(
+        f"agent surface: mirrored {mirrored} markdown files, "
+        f"annotated {injected} pages, wrote robots.txt"
+    )
 
 
 if __name__ == "__main__":

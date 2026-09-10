@@ -1,0 +1,36 @@
+{
+ "data": {
+  "findLocations": [
+   {
+    "locationName": "HARV",
+    "locationType": "SITE",
+    "locationDescription": "Harvard Forest & Quabbin Watershed NEON",
+    "siteCode": "HARV",
+    "locationDecimalLatitude": 42.53691,
+    "locationDecimalLongitude": -72.17265,
+    "locationElevation": 348.12784,
+    "locationParent": "D01"
+   },
+   {
+    "locationName": "TOWER104454",
+    "locationType": "TOWER",
+    "locationDescription": "Santa Rita Tower",
+    "siteCode": "SRER",
+    "locationDecimalLatitude": 31.910711,
+    "locationDecimalLongitude": -110.83547,
+    "locationElevation": 997.476,
+    "locationParent": "SRER"
+   },
+   {
+    "locationName": "D01",
+    "locationType": "DOMAIN",
+    "locationDescription": "Northeast Domain",
+    "siteCode": null,
+    "locationDecimalLatitude": null,
+    "locationDecimalLongitude": null,
+    "locationElevation": null,
+    "locationParent": "REALM"
+   }
+  ]
+ }
+}

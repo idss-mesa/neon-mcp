@@ -1,0 +1,226 @@
+{
+ "data": {
+  "productCodeLong": "NEON.DOM.SITE.DP1.10003.001",
+  "productCode": "DP1.10003.001",
+  "productCodePresentation": "NEON.DP1.10003",
+  "productName": "Breeding landbird point counts",
+  "productDescription": "Count, distance from observer, and taxonomic identification of breeding landbirds observed during point counts",
+  "productStatus": "ACTIVE",
+  "productCategory": "Level 1 Data Product",
+  "productHasExpanded": true,
+  "productScienceTeamAbbr": "TOS",
+  "productScienceTeam": "Terrestrial Observation System (TOS)",
+  "productPublicationFormatType": "TOS Data Product Type",
+  "productAbstract": "This data product contains the quality-controlled, native sampling resolution data from NEON's breeding landbird sampling. Breeding landbirds are defined as “smaller birds (usually exclusive of raptors and upland game birds) not usually associated with aquatic habitats” (Ralph et al. 1993). The breeding landbird point counts product provides records of species identification of all individuals obs…",
+  "productDesignDescription": "Depending on the size of the site, sampling for this product occurs at either randomly distributed individual points or grids of nine points each. At larger sites, point count sampling occurs at five to ten 9-point grids, with grid centers collocated with distributed base plot centers (where plant, beetle, and/or soil sampling may also occur), if possible. At smaller sites (i.e., sites that cannot…",
+  "productStudyDescription": "This sampling occurs at all NEON terrestrial sites.",
+  "productBasicDescription": "The basic package contains the per point metadata table that includes data pertaining to the observer and the weather conditions and the count data table that includes all of the observational data.",
+  "productExpandedDescription": "The expanded package includes two additional tables and two additional fields within the count data table. The personnel table provides institutional information about each observer, as well as their performance on identification quizzes, where available. The references tables provides the list of resources used by an observer to identify birds. The additional fields in the countdata table are family and nativeStatusCode, which are derived from the NEON master list of birds.",
+  "productSensor": "",
+  "productRemarks": "Queries for this data product will return data collected during the date range specified for `brd_perpoint` and `brd_countdata`, but will return data from all dates for `brd_personnel` (quiz scores may occur over time periods which are distinct from when sampling occurs) and `brd_references` (which apply to a broad range of sampling dates). A record from `brd_perPoint` should have 6+ child records…",
+  "themes": [
+   "Organisms, Populations, and Communities"
+  ],
+  "changeLogs": [
+   {
+    "id": 16607,
+    "parentIssueID": null,
+    "issueDate": "2020-10-28T00:00:00Z",
+    "resolvedDate": "2020-01-01T00:00:00Z",
+    "dateRangeStart": "2013-01-01T00:00:00Z",
+    "dateRangeEnd": "2020-01-01T00:00:00Z",
+    "locationAffected": "All",
+    "issue": "No sampling impractical: There was not a way to indicate that a scheduled sampling event did not occur.",
+    "resolution": "The fields samplingImpracticalRemarks and samplingImpractical were added prior to the 2020 field season. The contractor supplies the samplingImpracticalRemarks field, and this field autopopulates the samplingImpractical field. The samplingImpractical field has a value other than OK if something prevented sampling from occurring."
+   },
+   {
+    "id": 17938,
+    "parentIssueID": null,
+    "issueDate": "2021-01-06T00:00:00Z",
+    "resolvedDate": "2021-12-31T00:00:00Z",
+    "dateRangeStart": "2020-03-23T00:00:00Z",
+    "dateRangeEnd": "2021-12-31T00:00:00Z",
+    "locationAffected": "All",
+    "issue": "Safety measures to protect personnel during the COVID-19 pandemic resulted in reduced or canceled sampling activities for extended periods at NEON sites. Data availability may be reduced during this time.",
+    "resolution": "The primary impact of the pandemic on observational data was reduced data collection. Training procedures and data quality reviews were maintained throughout the pandemic, although some previously in-person training was conducted virtually.  Scheduled measurements and sampling that were not carried out due to COVID-19 or any other causes are indicated in data records via the samplingImpractical data field."
+   }
+  ],
+  "specs": [
+   {
+    "specId": "10704",
+    "specNumber": "NEON.DOC.014041vL",
+    "specType": "application/pdf",
+    "specSize": 3553655,
+    "specDescription": "TOS Protocol and Procedure: BRD – Breeding Landbird Abundance and Diversity",
+    "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.014041vL"
+   },
+   {
+    "specId": "7294",
+    "specNumber": "NEON.DOC.000916vD",
+    "specType": "application/pdf",
+    "specSize": 1654075,
+    "specDescription": "TOS Science Design for Breeding Landbird Abundance and Diversity",
+    "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.000916vD"
+   }
+  ],
+  "keywords": [
+   "birds",
+   "diversity",
+   "taxonomy",
+   "community composition",
+   "distance sampling",
+   "avian",
+   "species composition",
+   "population",
+   "vertebrates",
+   "landbirds",
+   "animals",
+   "Animalia",
+   "Aves",
+   "Chordata",
+   "point counts",
+   "brd",
+   "introduced species",
+   "invasive species",
+   "native species",
+   "biodiversity"
+  ],
+  "biorepositoryCollections": null,
+  "releases": [
+   {
+    "release": "RELEASE-2025",
+    "generationDate": "2025-01-29T00:07:30Z",
+    "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2025",
+    "productDoi": {
+     "generationDate": "2025-01-29T01:02:59Z",
+     "url": "https://doi.org/10.48443/3nka-yg96"
+    }
+   },
+   {
+    "release": "RELEASE-2026",
+    "generationDate": "2026-01-23T00:07:49Z",
+    "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2026",
+    "productDoi": {
+     "generationDate": "2026-01-23T01:10:15Z",
+     "url": "https://doi.org/10.48443/v6hs-mx57"
+    }
+   }
+  ],
+  "siteCodes": [
+   {
+    "siteCode": "ABBY",
+    "availableMonths": [
+     "2022-05",
+     "2022-06",
+     "2023-05",
+     "2023-06",
+     "2024-05",
+     "2025-05"
+    ],
+    "availableDataUrls": [
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2022-05",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2022-06",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2023-05",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2023-06",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2024-05",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2025-05"
+    ],
+    "availableReleases": [
+     {
+      "release": "PROVISIONAL",
+      "availableMonths": [
+       "2025-05"
+      ]
+     },
+     {
+      "release": "RELEASE-2026",
+      "availableMonths": [
+       "2021-05",
+       "2022-05",
+       "2022-06",
+       "2023-05",
+       "2023-06",
+       "2024-05"
+      ]
+     }
+    ]
+   },
+   {
+    "siteCode": "BARR",
+    "availableMonths": [
+     "2020-07",
+     "2021-06",
+     "2022-06",
+     "2023-06",
+     "2024-06",
+     "2025-06"
+    ],
+    "availableDataUrls": [
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2020-07",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2021-06",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2022-06",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2023-06",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2024-06",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2025-06"
+    ],
+    "availableReleases": [
+     {
+      "release": "PROVISIONAL",
+      "availableMonths": [
+       "2025-06"
+      ]
+     },
+     {
+      "release": "RELEASE-2026",
+      "availableMonths": [
+       "2019-06",
+       "2020-07",
+       "2021-06",
+       "2022-06",
+       "2023-06",
+       "2024-06"
+      ]
+     }
+    ]
+   },
+   {
+    "siteCode": "BART",
+    "availableMonths": [
+     "2020-07",
+     "2021-06",
+     "2022-06",
+     "2023-06",
+     "2024-06",
+     "2025-06"
+    ],
+    "availableDataUrls": [
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2020-07",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2021-06",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2022-06",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2023-06",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2024-06",
+     "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2025-06"
+    ],
+    "availableReleases": [
+     {
+      "release": "PROVISIONAL",
+      "availableMonths": [
+       "2025-06"
+      ]
+     },
+     {
+      "release": "RELEASE-2026",
+      "availableMonths": [
+       "2020-06",
+       "2020-07",
+       "2021-06",
+       "2022-06",
+       "2023-06",
+       "2024-06"
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,45 @@
+{
+ "data": {
+  "productCode": "DP1.00001.001",
+  "siteCode": "ABBY",
+  "month": "2023-01",
+  "release": "RELEASE-2025",
+  "packages": [
+   {
+    "type": "basic",
+    "url": "https://data.neonscience.org/api/v0/data/package/DP1.00001.001/ABBY/2023-01?package=basic"
+   },
+   {
+    "type": "expanded",
+    "url": "https://data.neonscience.org/api/v0/data/package/DP1.00001.001/ABBY/2023-01?package=expanded"
+   }
+  ],
+  "files": [
+   {
+    "name": "NEON.D16.ABBY.DP1.00001.001.000.010.030.2DWSD_30min.2023-01.basic.20250128T000000Z.csv",
+    "size": 112233,
+    "md5": "0123456789abcdef0123456789abcdef",
+    "crc32": null,
+    "crc32c": "AbCdEf==",
+    "url": "https://storage.googleapis.com/neon-publication/NEON.DOM.SITE.DP1.00001.001/ABBY/20230101T000000--20230201T000000/basic/NEON.D16.ABBY.DP1.00001.001.000.010.030.2DWSD_30min.2023-01.basic.20250128T000000Z.csv?X-Goog-Expires=604800&X-Goog-Signature=REDACTED"
+   },
+   {
+    "name": "NEON.D16.ABBY.DP1.00001.001.readme.20250128T000000Z.txt",
+    "size": 4567,
+    "md5": "fedcba9876543210fedcba9876543210",
+    "crc32": null,
+    "crc32c": "ZzYyXx==",
+    "url": "https://storage.googleapis.com/neon-publication/.../NEON.D16.ABBY.DP1.00001.001.readme.20250128T000000Z.txt?X-Goog-Expires=604800&X-Goog-Signature=REDACTED"
+   },
+   {
+    "name": "NEON.D16.ABBY.DP1.00001.001.variables.20250128T000000Z.csv",
+    "size": 890,
+    "md5": "00000000000000000000000000000000",
+    "crc32": null,
+    "crc32c": "AAAA==",
+    "url": "https://storage.googleapis.com/neon-publication/.../variables.csv?X-Goog-Signature=REDACTED"
+   }
+  ],
+  "externalData": []
+ }
+}

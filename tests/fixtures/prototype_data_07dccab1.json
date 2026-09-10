@@ -1,0 +1,33 @@
+{
+ "data": {
+  "datasetUuid": "07dccab1-4990-4d2f-9c5b-bf97e10517e3",
+  "datasetProjectTitle": "NEON prototype reaeration data from Blue River (BLUE), 2016",
+  "files": [
+   {
+    "name": "Dataset EML",
+    "description": "Generated dataset EML",
+    "size": 15071,
+    "fileName": "NEON.PROTOTYPE.DATASET.EML.07dccab1-4990-4d2f-9c5b-bf97e10517e3.xml",
+    "md5": "674c231ffd3562ba09c1a5264830514d",
+    "type": {
+     "name": "EML",
+     "description": "EML XML metadata file"
+    },
+    "url": "https://neon-publication-proto.storage.googleapis.com/datasets/07dccab1-4990-4d2f-9c5b-bf97e10517e3/NEON.PROTOTYPE.DATASET.EML.07dccab1-4990-4d2f-9c5b-bf97e10517e3.xml?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T160224Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED"
+   },
+   {
+    "name": "NEON_reaeration_BLUE_2016.zip",
+    "description": "BLUE reaeration dataset",
+    "size": 4678798,
+    "fileName": "NEON_reaeration_BLUE_2016.zip",
+    "md5": "466cf7e83237512a8c38e810c979a1a3",
+    "type": {
+     "name": "DATA",
+     "description": "Dataset data package"
+    },
+    "url": "https://neon-publication-proto.storage.googleapis.com/datasets/07dccab1-4990-4d2f-9c5b-bf97e10517e3/NEON_reaeration_BLUE_2016.zip?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T160224Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED"
+   }
+  ],
+  "dataLocations": []
+ }
+}

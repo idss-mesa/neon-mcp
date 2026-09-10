@@ -1,0 +1,55 @@
+{
+ "data": {
+  "sampleViews": [
+   {
+    "sampleUuid": "5e2b4c1a-0000-4000-8000-000000000001",
+    "sampleTag": "A00000123456",
+    "sampleClass": "bet_IDandpinning_in.individualID",
+    "barcode": "A00000123456",
+    "archiveGuid": null,
+    "sampleEvents": [
+     {
+      "ingestTableName": "bet_fielddata_in",
+      "smsFieldEntries": [
+       {
+        "smsKey": "collectDate",
+        "smsValue": "2019-06-12T00:00:00Z"
+       },
+       {
+        "smsKey": "siteID",
+        "smsValue": "HARV"
+       },
+       {
+        "smsKey": "plotID",
+        "smsValue": "HARV_001"
+       }
+      ]
+     },
+     {
+      "ingestTableName": "bet_IDandpinning_in",
+      "smsFieldEntries": [
+       {
+        "smsKey": "identifiedDate",
+        "smsValue": "2019-09-01T00:00:00Z"
+       },
+       {
+        "smsKey": "scientificName",
+        "smsValue": "Carabus nemoralis"
+       }
+      ]
+     }
+    ],
+    "parentSampleIdentifiers": [
+     {
+      "sampleUuid": "5e2b4c1a-0000-4000-8000-000000000000",
+      "sampleTag": "HARV_001.20190612.B",
+      "sampleClass": "bet_fielddata_in.sampleID",
+      "barcode": null,
+      "archiveGuid": null
+     }
+    ],
+    "childSampleIdentifiers": []
+   }
+  ]
+ }
+}

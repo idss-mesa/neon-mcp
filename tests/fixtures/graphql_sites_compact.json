@@ -1,0 +1,56 @@
+{
+ "data": {
+  "sites": [
+   {
+    "siteCode": "ABBY",
+    "siteName": "Abby Road NEON",
+    "siteType": "GRADIENT",
+    "domainCode": "D16",
+    "domainName": "Pacific Northwest",
+    "stateCode": "WA",
+    "siteLatitude": 45.762439,
+    "siteLongitude": -122.330317
+   },
+   {
+    "siteCode": "ARIK",
+    "siteName": "Arikaree River NEON",
+    "siteType": "CORE",
+    "domainCode": "D10",
+    "domainName": "Central Plains",
+    "stateCode": "CO",
+    "siteLatitude": 39.758206,
+    "siteLongitude": -102.447148
+   },
+   {
+    "siteCode": "BARC",
+    "siteName": "Lake Barco NEON",
+    "siteType": "CORE",
+    "domainCode": "D03",
+    "domainName": "Southeast",
+    "stateCode": "FL",
+    "siteLatitude": 29.675982,
+    "siteLongitude": -82.008414
+   },
+   {
+    "siteCode": "BARR",
+    "siteName": "Utqiaġvik NEON",
+    "siteType": "GRADIENT",
+    "domainCode": "D18",
+    "domainName": "Tundra",
+    "stateCode": "AK",
+    "siteLatitude": 71.28241,
+    "siteLongitude": -156.61936
+   },
+   {
+    "siteCode": "BART",
+    "siteName": "Bartlett Experimental Forest NEON",
+    "siteType": "GRADIENT",
+    "domainCode": "D01",
+    "domainName": "Northeast",
+    "stateCode": "NH",
+    "siteLatitude": 44.063889,
+    "siteLongitude": -71.287375
+   }
+  ]
+ }
+}

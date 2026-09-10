@@ -1,0 +1,211 @@
+{
+ "data": [
+  {
+   "locationName": "ABBY",
+   "locationDescription": "Abby Road NEON",
+   "locationType": "SITE",
+   "domainCode": "D16",
+   "siteCode": "ABBY",
+   "locationDecimalLatitude": 45.762439,
+   "locationDecimalLongitude": -122.330317,
+   "locationElevation": 364.5523,
+   "locationUtmEasting": 552076.54512,
+   "locationUtmNorthing": 5067871.43712,
+   "locationUtmHemisphere": "N",
+   "locationUtmZone": 10,
+   "alphaOrientation": 0.0,
+   "betaOrientation": 0.0,
+   "gammaOrientation": 0.0,
+   "xOffset": 0.0,
+   "yOffset": 0.0,
+   "zOffset": 0.0,
+   "offsetLocation": null,
+   "activePeriods": [
+    {
+     "activatedDate": null,
+     "deactivatedDate": null
+    }
+   ],
+   "locationProperties": [
+    {
+     "locationPropertyName": "Value for AngAzWindPrim",
+     "locationPropertyValue": "130-190"
+    },
+    {
+     "locationPropertyName": "Value for AngAzWindScnd",
+     "locationPropertyValue": "NA"
+    },
+    {
+     "locationPropertyName": "Value for AngAzWindTrty",
+     "locationPropertyValue": "NA"
+    },
+    {
+     "locationPropertyName": "Value for BOLD_XREF",
+     "locationPropertyValue": "Abby Road"
+    },
+    {
+     "locationPropertyName": "Value for Country",
+     "locationPropertyValue": "USA"
+    },
+    {
+     "locationPropertyName": "Value for County",
+     "locationPropertyValue": "Clark"
+    }
+   ],
+   "locationParent": "D16",
+   "locationParentUrl": "https://data.neonscience.org/api/v0/locations/D16",
+   "locationChildren": [
+    "ABBY_015.basePlot.cdw",
+    "ABBY_015.basePlot.cfc",
+    "ABBY_015.basePlot.dhp",
+    "ABBY_015.basePlot.hbp",
+    "ABBY_015.basePlot.vst"
+   ],
+   "locationChildrenUrls": [
+    "https://data.neonscience.org/api/v0/locations/ABBY_015.basePlot.cdw",
+    "https://data.neonscience.org/api/v0/locations/ABBY_015.basePlot.cfc",
+    "https://data.neonscience.org/api/v0/locations/ABBY_015.basePlot.dhp",
+    "https://data.neonscience.org/api/v0/locations/ABBY_015.basePlot.hbp",
+    "https://data.neonscience.org/api/v0/locations/ABBY_015.basePlot.vst"
+   ]
+  },
+  {
+   "locationName": "HARV",
+   "locationDescription": "Harvard Forest & Quabbin Watershed NEON",
+   "locationType": "SITE",
+   "domainCode": "D01",
+   "siteCode": "HARV",
+   "locationDecimalLatitude": 42.53691,
+   "locationDecimalLongitude": -72.17265,
+   "locationElevation": 348.12784,
+   "locationUtmEasting": 732183.97796,
+   "locationUtmNorthing": 4713266.17907,
+   "locationUtmHemisphere": "N",
+   "locationUtmZone": 18,
+   "alphaOrientation": 0.0,
+   "betaOrientation": 0.0,
+   "gammaOrientation": 0.0,
+   "xOffset": 0.0,
+   "yOffset": 0.0,
+   "zOffset": 0.0,
+   "offsetLocation": null,
+   "activePeriods": [
+    {
+     "activatedDate": null,
+     "deactivatedDate": null
+    }
+   ],
+   "locationProperties": [
+    {
+     "locationPropertyName": "Value for AERONET_XREF",
+     "locationPropertyValue": "NEON_Harvard"
+    },
+    {
+     "locationPropertyName": "Value for AngAzWindPrim",
+     "locationPropertyValue": "190-335"
+    },
+    {
+     "locationPropertyName": "Value for AngAzWindScnd",
+     "locationPropertyValue": "NA"
+    },
+    {
+     "locationPropertyName": "Value for AngAzWindTrty",
+     "locationPropertyValue": "NA"
+    },
+    {
+     "locationPropertyName": "Value for BOLD_XREF",
+     "locationPropertyValue": "Harvard Forest"
+    },
+    {
+     "locationPropertyName": "Value for Country",
+     "locationPropertyValue": "USA"
+    }
+   ],
+   "locationParent": "D01",
+   "locationParentUrl": "https://data.neonscience.org/api/v0/locations/D01",
+   "locationChildren": [
+    "HARV_006.basePlot.bgc",
+    "TOWER100450",
+    "HARV_004.basePlot.bet",
+    "HARV_005.basePlot.hbp",
+    "HARV_005.basePlot.sme"
+   ],
+   "locationChildrenUrls": [
+    "https://data.neonscience.org/api/v0/locations/HARV_006.basePlot.bgc",
+    "https://data.neonscience.org/api/v0/locations/TOWER100450",
+    "https://data.neonscience.org/api/v0/locations/HARV_004.basePlot.bet",
+    "https://data.neonscience.org/api/v0/locations/HARV_005.basePlot.hbp",
+    "https://data.neonscience.org/api/v0/locations/HARV_005.basePlot.sme"
+   ]
+  },
+  {
+   "locationName": "SRER",
+   "locationDescription": "Santa Rita Experimental Range NEON",
+   "locationType": "SITE",
+   "domainCode": "D14",
+   "siteCode": "SRER",
+   "locationDecimalLatitude": 31.91068,
+   "locationDecimalLongitude": -110.83549,
+   "locationElevation": 997.476,
+   "locationUtmEasting": 515553.90312,
+   "locationUtmNorthing": 3530547.11829,
+   "locationUtmHemisphere": "N",
+   "locationUtmZone": 12,
+   "alphaOrientation": 0.0,
+   "betaOrientation": 0.0,
+   "gammaOrientation": 0.0,
+   "xOffset": 0.0,
+   "yOffset": 0.0,
+   "zOffset": 0.0,
+   "offsetLocation": null,
+   "activePeriods": [
+    {
+     "activatedDate": null,
+     "deactivatedDate": null
+    }
+   ],
+   "locationProperties": [
+    {
+     "locationPropertyName": "Value for AERONET_XREF",
+     "locationPropertyValue": "NEON_SRER"
+    },
+    {
+     "locationPropertyName": "Value for AngAzWindPrim",
+     "locationPropertyValue": "110-135"
+    },
+    {
+     "locationPropertyName": "Value for AngAzWindScnd",
+     "locationPropertyValue": "200-270"
+    },
+    {
+     "locationPropertyName": "Value for AngAzWindTrty",
+     "locationPropertyValue": "NA"
+    },
+    {
+     "locationPropertyName": "Value for Country",
+     "locationPropertyValue": "USA"
+    },
+    {
+     "locationPropertyName": "Value for County",
+     "locationPropertyValue": "Pima"
+    }
+   ],
+   "locationParent": "D14",
+   "locationParentUrl": "https://data.neonscience.org/api/v0/locations/D14",
+   "locationChildren": [
+    "SRER_007.birdGrid.brd",
+    "SRER_049.basePlot.bbc",
+    "SRER_049.basePlot.ltr",
+    "SRER_049.basePlot.vst",
+    "SRER_017.basePlot.cdw"
+   ],
+   "locationChildrenUrls": [
+    "https://data.neonscience.org/api/v0/locations/SRER_007.birdGrid.brd",
+    "https://data.neonscience.org/api/v0/locations/SRER_049.basePlot.bbc",
+    "https://data.neonscience.org/api/v0/locations/SRER_049.basePlot.ltr",
+    "https://data.neonscience.org/api/v0/locations/SRER_049.basePlot.vst",
+    "https://data.neonscience.org/api/v0/locations/SRER_017.basePlot.cdw"
+   ]
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+{
+ "error": {
+  "status": 404,
+  "detail": "Request replied with status: 404\nError response: No Sample Classes Found for Sample Tag: [NOPE]\n Status: Request failed with code 404"
+ },
+ "data": null
+}

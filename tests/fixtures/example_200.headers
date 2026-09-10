@@ -1,0 +1,18 @@
+HTTP/2 200 
+access-control-allow-origin: *
+content-type: application/json
+date: Thu, 10 Sep 2026 16:01:46 GMT
+vary: Accept-Encoding
+vary: Origin
+vary: Access-Control-Request-Method
+vary: Access-Control-Request-Headers
+x-ratelimit-limit: 200
+x-ratelimit-remaining: 200
+x-ratelimit-reset: 1
+x-xss-protection: 1
+via: 1.1 google
+strict-transport-security: max-age=31536000; includeSubdomains; preload;
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+alt-svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+

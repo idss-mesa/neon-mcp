@@ -1,0 +1,107 @@
+{
+ "data": {
+  "uuid": "07dccab1-4990-4d2f-9c5b-bf97e10517e3",
+  "projectTitle": "NEON prototype reaeration data from Blue River (BLUE), 2016",
+  "projectDescription": "This data package includes field and external laboratory data from gas injection reaeration measurements. This package differs from NEON's typical reaeration data product in that a modified protocol was used due concerns about mixing dificulties and the large amount of salt called for by the usual protocol (NEON.DOC.000693).",
+  "designDescription": "In the typical NEON reaeration protocol, tracer injections of volatile gas are completed to capture a range of flows at NEON wadeable stream sites. The first sampling station is located near sensor set #1 and the fourth sampling station is located near sensor set #2. Sampling stations #2 and #3 are approximately evenly spaced between sampling stations #1 and #4. See the abstract for details on how this package differs from the typical NEON reaeration protocol: Reaeration in Streams [NEON.DOC.000693](http://data.neonscience.org/api/v0/documents/NEON.DOC.000693vH)",
+  "metadataDescription": "A readme txt file and variables csv are included with the dataset",
+  "studyAreaDescription": "The reaeration data product is measured at NEON wadeable stream sites.",
+  "datasetAbstract": "This data package contains data from a modified version of NEON's wadeable stream reaeration sampling protocol. \r\nDue to high discharge and large stream width at BLUE, there was concern that the typical NEON reaeration protocol (NEON.DOC.000693) would require a large amount of salt and wouldn’t allow for sufficient mixing across the stream. This led to the trial of a reaeration bout in August 2016 with the following modifications to the regular protocol:\r\n1.\tNo continuous salt injection was conducted.\r\n2.\tDischarge was taken at each of the 4 sampling stations to assess ground water inputs instead of using the conservative tracer.\r\n3.\tA salt slug of NaCl was deployed at the SF6 injection site to assess travel time. Slug solution was deployed in multiple locations to aid with even mixing. 4 HOBO loggers were deployed (one at each station).\r\n4.\tSF6 was deployed using 4 air stones distributed evenly across the stream.\r\n5.\tWetted widths were collected as well as depth measurements. Depth measurements were collected because back-calculating depth would be difficult with the very deep pools, and would likely not capture the more shallow areas where reaeration is occurring in this big river.\r\nThis data package includes field and external laboratory data from the modified protocol at the Blue River site.",
+  "startYear": 2016,
+  "endYear": 2016,
+  "dateUploaded": "2021-02-04T22:38:29Z",
+  "isPublished": false,
+  "version": "v1",
+  "versionDescription": null,
+  "doi": {
+   "url": "https://doi.org/10.48443/7ay8-e395",
+   "generationDate": "2021-05-12T23:18:08Z"
+  },
+  "relatedVersions": [],
+  "data": {
+   "url": "https://data.neonscience.org/api/v0/prototype/data/07dccab1-4990-4d2f-9c5b-bf97e10517e3",
+   "files": [
+    {
+     "name": "Dataset EML",
+     "description": "Generated dataset EML",
+     "size": 15071,
+     "fileName": "NEON.PROTOTYPE.DATASET.EML.07dccab1-4990-4d2f-9c5b-bf97e10517e3.xml",
+     "md5": "674c231ffd3562ba09c1a5264830514d",
+     "type": {
+      "name": "EML",
+      "description": "EML XML metadata file"
+     }
+    },
+    {
+     "name": "NEON_reaeration_BLUE_2016.zip",
+     "description": "BLUE reaeration dataset",
+     "size": 4678798,
+     "fileName": "NEON_reaeration_BLUE_2016.zip",
+     "md5": "466cf7e83237512a8c38e810c979a1a3",
+     "type": {
+      "name": "DATA",
+      "description": "Dataset data package"
+     }
+    }
+   ],
+   "dataLocations": []
+  },
+  "dataThemes": [
+   "Ecohydrology",
+   "Biogeochemistry"
+  ],
+  "fileTypes": [
+   {
+    "name": "CSV",
+    "description": "CSV"
+   },
+   {
+    "name": "PDF",
+    "description": "PDF"
+   },
+   {
+    "name": "TXT",
+    "description": "TXT"
+   }
+  ],
+  "keywords": [
+   "conductivity",
+   "discharge",
+   "wetted width",
+   "bromide",
+   "argon",
+   "aquatic",
+   "propane",
+   "injection",
+   "flow",
+   "SF6",
+   "chloride",
+   "velocity",
+   "metabolism",
+   "streamflow",
+   "tracer",
+   "travel time",
+   "salt",
+   "sulfur hexafluoride",
+   "deaeration",
+   "reaeration rate",
+   "stream",
+   "river"
+  ],
+  "locations": [
+   {
+    "domain": "D08",
+    "state": "OK",
+    "siteCode": "BLUE",
+    "siteName": "Blue River",
+    "latitude": 34.444218,
+    "longitude": -96.624201
+   }
+  ],
+  "publicationCitations": [],
+  "relatedDataProducts": [],
+  "scienceTeams": [
+   "Aquatic Observational Systems (AOS)"
+  ]
+ }
+}

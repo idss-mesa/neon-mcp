@@ -1,0 +1,39 @@
+{
+ "data": {
+  "locationName": "D01",
+  "locationDescription": "Northeast Domain",
+  "locationType": "DOMAIN",
+  "domainCode": "D01",
+  "alphaOrientation": 0.0,
+  "betaOrientation": 0.0,
+  "gammaOrientation": 0.0,
+  "xOffset": 0.0,
+  "yOffset": 0.0,
+  "zOffset": 0.0,
+  "offsetLocation": null,
+  "activePeriods": [
+   {
+    "activatedDate": null,
+    "deactivatedDate": null
+   }
+  ],
+  "locationProperties": [
+   {
+    "locationPropertyName": "Value for Required Asset Management Location Code",
+    "locationPropertyValue": "D01"
+   }
+  ],
+  "locationParent": "REALM",
+  "locationParentUrl": "https://data.neonscience.org/api/v0/locations/REALM",
+  "locationChildren": [
+   "HARV",
+   "BART",
+   "HOPB"
+  ],
+  "locationChildrenUrls": [
+   "https://data.neonscience.org/api/v0/locations/HARV",
+   "https://data.neonscience.org/api/v0/locations/BART",
+   "https://data.neonscience.org/api/v0/locations/HOPB"
+  ]
+ }
+}

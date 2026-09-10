@@ -1,0 +1,341 @@
+{
+ "data": [
+  {
+   "uuid": "07dccab1-4990-4d2f-9c5b-bf97e10517e3",
+   "projectTitle": "NEON prototype reaeration data from Blue River (BLUE), 2016",
+   "projectDescription": "This data package includes field and external laboratory data from gas injection reaeration measurements. This package differs from NEON's typical reaeration data product in that a modified protocol was used due concerns about mixing dificulties and the large amount of salt called for by the usual p",
+   "designDescription": "In the typical NEON reaeration protocol, tracer injections of volatile gas are completed to capture a range of flows at NEON wadeable stream sites. The first sampling station is located near sensor se",
+   "metadataDescription": "A readme txt file and variables csv are included with the dataset",
+   "studyAreaDescription": "The reaeration data product is measured at NEON wadeable stream sites.",
+   "datasetAbstract": "This data package contains data from a modified version of NEON's wadeable stream reaeration sampling protocol. \r\nDue to high discharge and large stream width at BLUE, there was concern that the typical NEON reaeration protocol (NEON.DOC.000693) would require a large amount of salt and wouldn’t allo",
+   "startYear": 2016,
+   "endYear": 2016,
+   "dateUploaded": "2021-02-04T22:38:29Z",
+   "isPublished": false,
+   "version": "v1",
+   "versionDescription": null,
+   "doi": {
+    "url": "https://doi.org/10.48443/7ay8-e395",
+    "generationDate": "2021-05-12T23:18:08Z"
+   },
+   "relatedVersions": [],
+   "data": {
+    "url": "https://data.neonscience.org/api/v0/prototype/data/07dccab1-4990-4d2f-9c5b-bf97e10517e3",
+    "files": [
+     {
+      "name": "Dataset EML",
+      "description": "Generated dataset EML",
+      "size": 15071,
+      "fileName": "NEON.PROTOTYPE.DATASET.EML.07dccab1-4990-4d2f-9c5b-bf97e10517e3.xml",
+      "md5": "674c231ffd3562ba09c1a5264830514d",
+      "type": {
+       "name": "EML",
+       "description": "EML XML metadata file"
+      }
+     },
+     {
+      "name": "NEON_reaeration_BLUE_2016.zip",
+      "description": "BLUE reaeration dataset",
+      "size": 4678798,
+      "fileName": "NEON_reaeration_BLUE_2016.zip",
+      "md5": "466cf7e83237512a8c38e810c979a1a3",
+      "type": {
+       "name": "DATA",
+       "description": "Dataset data package"
+      }
+     }
+    ],
+    "dataLocations": []
+   },
+   "dataThemes": [
+    "Ecohydrology",
+    "Biogeochemistry"
+   ],
+   "fileTypes": [
+    {
+     "name": "CSV",
+     "description": "CSV"
+    },
+    {
+     "name": "PDF",
+     "description": "PDF"
+    },
+    {
+     "name": "TXT",
+     "description": "TXT"
+    }
+   ],
+   "keywords": [
+    "conductivity",
+    "discharge",
+    "wetted width",
+    "bromide",
+    "argon",
+    "aquatic",
+    "propane",
+    "injection",
+    "flow",
+    "SF6",
+    "chloride",
+    "velocity",
+    "metabolism",
+    "streamflow",
+    "tracer",
+    "travel time",
+    "salt",
+    "sulfur hexafluoride",
+    "deaeration",
+    "reaeration rate",
+    "stream",
+    "river"
+   ],
+   "locations": [
+    {
+     "domain": "D08",
+     "state": "OK",
+     "siteCode": "BLUE",
+     "siteName": "Blue River",
+     "latitude": 34.444218,
+     "longitude": -96.624201
+    }
+   ],
+   "publicationCitations": [],
+   "relatedDataProducts": [],
+   "scienceTeams": [
+    "Aquatic Observational Systems (AOS)"
+   ]
+  },
+  {
+   "uuid": "08047ac5-16a1-4068-bf57-395886c147a3",
+   "projectTitle": "NEON prototype mosquito data from Florida and Georgia collections, 2012",
+   "projectDescription": "NEON’s mosquito sampling will provide an informative measure of a biological response to environmental, climate and land-use change. NEON sampling will augment state and local mosquito collection efforts and will enable us to characterize the response of mosquito populations, including abundance, ph",
+   "designDescription": "To implement a sampling regime that measures the abundance and diversity of mosquitoes, we conducted initial prototype sampling on a domain-scale. We set out 11 CO2 traps within Domain 03 in 2012. Tra",
+   "metadataDescription": "Metadata with xml download",
+   "studyAreaDescription": "Sampling occurred in three locations: the Disney Wilderness Preserve in FL (DSNY), the Ordway-Swisher Biological Station in FL (OSBS), and the Jones Ecological Research Center in GA (JERC). This prototype effort was implemented at alternative plot locations to the operational ones listed on the data portal. GPS coordinates of each plot are recorded.",
+   "datasetAbstract": "Mosquitoes are a widespread family of insects with aquatic larval and pupal forms and flying adults that have been extensively studied because of their ecological and epidemiological significance. As a dominant taxon in aquatic food webs, mosquitoes compose a sizable proportion of invertebrate bioma",
+   "startYear": 2012,
+   "endYear": 2012,
+   "dateUploaded": "2017-08-18T19:48:23Z",
+   "isPublished": false,
+   "version": "v1",
+   "versionDescription": null,
+   "doi": {
+    "url": "https://doi.org/10.48443/wcj3-ew78",
+    "generationDate": "2021-05-12T22:47:17Z"
+   },
+   "relatedVersions": [],
+   "data": {
+    "url": "https://data.neonscience.org/api/v0/prototype/data/08047ac5-16a1-4068-bf57-395886c147a3",
+    "files": [
+     {
+      "name": "NEON_mosquito_prototype_data_FL_GA_2012.zip",
+      "description": "Metadata with associated XML download.",
+      "size": 14034,
+      "fileName": "NEON_mosquito_prototype_data_FL_GA_2012.zip",
+      "md5": "2d31749da9c281d55fcfd04dba3a17e6",
+      "type": {
+       "name": "DATA",
+       "description": "Dataset data package"
+      }
+     },
+     {
+      "name": "Dataset EML",
+      "description": "Generated dataset EML",
+      "size": 15436,
+      "fileName": "NEON.PROTOTYPE.DATASET.EML.08047ac5-16a1-4068-bf57-395886c147a3.xml",
+      "md5": "39280def43d87c050c770d92c1faccda",
+      "type": {
+       "name": "EML",
+       "description": "EML XML metadata file"
+      }
+     }
+    ],
+    "dataLocations": []
+   },
+   "dataThemes": [
+    "Organisms, Populations, and Communities"
+   ],
+   "fileTypes": [
+    {
+     "name": "CSV",
+     "description": "CSV"
+    }
+   ],
+   "keywords": [
+    "abundance",
+    "mosquitoes",
+    "diversity"
+   ],
+   "locations": [
+    {
+     "domain": "03",
+     "state": "FL",
+     "siteCode": "DSNY",
+     "siteName": "Disney Wilderness Preserve",
+     "latitude": 28.12505,
+     "longitude": -81.43619
+    },
+    {
+     "domain": "03",
+     "state": "FL",
+     "siteCode": "OSBS",
+     "siteName": "Ordway-Swisher Biological Station",
+     "latitude": 29.689282,
+     "longitude": -81.993431
+    },
+    {
+     "domain": "03",
+     "state": "GA",
+     "siteCode": "JERC",
+     "siteName": "Jones Ecological Research Center",
+     "latitude": 31.194839,
+     "longitude": -84.468623
+    }
+   ],
+   "publicationCitations": [],
+   "relatedDataProducts": [
+    {
+     "dataProductIdq": "NEON.DOM.SITE.DP1.10043.001",
+     "dataProductCode": "DP1.10043.001",
+     "dataProductName": "Mosquitoes sampled from CO2 traps",
+     "dataProductDescription": "Taxonomically identified mosquitoes and the plots and times from which they were collected"
+    }
+   ],
+   "scienceTeams": [
+    "Terrestrial Observational Systems (TOS)"
+   ]
+  },
+  {
+   "uuid": "09a00d5d-ec6d-4cfd-9ab2-c8bfefae96b8",
+   "projectTitle": "NEON prototype bathymetric sonar data from D05 Lake Clara, 2011",
+   "projectDescription": "This file contains prototype bathymetric data that has had little or no post processing for higher level data products. Data were collected using the AOS Protocol and Procedure: Bathymetry and Morphology of Lakes and Non-Wadeable Streams [NEON.DOC.001197]. Review the README and the BAT_Master_OpalFi",
+   "designDescription": "Sonar data collected from NEON lake and river sites using a Humminbird 1198c SI Combo with sonar and side imaging capability. Refer to the AOS Protocol and Procedure: Bathymetry and Morphology of Lake",
+   "metadataDescription": "README.txt include additional documents for the user to review for collecting and post processing bathymetric data and habitat maps.\r\nBAT_Master_OpalFiles.csv include details regarding the file types associated with this package.",
+   "studyAreaDescription": "Lake Clara, D05; WI",
+   "datasetAbstract": "The Bathymetric and Morphological Map data product provides depths of lakes and non-wadeable streams (rivers), sediment and substrate characteristics, as well as the presence or absence, approximate abundance, distribution, and size of underwater flora. High accuracy depth (bathymetric) maps are obt",
+   "startYear": 2011,
+   "endYear": 2011,
+   "dateUploaded": "2018-02-28T20:49:43Z",
+   "isPublished": false,
+   "version": "v1",
+   "versionDescription": null,
+   "doi": {
+    "url": "https://doi.org/10.48443/y5v7-5d90",
+    "generationDate": "2021-05-12T22:59:53Z"
+   },
+   "relatedVersions": [],
+   "data": {
+    "url": "https://data.neonscience.org/api/v0/prototype/data/09a00d5d-ec6d-4cfd-9ab2-c8bfefae96b8",
+    "files": [
+     {
+      "name": "D05_CLARA_BAT_2011b.zip",
+      "description": "Sonar Data",
+      "size": 853269444,
+      "fileName": "D05_CLARA_BAT_2011b.zip",
+      "md5": "a95f85ec1e7c9261e33cfca62c705e2a",
+      "type": {
+       "name": "DATA",
+       "description": "Dataset data package"
+      }
+     },
+     {
+      "name": "D05_CLARA_BAT_2011c.zip",
+      "description": "Sonar Data",
+      "size": 1297654341,
+      "fileName": "D05_CLARA_BAT_2011c.zip",
+      "md5": "b294c409120007c77b31653210f76e43",
+      "type": {
+       "name": "DATA",
+       "description": "Dataset data package"
+      }
+     },
+     {
+      "name": "D05_CLARA_BAT_2011a.zip",
+      "description": "Sonar Data",
+      "size": 344608555,
+      "fileName": "D05_CLARA_BAT_2011a.zip",
+      "md5": "d588fca8a8788ec543b87344d342fb42",
+      "type": {
+       "name": "DATA",
+       "description": "Dataset data package"
+      }
+     },
+     {
+      "name": "Dataset EML",
+      "description": "Generated dataset EML",
+      "size": 14890,
+      "fileName": "NEON.PROTOTYPE.DATASET.EML.09a00d5d-ec6d-4cfd-9ab2-c8bfefae96b8.xml",
+      "md5": "1fb82c67d713ea28207c499b8ae6b239",
+      "type": {
+       "name": "EML",
+       "description": "EML XML metadata file"
+      }
+     }
+    ],
+    "dataLocations": []
+   },
+   "dataThemes": [
+    "Ecohydrology",
+    "Land Cover and Processes"
+   ],
+   "fileTypes": [
+    {
+     "name": "XLS",
+     "description": "XLS"
+    },
+    {
+     "name": "DAT",
+     "description": "DAT"
+    },
+    {
+     "name": "XML",
+     "description": "XML"
+    },
+    {
+     "name": "CSV",
+     "description": "CSV"
+    },
+    {
+     "name": "PNG",
+     "description": "PNG"
+    },
+    {
+     "name": "GPX",
+     "description": "GPX"
+    },
+    {
+     "name": "SHP",
+     "description": "SHP"
+    }
+   ],
+   "keywords": [
+    "bathymetry",
+    "sonar",
+    "side scan",
+    "habitat"
+   ],
+   "locations": [
+    {
+     "domain": "D05",
+     "state": "WI",
+     "siteCode": "LACL",
+     "siteName": "Lake Clara",
+     "latitude": 45.436594,
+     "longitude": -89.486812
+    }
+   ],
+   "publicationCitations": [],
+   "relatedDataProducts": [
+    {
+     "dataProductIdq": "NEON.DOM.SITE.DP4.00132.001",
+     "dataProductCode": "DP4.00132.001",
+     "dataProductName": "Bathymetric and morphological maps",
+     "dataProductDescription": "Bathymetry of lake bottoms and non-wadeable streams for detecting environmental change as well as for determining lake morphology, habitat features, and water quality."
+    }
+   ],
+   "scienceTeams": [
+    "Aquatic Observational Systems (AOS)"
+   ]
+  }
+ ]
+}

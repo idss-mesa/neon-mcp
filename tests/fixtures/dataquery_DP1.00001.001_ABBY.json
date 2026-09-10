@@ -1,0 +1,51 @@
+{
+ "data": {
+  "productCode": "DP1.00001.001",
+  "siteCodes": [
+   "ABBY"
+  ],
+  "startDate": "2023-01-01T00:00:00Z",
+  "endDate": "2023-02-28T23:59:59Z",
+  "packageType": "basic",
+  "releases": [
+   {
+    "release": "RELEASE-2025",
+    "generationDate": "2025-01-29T00:07:30Z",
+    "packages": [
+     {
+      "domainCode": "D16",
+      "siteCode": "ABBY",
+      "month": "2023-01",
+      "packageType": "basic",
+      "generationDate": "2025-01-28T00:00:00Z",
+      "files": [
+       {
+        "name": "NEON.D16.ABBY.DP1.00001.001.000.010.030.2DWSD_30min.2023-01.basic.20250128T000000Z.csv",
+        "size": 112233,
+        "md5": "0123456789abcdef0123456789abcdef",
+        "crc32c": "AbCdEf==",
+        "url": "https://storage.googleapis.com/neon-publication/.../2023-01.basic.csv?X-Goog-Signature=REDACTED"
+       }
+      ]
+     },
+     {
+      "domainCode": "D16",
+      "siteCode": "ABBY",
+      "month": "2023-02",
+      "packageType": "basic",
+      "generationDate": "2025-01-28T00:00:00Z",
+      "files": [
+       {
+        "name": "NEON.D16.ABBY.DP1.00001.001.000.010.030.2DWSD_30min.2023-02.basic.20250128T000000Z.csv",
+        "size": 99887,
+        "md5": "1111111111111111111111111111111",
+        "crc32c": "BbCcDd==",
+        "url": "https://storage.googleapis.com/neon-publication/.../2023-02.basic.csv?X-Goog-Signature=REDACTED"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

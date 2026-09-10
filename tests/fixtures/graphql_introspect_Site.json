@@ -1,0 +1,138 @@
+{
+ "data": {
+  "__type": {
+   "name": "Site",
+   "kind": "OBJECT",
+   "description": "Type definition for a site",
+   "fields": [
+    {
+     "name": "siteCode",
+     "description": "Four character code for the site",
+     "type": {
+      "name": "String",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "siteName",
+     "description": "Full name for the site",
+     "type": {
+      "name": "String",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "siteDescription",
+     "description": "Brief site description",
+     "type": {
+      "name": "String",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "siteType",
+     "description": "Core or Gradient site",
+     "type": {
+      "name": "String",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "siteLongitude",
+     "description": "Point longitude for the site",
+     "type": {
+      "name": "Float",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "siteLatitude",
+     "description": "Point latitude for the site",
+     "type": {
+      "name": "Float",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "stateName",
+     "description": "Full name of the state or territory that this site is in",
+     "type": {
+      "name": "String",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "stateCode",
+     "description": "Two letter state code that this site is in",
+     "type": {
+      "name": "String",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "domainName",
+     "description": "Brief description for the domain this site is in",
+     "type": {
+      "name": "String",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "domainCode",
+     "description": "Three character domain abbreviation (D01, D02, etc) for the\ndomain this site is in",
+     "type": {
+      "name": "String",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "deimsId",
+     "description": "The DEIMS Registry ID for the site (see deims.org)",
+     "type": {
+      "name": "String",
+      "kind": "SCALAR",
+      "ofType": null
+     }
+    },
+    {
+     "name": "releases",
+     "description": "List of releases associated with the site based on data\nproducts available.",
+     "type": {
+      "name": null,
+      "kind": "LIST",
+      "ofType": {
+       "name": "DataProductRelease",
+       "kind": "OBJECT",
+       "ofType": null
+      }
+     }
+    },
+    {
+     "name": "dataProducts",
+     "description": "List of data products and months of available data",
+     "type": {
+      "name": null,
+      "kind": "LIST",
+      "ofType": {
+       "name": "SiteDataProduct",
+       "kind": "OBJECT",
+       "ofType": null
+      }
+     }
+    }
+   ],
+   "inputFields": null,
+   "enumValues": null
+  }
+ }
+}

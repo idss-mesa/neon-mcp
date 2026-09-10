@@ -1,0 +1,556 @@
+{
+ "data": [
+  {
+   "productCodeLong": "NEON.DOM.SITE.DP1.00001.001",
+   "productCode": "DP1.00001.001",
+   "productCodePresentation": "NEON.DP1.00001",
+   "productName": "2D wind speed and direction",
+   "productDescription": "Two-dimensional wind speed and direction, available as two- and thirty-minute aggregations of 1 Hz observations.  Observations are made by 2-D sonic anemometer sensors located at multiple heights on the tower infrastructure and by 2-D sonic anemometer sensors located on the aquatic meteorological station.",
+   "productStatus": "ACTIVE",
+   "productCategory": "Level 1 Data Product",
+   "productHasExpanded": true,
+   "productScienceTeamAbbr": "TIS",
+   "productScienceTeam": "Terrestrial Instrument System (TIS)",
+   "productPublicationFormatType": "TIS Data Product Type",
+   "productAbstract": "Wind plays an important role in atmospheric and environmental sciences. A function of differential heating of Earth’s surface and subsequent pressure gradients, horizontal and vertical winds are responsible for advection of atmospheric pollutants, moisture, heat and momentum (Stull 1988). As such, horizontal and vertical winds will be measured throughout the Observatory.\n\nLatency:\nData collected i…",
+   "productDesignDescription": "Multiple 2D anemometers are deployed at tower sites. They are located on each boom arm below the tower-top level at terrestrial sites. A single 2D anemometer is located at the top of the aquatic met station at a standard height of 3m above ground level. Two- and thirty-minute averages of horizontal wind speed and direction are calculated. Each 2D anemometer represents the point at which it is plac…",
+   "productStudyDescription": "2D wind speed is measured at all NEON terrestrial and aquatic sites except for BLWA and TOMB.",
+   "productBasicDescription": "Includes the data product, summary statistics, expanded uncertainty, and final quality flag.",
+   "productExpandedDescription": "Includes the basic package information plus quality metrics for all of the quality assessment and quality control analyses.",
+   "productSensor": "Gill - Wind Observer II; Extreme Weather Wind Observer",
+   "productRemarks": "Note that the final quality flag for wind direction (windDirFinalQF) in the basic download package includes a test for calm winds, under which the computed wind direction is unreliable (due to light wind speed) though the data quality may still be adequate for scientific purposes. To distinguish between data flagged for calm winds and other quality tests, please download the expanded package.",
+   "themes": [
+    "Atmosphere"
+   ],
+   "changeLogs": [
+    {
+     "id": 506,
+     "parentIssueID": null,
+     "issueDate": "2018-01-05T00:00:00Z",
+     "resolvedDate": "2018-01-05T00:00:00Z",
+     "dateRangeStart": "2017-12-28T00:00:00Z",
+     "dateRangeEnd": "2018-03-19T00:00:00Z",
+     "locationAffected": "DEJU (HOR.VER: 000.020)",
+     "issue": "Ice-forming conditions on 2D wind sensor tines.",
+     "resolution": "Applied manual flagging."
+    },
+    {
+     "id": 601,
+     "parentIssueID": 506,
+     "issueDate": "2018-01-05T00:00:00Z",
+     "resolvedDate": "2018-01-05T00:00:00Z",
+     "dateRangeStart": "2017-09-15T00:00:00Z",
+     "dateRangeEnd": "2017-12-14T00:00:00Z",
+     "locationAffected": "TOOK",
+     "issue": "Ice-forming conditions on 2D wind sensor tines.",
+     "resolution": "Applied manual flagging."
+    }
+   ],
+   "specs": [
+    {
+     "specId": "8365",
+     "specNumber": "NEON.DOC.000780vD",
+     "specType": "application/pdf",
+     "specSize": 715529,
+     "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD) – 2D Wind Speed and Direction",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.000780vD"
+    },
+    {
+     "specId": "7604",
+     "specNumber": "NEON.DOC.011081vD",
+     "specType": "application/pdf",
+     "specSize": 488215,
+     "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD) –  QA/QC Plausibility Testing",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.011081vD"
+    }
+   ],
+   "keywords": [
+    "sonic anemometer",
+    "horizontal wind",
+    "tower",
+    "wind speed",
+    "met station",
+    "meteorological station",
+    "wind direction"
+   ],
+   "biorepositoryCollections": null,
+   "releases": [
+    {
+     "release": "RELEASE-2025",
+     "generationDate": "2025-01-29T00:07:30Z",
+     "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2025",
+     "productDoi": {
+      "generationDate": "2025-01-29T01:02:59Z",
+      "url": "https://doi.org/10.48443/te3v-2m97"
+     }
+    }
+   ],
+   "siteCodes": [
+    {
+     "siteCode": "ABBY",
+     "availableMonths": [
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ABBY/2024-01",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ABBY/2024-02",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ABBY/2024-03",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ABBY/2024-04",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ABBY/2024-05",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ABBY/2024-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "RELEASE-2025",
+       "availableMonths": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "ARIK",
+     "availableMonths": [
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ARIK/2024-01",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ARIK/2024-02",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ARIK/2024-03",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ARIK/2024-04",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ARIK/2024-05",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/ARIK/2024-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "RELEASE-2025",
+       "availableMonths": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "BARC",
+     "availableMonths": [
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/BARC/2024-01",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/BARC/2024-02",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/BARC/2024-03",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/BARC/2024-04",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/BARC/2024-05",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00001.001/BARC/2024-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "RELEASE-2025",
+       "availableMonths": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "productCodeLong": "NEON.DOM.SITE.DP1.00002.001",
+   "productCode": "DP1.00002.001",
+   "productCodePresentation": "NEON.DP1.00002",
+   "productName": "Single aspirated air temperature",
+   "productDescription": "Air temperature, available as one- and thirty-minute averages of 1 Hz observations. Observations are made by sensors located at multiple heights on the tower infrastructure and by sensors located on the aquatic meteorological station. Temperature observations are made using platinum resistance thermometers, which are housed in a fan aspirated shield to reduce radiative bias.",
+   "productStatus": "ACTIVE",
+   "productCategory": "Level 1 Data Product",
+   "productHasExpanded": true,
+   "productScienceTeamAbbr": "TIS",
+   "productScienceTeam": "Terrestrial Instrument System (TIS)",
+   "productPublicationFormatType": "TIS Data Product Type",
+   "productAbstract": "Single aspirated air temperature measurements, available as one- and thirty-minute averages of 1 Hz observations. Temperature is one of the most fundamental physical measurements.  It is a primary driving factor for countless physical, chemical, and biological processes. The single aspirated sensor assembly comprises an individual Platinum Resistance Thermometer (PRT) housed within an aspirated sh…",
+   "productDesignDescription": "Multiple Single Aspirated Air Temperature (SAAT) assemblies are deployed at tower sites. SAAT assemblies are located on each boom arm below the top of the tower. A single SAAT assembly is deployed at aquatic sites and is located on the aquatic met station 3m above ground level.",
+   "productStudyDescription": ": Single aspirated air temperature is measured at all NEON terrestrial and aquatic sites except for BLWA and TOMB.",
+   "productBasicDescription": "The basic download package includes the data product, summary statistics, expanded uncertainty, and final quality flag.",
+   "productExpandedDescription": "The expanded download package includes the basic package information plus quality metrics for all of the quality assessment and quality control analyses.",
+   "productSensor": "Thermometrics Climate RTD 100 Ω Probe, housed within a Met One 076B fan aspirated radiation shield",
+   "productRemarks": "",
+   "themes": [
+    "Atmosphere"
+   ],
+   "changeLogs": [
+    {
+     "id": 702,
+     "parentIssueID": null,
+     "issueDate": "2018-01-09T00:00:00Z",
+     "resolvedDate": "2018-01-09T00:00:00Z",
+     "dateRangeStart": "2017-12-11T00:00:00Z",
+     "dateRangeEnd": "2018-04-25T00:00:00Z",
+     "locationAffected": "BART",
+     "issue": "Removed aspirated air sensors on ML1 for winterization",
+     "resolution": "Sensor reinstalled."
+    },
+    {
+     "id": 1322,
+     "parentIssueID": 702,
+     "issueDate": "2018-01-09T00:00:00Z",
+     "resolvedDate": "2018-01-09T00:00:00Z",
+     "dateRangeStart": "2017-10-10T00:00:00Z",
+     "dateRangeEnd": "2018-06-13T00:00:00Z",
+     "locationAffected": "TOOL",
+     "issue": "Removed aspirated air sensors on ML1 for winterization",
+     "resolution": "Sensor reinstalled."
+    }
+   ],
+   "specs": [
+    {
+     "specId": "7609",
+     "specNumber": "NEON.DOC.011081vD",
+     "specType": "application/pdf",
+     "specSize": 488215,
+     "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD) –  QA/QC Plausibility Testing",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.011081vD"
+    },
+    {
+     "specId": "7610",
+     "specNumber": "NEON.DOC.001113vC",
+     "specType": "application/pdf",
+     "specSize": 1178860,
+     "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD) –Quality Flags and Quality Metrics for TIS Data Products",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.001113vC"
+    }
+   ],
+   "keywords": [
+    "air temperature",
+    "tower",
+    "profile",
+    "met station",
+    "meteorology",
+    "single aspirated air temperature (SAAT)",
+    "platinum resistance thermometers (PRT)"
+   ],
+   "biorepositoryCollections": null,
+   "releases": [
+    {
+     "release": "RELEASE-2025",
+     "generationDate": "2025-01-29T00:07:30Z",
+     "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2025",
+     "productDoi": {
+      "generationDate": "2025-01-29T01:02:59Z",
+      "url": "https://doi.org/10.48443/hejx-aa82"
+     }
+    }
+   ],
+   "siteCodes": [
+    {
+     "siteCode": "ABBY",
+     "availableMonths": [
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ABBY/2024-01",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ABBY/2024-02",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ABBY/2024-03",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ABBY/2024-04",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ABBY/2024-05",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ABBY/2024-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "RELEASE-2025",
+       "availableMonths": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "ARIK",
+     "availableMonths": [
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ARIK/2024-01",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ARIK/2024-02",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ARIK/2024-03",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ARIK/2024-04",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ARIK/2024-05",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/ARIK/2024-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "RELEASE-2025",
+       "availableMonths": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "BARC",
+     "availableMonths": [
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/BARC/2024-01",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/BARC/2024-02",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/BARC/2024-03",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/BARC/2024-04",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/BARC/2024-05",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00002.001/BARC/2024-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "RELEASE-2025",
+       "availableMonths": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "productCodeLong": "NEON.DOM.SITE.DP1.00003.001",
+   "productCode": "DP1.00003.001",
+   "productCodePresentation": "NEON.DP1.00003",
+   "productName": "Triple aspirated air temperature",
+   "productDescription": "Air temperature, available as one- and thirty-minute averages derived from triplicate 1 Hz temperature observations. Observations are made by sensors located at the top of the tower infrastructure. Temperature observations are made by three platinum resistance thermometers, which are housed together in a fan aspirated shield to reduce radiative biases.",
+   "productStatus": "ACTIVE",
+   "productCategory": "Level 1 Data Product",
+   "productHasExpanded": true,
+   "productScienceTeamAbbr": "TIS",
+   "productScienceTeam": "Terrestrial Instrument System (TIS)",
+   "productPublicationFormatType": "TIS Data Product Type",
+   "productAbstract": "Temperature is one of the most fundamental physical measurements. It is a primary driving factor for countless physical, chemical, and biological processes. The triple aspirated sensor assembly comprises three individual Platinum Resistance Thermometers (PRTs) housed within an aspirated shield.\n\nLatency:\nData collected in any given month are published during the second full week of the following m…",
+   "productDesignDescription": "The Triple Aspirated Air Temperature assembly is deployed at core and relocatable tower sites. It is located on the top level of the tower infrastructure.",
+   "productStudyDescription": "These data are collected at all NEON terrestrial sites.",
+   "productBasicDescription": "Includes the data product, summary statistics, expanded uncertainty, and final quality flag.",
+   "productExpandedDescription": "Includes the basic package information plus quality metrics for all of the quality assessment and quality control analyses.",
+   "productSensor": "Thermometrics Climate RTD 100 Ω Probe, housed within a Met One 076B fan aspirated radiation shield",
+   "productRemarks": "",
+   "themes": [
+    "Atmosphere"
+   ],
+   "changeLogs": [
+    {
+     "id": 2527,
+     "parentIssueID": null,
+     "issueDate": "2018-05-08T00:00:00Z",
+     "resolvedDate": "2018-05-08T00:00:00Z",
+     "dateRangeStart": "2018-04-19T00:00:00Z",
+     "dateRangeEnd": "2018-04-19T00:00:00Z",
+     "locationAffected": "NIWO (HOR.VER 000.040)",
+     "issue": "Sensor not powered down for cleaning.",
+     "resolution": "Applied manual flagging."
+    },
+    {
+     "id": 7128,
+     "parentIssueID": null,
+     "issueDate": "2019-02-19T00:00:00Z",
+     "resolvedDate": "2019-02-19T00:00:00Z",
+     "dateRangeStart": "2018-01-01T00:00:00Z",
+     "dateRangeEnd": "2018-10-31T00:00:00Z",
+     "locationAffected": "All locations.",
+     "issue": "Incorrect calibration information was applied to data for some sites and time periods.",
+     "resolution": "Data reprocessed with correct calibration information."
+    }
+   ],
+   "specs": [
+    {
+     "specId": "8944",
+     "specNumber": "NEON.DOC.004757vB",
+     "specType": "application/pdf",
+     "specSize": 2690911,
+     "specDescription": "NEON Preventive Maintenance Procedure: AIS & TIS Thermometrics Platinum Resistance Thermometer (PRT)",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.004757vB"
+    },
+    {
+     "specId": "7614",
+     "specNumber": "NEON.DOC.011081vD",
+     "specType": "application/pdf",
+     "specSize": 488215,
+     "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD) –  QA/QC Plausibility Testing",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.011081vD"
+    }
+   ],
+   "keywords": [
+    "air temperature",
+    "tower",
+    "tower top",
+    "met station",
+    "meteorology",
+    "triple aspirated air temperature (TRAAT)",
+    "platinum resistance thermometers (PRT)"
+   ],
+   "biorepositoryCollections": null,
+   "releases": [
+    {
+     "release": "RELEASE-2025",
+     "generationDate": "2025-01-29T00:07:30Z",
+     "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2025",
+     "productDoi": {
+      "generationDate": "2025-01-29T01:02:59Z",
+      "url": "https://doi.org/10.48443/fk2b-4504"
+     }
+    }
+   ],
+   "siteCodes": [
+    {
+     "siteCode": "ABBY",
+     "availableMonths": [
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/ABBY/2024-01",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/ABBY/2024-02",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/ABBY/2024-03",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/ABBY/2024-04",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/ABBY/2024-05",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/ABBY/2024-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "RELEASE-2025",
+       "availableMonths": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "BARR",
+     "availableMonths": [
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BARR/2024-01",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BARR/2024-02",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BARR/2024-03",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BARR/2024-04",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BARR/2024-05",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BARR/2024-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "RELEASE-2025",
+       "availableMonths": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "BART",
+     "availableMonths": [
+      "2024-01",
+      "2024-02",
+      "2024-03",
+      "2024-04",
+      "2024-05",
+      "2024-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BART/2024-01",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BART/2024-02",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BART/2024-03",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BART/2024-04",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BART/2024-05",
+      "https://data.neonscience.org/api/v0/releases/RELEASE-2025/data/DP1.00003.001/BART/2024-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "RELEASE-2025",
+       "availableMonths": [
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

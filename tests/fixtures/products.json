@@ -1,0 +1,945 @@
+{
+ "data": [
+  {
+   "productCodeLong": "NEON.DOM.SITE.DP1.00001.001",
+   "productCode": "DP1.00001.001",
+   "productCodePresentation": "NEON.DP1.00001",
+   "productName": "2D wind speed and direction",
+   "productDescription": "Two-dimensional wind speed and direction, available as two- and thirty-minute aggregations of 1 Hz observations.  Observations are made by 2-D sonic anemometer sensors located at multiple heights on the tower infrastructure and by 2-D sonic anemometer sensors located on the aquatic meteorological station.",
+   "productStatus": "ACTIVE",
+   "productCategory": "Level 1 Data Product",
+   "productHasExpanded": true,
+   "productScienceTeamAbbr": "TIS",
+   "productScienceTeam": "Terrestrial Instrument System (TIS)",
+   "productPublicationFormatType": "TIS Data Product Type",
+   "productAbstract": "Wind plays an important role in atmospheric and environmental sciences. A function of differential heating of Earth’s surface and subsequent pressure gradients, horizontal and vertical winds are responsible for advection of atmospheric pollutants, moisture, heat and momentum (Stull 1988). As such, horizontal and vertical winds will be measured throughout the Observatory.\n\nLatency:\nData collected i…",
+   "productDesignDescription": "Multiple 2D anemometers are deployed at tower sites. They are located on each boom arm below the tower-top level at terrestrial sites. A single 2D anemometer is located at the top of the aquatic met station at a standard height of 3m above ground level. Two- and thirty-minute averages of horizontal wind speed and direction are calculated. Each 2D anemometer represents the point at which it is plac…",
+   "productStudyDescription": "2D wind speed is measured at all NEON terrestrial and aquatic sites except for BLWA and TOMB.",
+   "productBasicDescription": "Includes the data product, summary statistics, expanded uncertainty, and final quality flag.",
+   "productExpandedDescription": "Includes the basic package information plus quality metrics for all of the quality assessment and quality control analyses.",
+   "productSensor": "Gill - Wind Observer II; Extreme Weather Wind Observer",
+   "productRemarks": "Note that the final quality flag for wind direction (windDirFinalQF) in the basic download package includes a test for calm winds, under which the computed wind direction is unreliable (due to light wind speed) though the data quality may still be adequate for scientific purposes. To distinguish between data flagged for calm winds and other quality tests, please download the expanded package.",
+   "themes": [
+    "Atmosphere"
+   ],
+   "changeLogs": [
+    {
+     "id": 506,
+     "parentIssueID": null,
+     "issueDate": "2018-01-05T00:00:00Z",
+     "resolvedDate": "2018-01-05T00:00:00Z",
+     "dateRangeStart": "2017-12-28T00:00:00Z",
+     "dateRangeEnd": "2018-03-19T00:00:00Z",
+     "locationAffected": "DEJU (HOR.VER: 000.020)",
+     "issue": "Ice-forming conditions on 2D wind sensor tines.",
+     "resolution": "Applied manual flagging."
+    },
+    {
+     "id": 601,
+     "parentIssueID": 506,
+     "issueDate": "2018-01-05T00:00:00Z",
+     "resolvedDate": "2018-01-05T00:00:00Z",
+     "dateRangeStart": "2017-09-15T00:00:00Z",
+     "dateRangeEnd": "2017-12-14T00:00:00Z",
+     "locationAffected": "TOOK",
+     "issue": "Ice-forming conditions on 2D wind sensor tines.",
+     "resolution": "Applied manual flagging."
+    }
+   ],
+   "specs": [
+    {
+     "specId": "8365",
+     "specNumber": "NEON.DOC.000780vD",
+     "specType": "application/pdf",
+     "specSize": 715529,
+     "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD) – 2D Wind Speed and Direction",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.000780vD"
+    },
+    {
+     "specId": "7604",
+     "specNumber": "NEON.DOC.011081vD",
+     "specType": "application/pdf",
+     "specSize": 488215,
+     "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD) –  QA/QC Plausibility Testing",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.011081vD"
+    }
+   ],
+   "keywords": [
+    "sonic anemometer",
+    "horizontal wind",
+    "tower",
+    "wind speed",
+    "met station",
+    "meteorological station",
+    "wind direction"
+   ],
+   "biorepositoryCollections": null,
+   "releases": [
+    {
+     "release": "RELEASE-2025",
+     "generationDate": "2025-01-29T00:07:30Z",
+     "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2025",
+     "productDoi": {
+      "generationDate": "2025-01-29T01:02:59Z",
+      "url": "https://doi.org/10.48443/te3v-2m97"
+     }
+    },
+    {
+     "release": "RELEASE-2026",
+     "generationDate": "2026-01-23T00:07:49Z",
+     "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2026",
+     "productDoi": {
+      "generationDate": "2026-01-23T01:10:15Z",
+      "url": "https://doi.org/10.48443/d4h5-ys70"
+     }
+    }
+   ],
+   "siteCodes": [
+    {
+     "siteCode": "ABBY",
+     "availableMonths": [
+      "2026-03",
+      "2026-04",
+      "2026-05",
+      "2026-06",
+      "2026-07",
+      "2026-08"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-03",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-04",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-05",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-06",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-07",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ABBY/2026-08"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08"
+       ]
+      },
+      {
+       "release": "RELEASE-2026",
+       "availableMonths": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "ARIK",
+     "availableMonths": [
+      "2026-03",
+      "2026-04",
+      "2026-05",
+      "2026-06",
+      "2026-07",
+      "2026-08"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-03",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-04",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-05",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-06",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-07",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/ARIK/2026-08"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08"
+       ]
+      },
+      {
+       "release": "RELEASE-2026",
+       "availableMonths": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "BARC",
+     "availableMonths": [
+      "2026-03",
+      "2026-04",
+      "2026-05",
+      "2026-06",
+      "2026-07",
+      "2026-08"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-03",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-04",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-05",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-06",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-07",
+      "https://data.neonscience.org/api/v0/data/DP1.00001.001/BARC/2026-08"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08"
+       ]
+      },
+      {
+       "release": "RELEASE-2026",
+       "availableMonths": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "productCodeLong": "NEON.DOM.SITE.DP1.00007.001",
+   "productCode": "DP1.00007.001",
+   "productCodePresentation": "NEON.DP1.00007",
+   "productName": "3D wind speed, direction and sonic temperature",
+   "productDescription": "Three-dimensional windspeed and direction measured by sonic anemometer; air temperature measured by the 3-D sonic anemometer. This data product is bundled into DP4.00200, Bundled data products - eddy covariance, and is not available as a stand-alone download.",
+   "productStatus": "FUTURE",
+   "productCategory": "Level 1 Data Product",
+   "productHasExpanded": false,
+   "productScienceTeamAbbr": "TIS",
+   "productScienceTeam": "Terrestrial Instrument System (TIS)",
+   "productPublicationFormatType": "TIS Data Product Type",
+   "productAbstract": "This data product provides the turbulent wind speed and wind direction statistics. The key sub-data products include the three wind components at the tower top. It contains the quality-controlled measurement data and associated metadata in HDF5 format. It is also used alongside other data products to generate the momentum flux, sensible heat flux, latent heat flux and carbon flux data products.\n\nL…",
+   "productDesignDescription": "This sensor is mounted on the tower top. The level 0 (L0) data products of this sensor are recorded at a rate of 20 Hz, and these L0 data products are used to calculate the level 1 (L1) data products at 1-min and 30-min time resolution.",
+   "productStudyDescription": "These data are collected at all terrestrial sites to study the 3-dimensional wind speed and wind direction above the ecosystem canopy.",
+   "productBasicDescription": "",
+   "productExpandedDescription": "",
+   "productSensor": "Campbell Scientific. CSAT-3 3-D Sonic Anemometer",
+   "productRemarks": "During subsequent nominal operations, we plan to produce and publish the data products in three phases, to accommodate a variety of use cases: the initial near-real-time transition, a science reviewed quality transition, and the epoch yearly transition. The initial near-real-time transition is scheduled to process daily files at a 5-day delay after data collection to accommodate a 9-day centered p…",
+   "themes": [
+    "Atmosphere",
+    "Biogeochemistry"
+   ],
+   "changeLogs": [
+    {
+     "id": 4923,
+     "parentIssueID": null,
+     "issueDate": "2018-05-20T00:00:00Z",
+     "resolvedDate": "2018-07-12T00:00:00Z",
+     "dateRangeStart": "2018-01-25T00:00:00Z",
+     "dateRangeEnd": "2018-01-25T00:00:00Z",
+     "locationAffected": "D17 SOAP measurement level 6  (000.060)",
+     "issue": "Ice/snow built up on 3D transducer",
+     "resolution": "Applied manual flagging"
+    },
+    {
+     "id": 5626,
+     "parentIssueID": null,
+     "issueDate": "2018-05-29T00:00:00Z",
+     "resolvedDate": "2018-10-18T00:00:00Z",
+     "dateRangeStart": "2017-11-20T00:00:00Z",
+     "dateRangeEnd": "2018-04-13T00:00:00Z",
+     "locationAffected": "D02 SCBI measurement level 6 (000.060)",
+     "issue": "CSAT3 sonic anemometer sensor head and electronic box mismatched.",
+     "resolution": "Applied manual flagging"
+    }
+   ],
+   "specs": [
+    {
+     "specId": "7637",
+     "specNumber": "NEON.DOC.004571vF",
+     "specType": "application/pdf",
+     "specSize": 1770550,
+     "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD): Eddy-Covariance Data Products\nBundle",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.004571vF"
+    },
+    {
+     "specId": "8144",
+     "specNumber": "NEON.DOC.000456vH",
+     "specType": "application/pdf",
+     "specSize": 1349152,
+     "specDescription": "NEON Command, Control, and Configuration (C3): Eddy-covariance Turbulent Exchange Subsystem",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.000456vH"
+    }
+   ],
+   "keywords": [
+    "sonic anemometer",
+    "air temperature",
+    "high frequency",
+    "horizontal wind speed",
+    "vertical velocity",
+    "vertical wind speed",
+    "sonic temperature",
+    "wind speed",
+    "turbulence",
+    "wind direction",
+    "eddy covariance (EC)"
+   ],
+   "biorepositoryCollections": null,
+   "releases": [],
+   "siteCodes": []
+  },
+  {
+   "productCodeLong": "NEON.DOM.SITE.DP1.10003.001",
+   "productCode": "DP1.10003.001",
+   "productCodePresentation": "NEON.DP1.10003",
+   "productName": "Breeding landbird point counts",
+   "productDescription": "Count, distance from observer, and taxonomic identification of breeding landbirds observed during point counts",
+   "productStatus": "ACTIVE",
+   "productCategory": "Level 1 Data Product",
+   "productHasExpanded": true,
+   "productScienceTeamAbbr": "TOS",
+   "productScienceTeam": "Terrestrial Observation System (TOS)",
+   "productPublicationFormatType": "TOS Data Product Type",
+   "productAbstract": "This data product contains the quality-controlled, native sampling resolution data from NEON's breeding landbird sampling. Breeding landbirds are defined as “smaller birds (usually exclusive of raptors and upland game birds) not usually associated with aquatic habitats” (Ralph et al. 1993). The breeding landbird point counts product provides records of species identification of all individuals obs…",
+   "productDesignDescription": "Depending on the size of the site, sampling for this product occurs at either randomly distributed individual points or grids of nine points each. At larger sites, point count sampling occurs at five to ten 9-point grids, with grid centers collocated with distributed base plot centers (where plant, beetle, and/or soil sampling may also occur), if possible. At smaller sites (i.e., sites that cannot…",
+   "productStudyDescription": "This sampling occurs at all NEON terrestrial sites.",
+   "productBasicDescription": "The basic package contains the per point metadata table that includes data pertaining to the observer and the weather conditions and the count data table that includes all of the observational data.",
+   "productExpandedDescription": "The expanded package includes two additional tables and two additional fields within the count data table. The personnel table provides institutional information about each observer, as well as their performance on identification quizzes, where available. The references tables provides the list of resources used by an observer to identify birds. The additional fields in the countdata table are family and nativeStatusCode, which are derived from the NEON master list of birds.",
+   "productSensor": "",
+   "productRemarks": "Queries for this data product will return data collected during the date range specified for `brd_perpoint` and `brd_countdata`, but will return data from all dates for `brd_personnel` (quiz scores may occur over time periods which are distinct from when sampling occurs) and `brd_references` (which apply to a broad range of sampling dates). A record from `brd_perPoint` should have 6+ child records…",
+   "themes": [
+    "Organisms, Populations, and Communities"
+   ],
+   "changeLogs": [
+    {
+     "id": 16607,
+     "parentIssueID": null,
+     "issueDate": "2020-10-28T00:00:00Z",
+     "resolvedDate": "2020-01-01T00:00:00Z",
+     "dateRangeStart": "2013-01-01T00:00:00Z",
+     "dateRangeEnd": "2020-01-01T00:00:00Z",
+     "locationAffected": "All",
+     "issue": "No sampling impractical: There was not a way to indicate that a scheduled sampling event did not occur.",
+     "resolution": "The fields samplingImpracticalRemarks and samplingImpractical were added prior to the 2020 field season. The contractor supplies the samplingImpracticalRemarks field, and this field autopopulates the samplingImpractical field. The samplingImpractical field has a value other than OK if something prevented sampling from occurring."
+    },
+    {
+     "id": 17938,
+     "parentIssueID": null,
+     "issueDate": "2021-01-06T00:00:00Z",
+     "resolvedDate": "2021-12-31T00:00:00Z",
+     "dateRangeStart": "2020-03-23T00:00:00Z",
+     "dateRangeEnd": "2021-12-31T00:00:00Z",
+     "locationAffected": "All",
+     "issue": "Safety measures to protect personnel during the COVID-19 pandemic resulted in reduced or canceled sampling activities for extended periods at NEON sites. Data availability may be reduced during this time.",
+     "resolution": "The primary impact of the pandemic on observational data was reduced data collection. Training procedures and data quality reviews were maintained throughout the pandemic, although some previously in-person training was conducted virtually.  Scheduled measurements and sampling that were not carried out due to COVID-19 or any other causes are indicated in data records via the samplingImpractical data field."
+    }
+   ],
+   "specs": [
+    {
+     "specId": "10704",
+     "specNumber": "NEON.DOC.014041vL",
+     "specType": "application/pdf",
+     "specSize": 3553655,
+     "specDescription": "TOS Protocol and Procedure: BRD – Breeding Landbird Abundance and Diversity",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.014041vL"
+    },
+    {
+     "specId": "7294",
+     "specNumber": "NEON.DOC.000916vD",
+     "specType": "application/pdf",
+     "specSize": 1654075,
+     "specDescription": "TOS Science Design for Breeding Landbird Abundance and Diversity",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.000916vD"
+    }
+   ],
+   "keywords": [
+    "birds",
+    "diversity",
+    "taxonomy",
+    "community composition",
+    "distance sampling",
+    "avian",
+    "species composition",
+    "population",
+    "vertebrates",
+    "landbirds",
+    "animals",
+    "Animalia",
+    "Aves",
+    "Chordata",
+    "point counts",
+    "brd",
+    "introduced species",
+    "invasive species",
+    "native species",
+    "biodiversity"
+   ],
+   "biorepositoryCollections": null,
+   "releases": [
+    {
+     "release": "RELEASE-2025",
+     "generationDate": "2025-01-29T00:07:30Z",
+     "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2025",
+     "productDoi": {
+      "generationDate": "2025-01-29T01:02:59Z",
+      "url": "https://doi.org/10.48443/3nka-yg96"
+     }
+    },
+    {
+     "release": "RELEASE-2026",
+     "generationDate": "2026-01-23T00:07:49Z",
+     "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2026",
+     "productDoi": {
+      "generationDate": "2026-01-23T01:10:15Z",
+      "url": "https://doi.org/10.48443/v6hs-mx57"
+     }
+    }
+   ],
+   "siteCodes": [
+    {
+     "siteCode": "ABBY",
+     "availableMonths": [
+      "2022-05",
+      "2022-06",
+      "2023-05",
+      "2023-06",
+      "2024-05",
+      "2025-05"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2022-05",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2022-06",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2023-05",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2023-06",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2024-05",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/ABBY/2025-05"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2025-05"
+       ]
+      },
+      {
+       "release": "RELEASE-2026",
+       "availableMonths": [
+        "2021-05",
+        "2022-05",
+        "2022-06",
+        "2023-05",
+        "2023-06",
+        "2024-05"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "BARR",
+     "availableMonths": [
+      "2020-07",
+      "2021-06",
+      "2022-06",
+      "2023-06",
+      "2024-06",
+      "2025-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2020-07",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2021-06",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2022-06",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2023-06",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2024-06",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BARR/2025-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2025-06"
+       ]
+      },
+      {
+       "release": "RELEASE-2026",
+       "availableMonths": [
+        "2019-06",
+        "2020-07",
+        "2021-06",
+        "2022-06",
+        "2023-06",
+        "2024-06"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "BART",
+     "availableMonths": [
+      "2020-07",
+      "2021-06",
+      "2022-06",
+      "2023-06",
+      "2024-06",
+      "2025-06"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2020-07",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2021-06",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2022-06",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2023-06",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2024-06",
+      "https://data.neonscience.org/api/v0/data/DP1.10003.001/BART/2025-06"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2025-06"
+       ]
+      },
+      {
+       "release": "RELEASE-2026",
+       "availableMonths": [
+        "2020-06",
+        "2020-07",
+        "2021-06",
+        "2022-06",
+        "2023-06",
+        "2024-06"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "productCodeLong": "NEON.DOM.SITE.DP1.20001.001",
+   "productCode": "DP1.20001.001",
+   "productCodePresentation": "NEON.DP1.20001",
+   "productName": "Rapid habitat assessment of streams",
+   "productDescription": "Characterization of the physical attributes of NEON wadeable streams. Includes dimensions and extent of aquatic habitat types, percentage of riparian cover over the channel, distribution of large wood, dominant substrata, and sediment particle size distribution throughout each monitoring reach.",
+   "productStatus": "ACTIVE",
+   "productCategory": "Level 1 Data Product",
+   "productHasExpanded": true,
+   "productScienceTeamAbbr": "AOS",
+   "productScienceTeam": "Aquatic Observation System (AOS)",
+   "productPublicationFormatType": "AOS Data Product Type",
+   "productAbstract": "The Rapid habitat assessment data product provides data that characterize the physical attributes of NEON wadeable stream sites. Rapid habitat surveys are conducted annually at each wadeable stream site and consist of two components: the Habitat Survey and the Pebble Count Survey. Habitat Surveys include the type (riffle, run, pool, etc.), location (latitude and longitude), dimension (wetted width…",
+   "productDesignDescription": "Rapid habitat surveys encapsulate the entirety of the aquatic reach, which at most NEON sites is equivalent to approximately 1,000 meters in stream length. The raw survey data file includes each of the individually mapped waypoints collected using a handheld GPS receiver. Waypoints are collected at the upstream and downstream monitoring reach boundaries and at the downstream extent of each aquatic…",
+   "productStudyDescription": "Rapid habitat assessment surveys are conducted annually at NEON wadeable stream sites.",
+   "productBasicDescription": "All data are included in the basic download package except the detailed pebble count data.",
+   "productExpandedDescription": "The expanded package includes the ‘rap_pebbleCount’ table, which contains the individual bin classes for each of the 200 sampling points measured during the Pebble Count Survey.",
+   "productSensor": "",
+   "productRemarks": "Queries for this data product will return all survey data collected from the site and date range specified. Data provided in each package file are specific to the same individual survey. File availability may vary by site and specific survey. Each survey will have one record in the ‘rap_surveySummary’ table that will include a URL to download a .zip folder containing the raw survey file produced b…",
+   "themes": [
+    "Ecohydrology"
+   ],
+   "changeLogs": [],
+   "specs": [],
+   "keywords": [
+    "hydrology",
+    "streams",
+    "habitat"
+   ],
+   "biorepositoryCollections": null,
+   "releases": [],
+   "siteCodes": []
+  },
+  {
+   "productCodeLong": "NEON.DOM.SITE.DP1.20002.001",
+   "productCode": "DP1.20002.001",
+   "productCodePresentation": "NEON.DP1.20002",
+   "productName": "Land-water interface images",
+   "productDescription": "RGB and IR images of the lake, river, or stream riparian vegetation and stream surface taken from an automated camera. Images are collected every 15 minutes.",
+   "productStatus": "ACTIVE",
+   "productCategory": "Level 1 Data Product",
+   "productHasExpanded": false,
+   "productScienceTeamAbbr": "AIS",
+   "productScienceTeam": "Aquatic Instrument System (AIS)",
+   "productPublicationFormatType": "AIS Data Product Type",
+   "productAbstract": "Interactions between terrestrial vegetation and aquatic ecosystems are critical to interpreting chemical, physical, and biological parameters of systems. At all NEON aquatic sites, photos are collected that capture the land-water interface. Photos may also be used for qualitative estimates of snow cover, riparian characteristics, or weather.\n \nImages are sent to and processed by PhenoCam, a cooper…",
+   "productDesignDescription": "A Stardot NetCam is deployed at each aquatic site, oriented towards an area where the land-water interface can be observed. Every 15 minutes each camera captures back-to-back RGB and IR images separated by 30 seconds.",
+   "productStudyDescription": "Land-water interface images are recorded at all aquatic sites.",
+   "productBasicDescription": "No download packages (either basic or expanded) are available: download images, data, and metadata from PhenoCam Gallery (https://phenocam.nau.edu/webcam/).",
+   "productExpandedDescription": "",
+   "productSensor": "Stardot NetCam SC CAM‐SEC5IR‐B",
+   "productRemarks": "",
+   "themes": [
+    "Organisms, Populations, and Communities",
+    "Ecohydrology",
+    "Land Use, Land Cover, and Land Processes"
+   ],
+   "changeLogs": [
+    {
+     "id": 67007,
+     "parentIssueID": null,
+     "issueDate": "2022-09-13T00:00:00Z",
+     "resolvedDate": "2021-12-31T00:00:00Z",
+     "dateRangeStart": "2020-03-23T00:00:00Z",
+     "dateRangeEnd": "2021-12-31T00:00:00Z",
+     "locationAffected": "ALL",
+     "issue": "Safety measures to protect personnel during the COVID-19 pandemic resulted in reduced or canceled maintenance activities for extended periods at NEON sites. Data availability and/or quality may be negatively impacted during this time.\n\nIn addition, the annual refresh of sensors and data acquisition systems (DAS) did not occur according to the typical 1-year schedule for many sites. The annual refresh is where freshly calibrated and verified sensors and DAS replace the units in the field.",
+     "resolution": "NEON reviewed data from all sites and time periods potentially impacted by COVID-19 safety precautions to identify and manually flag suspect data that escaped automated quality tests. Suspect data are indicated by the final quality flag in the data files, which should be used to inform data filtering prior to use. \n\nUsers are advised to review images for changes in view angle or excessive dirt buildup between the dates indicated in this issue log."
+    },
+    {
+     "id": 67008,
+     "parentIssueID": null,
+     "issueDate": "2022-09-13T00:00:00Z",
+     "resolvedDate": "2022-10-31T00:00:00Z",
+     "dateRangeStart": "2022-06-12T00:00:00Z",
+     "dateRangeEnd": "2022-10-31T00:00:00Z",
+     "locationAffected": "BLDE",
+     "issue": "Severe flooding destroyed several roads into Yellowstone National Park in June 2022, making the YELL and BLDE sites inaccessible to NEON staff. Preventive and corrective maintenance were not able to be performed, nor was the annual exchange of sensors for calibration and validation. While automated quality control routines are likely to detect and flag most issues, users are advised to review data carefully.",
+     "resolution": "Normal operations resumed on October 31, 2022, when the National Park Service opened a newly constructed road from Gardiner, MT to Mammoth, WY with minimal restrictions. For more details about data impacts, see Data Notification https://www.neonscience.org/impact/observatory-blog/data-impacts-neons-yellowstone-sites-yell-blde-due-catastrophic-flooding-0"
+    }
+   ],
+   "specs": [
+    {
+     "specId": "7794",
+     "specNumber": "NEON.DOC.001882vB",
+     "specType": "application/pdf",
+     "specSize": 1901736,
+     "specDescription": "NEON Preventive Maintenance Procedure: TIS & AIS Digital Network Camera",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.001882vB"
+    },
+    {
+     "specId": "7796",
+     "specNumber": "NEON.DOC.001789vD",
+     "specType": "application/pdf",
+     "specSize": 265055,
+     "specDescription": "NEON Algorithm Theoretical Basis Document (ATBD) – Above Canopy and Understory/Snowpack Phenology Camera",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.001789vD"
+    }
+   ],
+   "keywords": [
+    "plants",
+    "phenology",
+    "aquatic",
+    "phenocam",
+    "photographs",
+    "camera",
+    "understory",
+    "streams",
+    "lakes",
+    "rivers",
+    "red green blue (RGB)",
+    "infrared radiation (IR)",
+    "biodiversity"
+   ],
+   "biorepositoryCollections": null,
+   "releases": [],
+   "siteCodes": [
+    {
+     "siteCode": "ARIK",
+     "availableMonths": [
+      "2026-04",
+      "2026-05",
+      "2026-06",
+      "2026-07",
+      "2026-08",
+      "2026-09"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/ARIK/2026-04",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/ARIK/2026-05",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/ARIK/2026-06",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/ARIK/2026-07",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/ARIK/2026-08",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/ARIK/2026-09"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "BARC",
+     "availableMonths": [
+      "2026-04",
+      "2026-05",
+      "2026-06",
+      "2026-07",
+      "2026-08",
+      "2026-09"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BARC/2026-04",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BARC/2026-05",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BARC/2026-06",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BARC/2026-07",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BARC/2026-08",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BARC/2026-09"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "BIGC",
+     "availableMonths": [
+      "2026-04",
+      "2026-05",
+      "2026-06",
+      "2026-07",
+      "2026-08",
+      "2026-09"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BIGC/2026-04",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BIGC/2026-05",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BIGC/2026-06",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BIGC/2026-07",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BIGC/2026-08",
+      "https://data.neonscience.org/api/v0/data/DP1.20002.001/BIGC/2026-09"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
+       ]
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "productCodeLong": "NEON.DOM.SITE.DP1.30001.001",
+   "productCode": "DP1.30001.001",
+   "productCodePresentation": "NEON.DP1.30001",
+   "productName": "LiDAR slant range waveform",
+   "productDescription": "Outgoing pulse and slant range return waveform signals with geolocation information provided. Data are provided by flightline in the Pulsewaves format.",
+   "productStatus": "ACTIVE",
+   "productCategory": "Level 1 Data Product",
+   "productHasExpanded": false,
+   "productScienceTeamAbbr": "AOP",
+   "productScienceTeam": "Airborne Observation Platform (AOP)",
+   "productPublicationFormatType": "AOP Data Product Type",
+   "productAbstract": "The Level 1 Slant Range Waveform Lidar data product provides a geolocated waveform for each laser pulse in a compressed Pulsewaves (PLZ / WVZ) output format. The X and Y coordinates are reported in meters in a UTM mapping fame, elevations reported with reference to Geoid12A. The waveform product saves the continuous received signal versus time digitized into 1 nsec time bins. The waveform shapes c…",
+   "productDesignDescription": "The Level 1 waveform data product is a geolocated slant-range waveform product where the return waveform is relative signal intensity acquired in 1 ns time bins. The X and Y output coordinates will be reported as Easting and Northing values in a Universal Transverse Mercator (UTM) projection with the World Geodetic System 1984 (WGS84) International Terrestrial Reference Frame 2000 (ITRF 2000) elli…",
+   "productStudyDescription": "NEON AOP data are planned for yearly collects at all NEON sites at 90% of maximum greenness or greater. Coverage is planned to include at least 95% of NIS Tower Airshed area as well as at least 80% of a minimum 10km x 10 km box around that. All acquisitions are subject to change due to weather conditions as well as program planning changes.",
+   "productBasicDescription": "Includes the data product as a compressed Pulsewaves file with PLZ / WVZ extensions. An expanded package is not available for this product.",
+   "productExpandedDescription": "",
+   "productSensor": "NEON Airborne Observation Platform (AOP) LiDAR - Optech Gemini",
+   "productRemarks": "",
+   "themes": [
+    "Land Use, Land Cover, and Land Processes"
+   ],
+   "changeLogs": [
+    {
+     "id": 45904,
+     "parentIssueID": null,
+     "issueDate": "2022-01-20T00:00:00Z",
+     "resolvedDate": "2022-02-15T00:00:00Z",
+     "dateRangeStart": "2020-06-01T00:00:00Z",
+     "dateRangeEnd": "2020-07-31T00:00:00Z",
+     "locationAffected": "RMNP, ARIK, UKFS, WOOD",
+     "issue": "Filenames inconsistent across the archive of Pulsewaves waveform files.",
+     "resolution": "Updated inconsistent filenames to be consistent with archive."
+    },
+    {
+     "id": 75305,
+     "parentIssueID": null,
+     "issueDate": "2022-12-13T00:00:00Z",
+     "resolvedDate": "2023-01-27T00:00:00Z",
+     "dateRangeStart": "2018-04-01T00:00:00Z",
+     "dateRangeEnd": "2020-09-30T00:00:00Z",
+     "locationAffected": "ABBY, BARR, BART, BLAN, BONA, CPER, DEJU, DELA, DSNY, HARV, HEAL, HOPB, JERC, JORN, KONZ, LENO, LIRO, MOAB, NIWO, NOGP, OAES, OSBS, SCBI, SERC, SJER, SRER, STEI, SYCA, TALL, TEAK, TOOL, UKFS, UNDE, YELL ",
+     "issue": "Filenames inconsistent across the archive of Pulsewaves waveform files, many files include 'translate' at the end of the filename.",
+     "resolution": "Updated inconsistent filenames to be consistent with archive."
+    }
+   ],
+   "specs": [
+    {
+     "specId": "8466",
+     "specNumber": "NEON.DOC.001984vC",
+     "specType": "application/pdf",
+     "specSize": 5309626,
+     "specDescription": "AOP Flight Plan Boundaries Design",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.001984vC"
+    },
+    {
+     "specId": "7970",
+     "specNumber": "NEON.DOC.002293vB",
+     "specType": "application/pdf",
+     "specSize": 695788,
+     "specDescription": "NEON Discrete LiDAR Datum Reconciliation Report",
+     "specUrl": "https://data.neonscience.org/api/v0/documents/NEON.DOC.002293vB"
+    }
+   ],
+   "keywords": [
+    "vegetation",
+    "canopy",
+    "airborne",
+    "aerial",
+    "remote sensing",
+    "structure",
+    "3D",
+    "elevation",
+    "waveform",
+    "full waveform",
+    "light detection and ranging (LiDAR)",
+    "biodiversity"
+   ],
+   "biorepositoryCollections": null,
+   "releases": [
+    {
+     "release": "RELEASE-2026",
+     "generationDate": "2026-01-23T00:07:49Z",
+     "url": "https://data.neonscience.org/api/v0/releases/RELEASE-2026",
+     "productDoi": {
+      "generationDate": "2026-01-23T01:10:15Z",
+      "url": "https://doi.org/10.48443/0brz-hn08"
+     }
+    }
+   ],
+   "siteCodes": [
+    {
+     "siteCode": "ABBY",
+     "availableMonths": [
+      "2018-07",
+      "2019-07",
+      "2021-07",
+      "2022-07",
+      "2023-06",
+      "2025-08"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ABBY/2018-07",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ABBY/2019-07",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ABBY/2021-07",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ABBY/2022-07",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ABBY/2023-06",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ABBY/2025-08"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2025-08"
+       ]
+      },
+      {
+       "release": "RELEASE-2026",
+       "availableMonths": [
+        "2017-06",
+        "2018-07",
+        "2019-07",
+        "2021-07",
+        "2022-07",
+        "2023-06"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "ARIK",
+     "availableMonths": [
+      "2017-05",
+      "2020-06",
+      "2021-06",
+      "2022-07",
+      "2023-08",
+      "2024-08"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ARIK/2017-05",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ARIK/2020-06",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ARIK/2021-06",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ARIK/2022-07",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ARIK/2023-08",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/ARIK/2024-08"
+     ],
+     "availableReleases": [
+      {
+       "release": "RELEASE-2026",
+       "availableMonths": [
+        "2017-05",
+        "2020-06",
+        "2021-06",
+        "2022-07",
+        "2023-08",
+        "2024-08"
+       ]
+      }
+     ]
+    },
+    {
+     "siteCode": "BARR",
+     "availableMonths": [
+      "2017-07",
+      "2018-07",
+      "2019-07",
+      "2025-07"
+     ],
+     "availableDataUrls": [
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/BARR/2017-07",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/BARR/2018-07",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/BARR/2019-07",
+      "https://data.neonscience.org/api/v0/data/DP1.30001.001/BARR/2025-07"
+     ],
+     "availableReleases": [
+      {
+       "release": "PROVISIONAL",
+       "availableMonths": [
+        "2025-07"
+       ]
+      },
+      {
+       "release": "RELEASE-2026",
+       "availableMonths": [
+        "2017-07",
+        "2018-07",
+        "2019-07"
+       ]
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -1,0 +1,72 @@
+{
+ "data": [
+  {
+   "release": "RELEASE-2025",
+   "uuid": "e97870c2-bca7-4696-b6ff-45cb42fcbf53",
+   "generationDate": "2025-01-29T00:07:30Z",
+   "artifacts": [
+    {
+     "name": "manifest-available-20250129T000718Z.json",
+     "type": "MANIFEST_AVAILABLE",
+     "url": "https://storage.googleapis.com/neon-publication/release/build/e97870c2-bca7-4696-b6ff-45cb42fcbf53/manifest-available-20250129T000718Z.json?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T160204Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED",
+     "size": 2462182,
+     "md5": "1322616060d0e44dca394f43296e0581"
+    }
+   ],
+   "dataProducts": [
+    {
+     "productCode": "DP1.00001.001",
+     "productName": "2D wind speed and direction",
+     "productDescription": "Two-dimensional wind speed and direction, available as two- and thirty-minute aggregations of 1 Hz observations.  Observations are made by 2-D sonic anemometer sensors located at multiple heights on the tower infrastructure and by 2-D sonic anemometer sensors located on the aquatic meteorological station.",
+     "productDoi": "https://doi.org/10.48443/te3v-2m97"
+    },
+    {
+     "productCode": "DP1.00002.001",
+     "productName": "Single aspirated air temperature",
+     "productDescription": "Air temperature, available as one- and thirty-minute averages of 1 Hz observations. Observations are made by sensors located at multiple heights on the tower infrastructure and by sensors located on the aquatic meteorological station. Temperature observations are made using platinum resistance thermometers, which are housed in a fan aspirated shield to reduce radiative bias.",
+     "productDoi": "https://doi.org/10.48443/hejx-aa82"
+    },
+    {
+     "productCode": "DP1.00003.001",
+     "productName": "Triple aspirated air temperature",
+     "productDescription": "Air temperature, available as one- and thirty-minute averages derived from triplicate 1 Hz temperature observations. Observations are made by sensors located at the top of the tower infrastructure. Temperature observations are made by three platinum resistance thermometers, which are housed together in a fan aspirated shield to reduce radiative biases.",
+     "productDoi": "https://doi.org/10.48443/fk2b-4504"
+    }
+   ]
+  },
+  {
+   "release": "RELEASE-2026",
+   "uuid": "c28725ff-5aa2-41fa-845e-a7f1c8239d09",
+   "generationDate": "2026-01-23T00:07:49Z",
+   "artifacts": [
+    {
+     "name": "manifest-available-20260123T000738Z.json",
+     "type": "MANIFEST_AVAILABLE",
+     "url": "https://storage.googleapis.com/neon-publication/release/build/c28725ff-5aa2-41fa-845e-a7f1c8239d09/manifest-available-20260123T000738Z.json?X-Goog-Algorithm=GOOG4-RSA-SHA256&X-Goog-Credential=REDACTED&X-Goog-Date=20260910T160204Z&X-Goog-Expires=604800&X-Goog-SignedHeaders=host&X-Goog-Signature=REDACTED",
+     "size": 2779477,
+     "md5": "33c04c0f24dba030d3082acf704e2c56"
+    }
+   ],
+   "dataProducts": [
+    {
+     "productCode": "DP1.00001.001",
+     "productName": "2D wind speed and direction",
+     "productDescription": "Two-dimensional wind speed and direction, available as two- and thirty-minute aggregations of 1 Hz observations.  Observations are made by 2-D sonic anemometer sensors located at multiple heights on the tower infrastructure and by 2-D sonic anemometer sensors located on the aquatic meteorological station.",
+     "productDoi": "https://doi.org/10.48443/d4h5-ys70"
+    },
+    {
+     "productCode": "DP1.00002.001",
+     "productName": "Single aspirated air temperature",
+     "productDescription": "Air temperature, available as one- and thirty-minute averages of 1 Hz observations. Observations are made by sensors located at multiple heights on the tower infrastructure and by sensors located on the aquatic meteorological station. Temperature observations are made using platinum resistance thermometers, which are housed in a fan aspirated shield to reduce radiative bias.",
+     "productDoi": "https://doi.org/10.48443/p69b-5e50"
+    },
+    {
+     "productCode": "DP1.00003.001",
+     "productName": "Triple aspirated air temperature",
+     "productDescription": "Air temperature, available as one- and thirty-minute averages derived from triplicate 1 Hz temperature observations. Observations are made by sensors located at the top of the tower infrastructure. Temperature observations are made by three platinum resistance thermometers, which are housed together in a fan aspirated shield to reduce radiative biases.",
+     "productDoi": "https://doi.org/10.48443/ephd-9d23"
+    }
+   ]
+  }
+ ]
+}
