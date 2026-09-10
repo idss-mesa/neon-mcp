@@ -1,0 +1,523 @@
+# neon-mcp documentation — full corpus
+
+Each page below begins with its canonical URL followed by its original Markdown, OKF frontmatter included.
+
+---8<--- https://idss-mesa.github.io/neon-mcp/getting-started/api-token/
+
+---
+title: "NEON API token"
+description: "Why NEON's data and sample endpoints require an API token, how to obtain one, how neon-mcp reads it, and the rate limits that apply with and without it."
+type: Guide
+tags:
+  - getting-started
+  - authentication
+  - api-token
+  - rate-limits
+generated:
+  by: "claude/fable-5.1"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-api-auth
+    resource: "https://data.neonscience.org/data-api/authentication/"
+    title: "NEON Data API — Authentication"
+    author: "team:neon"
+  - id: neon-api-rate-limiting
+    resource: "https://data.neonscience.org/data-api/rate-limiting/"
+    title: "NEON Data API — Rate Limiting"
+    author: "team:neon"
+  - id: neon-myaccount
+    resource: "https://data.neonscience.org/myaccount"
+    title: "NEON Data Portal — My Account (API tokens)"
+    author: "team:neon"
+status: stable
+stale_after: "2027-03-10T00:00:00Z"
+---
+
+# NEON API token
+
+neon-mcp needs no credentials for discovery: NEON's product, site, location,
+release, taxonomy and prototype-dataset records are public. A **NEON API
+token** is required only when a tool has to list or fetch actual data files
+or trace samples. This page explains why, where to get a token, how to hand
+it to neon-mcp, and what changes once it is set.
+
+## Why a token is needed
+
+Since version 0.11.0 of the NEON Data API (June 2026) the following
+endpoints are marked *Requires Authentication*. Without a token they answer
+`HTTP 403` with the body
+`{"error":{"status":403,"detail":"Access Denied"},"data":null}`[^neon-api-auth]:
+
+| Endpoint family | Paths |
+| --- | --- |
+| Data files | `GET /data/{productCode}/{siteCode}/{year-month}` (and `/{filename}`), `GET /data/package/{productCode}/{siteCode}/{year-month}` |
+| Data query | `GET /data/query`, `POST /data/query` |
+| Release-pinned data | `GET /releases/{releaseTag}/data/...` (all variants) |
+| Sample tracking | `GET /samples/view`, `GET /samples/download` |
+
+Everything else — `/products`, `/sites`, `/locations`, `/releases` (list,
+detail, products, sites), `/taxonomy`, `/samples/classes`,
+`/samples/supportedClasses`, `/prototype/*` and the GraphQL endpoint — is
+anonymous. Data availability per site and month is part of the public product
+and site records, so neon-mcp can tell you *what* exists without a token; it
+needs the token to tell you *where the files are* and to fetch them.
+
+## Getting a token
+
+1. Sign in (or create a free account) at the NEON Data Portal:
+   [data.neonscience.org/myaccount](https://data.neonscience.org/myaccount){target=_blank}[^neon-myaccount].
+2. In **My Account**, open the API tokens section and generate a token.
+3. Copy it somewhere safe and treat it exactly like a password.
+
+NEON accepts the token either as the `X-API-Token` request header or as an
+`apiToken` query parameter[^neon-api-auth]. neon-mcp always sends the header
+form, so the token never appears in request URLs, access logs or the signed
+download links it returns.
+
+## Giving the token to neon-mcp
+
+neon-mcp reads the token from any of three places. When more than one is
+set, the command-line flag wins over the environment variable, which wins
+over the YAML config file.
+
+=== "Environment variable (recommended)"
+
+    ```bash
+    export NEON_MCP_NEON__API_TOKEN="paste-your-token-here"
+    ```
+
+    The `NEON_MCP_` prefix selects neon-mcp's settings and the double
+    underscore (`__`) separates the `neon` section from its `api_token`
+    field. This is the form to use with
+    `claude mcp add neon -s user -e NEON_MCP_NEON__API_TOKEN=... -- neon-mcp --transport stdio`
+    and with a systemd `EnvironmentFile=`.
+
+=== "YAML config file"
+
+    ```yaml
+    neon:
+      api_token: "paste-your-token-here"
+    ```
+
+    Keep this file out of version control — `config.yaml` and
+    `*.local.yaml` are already listed in the repository's `.gitignore`.
+
+=== "Command-line flag"
+
+    ```bash
+    neon-mcp --transport stdio --api-token "paste-your-token-here"
+    ```
+
+    Convenient for a one-off test; less suitable for long-running services,
+    because the token is visible in the process list.
+
+!!! danger "Never commit a token"
+
+    Do not paste a token into a repository, a checked-in MCP client
+    configuration, an issue, or a chat transcript. If a token leaks, revoke
+    it at [data.neonscience.org/myaccount](https://data.neonscience.org/myaccount){target=_blank}
+    and generate a new one. neon-mcp never logs the token, never echoes it in
+    tool results or error messages, and never places it in MCP `requestState`
+    (which round-trips through the client).
+
+## Rate limits
+
+NEON rate-limits the API globally across all endpoints. Each limit has a
+*burst* (requests you can make at once) and a *rate* at which the burst
+refills. A token raises both substantially[^neon-api-rate-limiting]:
+
+| Mode | Burst | Sustained rate | Applied per |
+| --- | --- | --- | --- |
+| Anonymous | 200 requests | 2 requests/s | IP address |
+| With API token | 2 000 requests | 8 requests/s | token |
+
+Every response carries `X-RateLimit-Limit` (the burst), `X-RateLimit-Remaining`
+and `X-RateLimit-Reset` (seconds until the burst refills in full). When the
+limit is exceeded the API returns `HTTP 429` with a `RetryAfter` header and
+the body `{"message":"API rate limit exceeded"}`. neon-mcp shares one HTTP
+client across all tools, slows down when `X-RateLimit-Remaining` runs low,
+and retries a 429 after the `RetryAfter` interval, so agents rarely hit the
+limit — but a token remains the single most effective way to speed up a
+heavy session.
+
+NEON reserves the right to change these limits at any time; the response
+headers are authoritative[^neon-api-rate-limiting].
+
+## What happens without a token
+
+* Discovery tools (products, sites, locations, availability, releases,
+  taxonomy, prototype datasets) behave identically with or without a token,
+  apart from the lower rate limit.
+* Tools that must call a token-only endpoint do **not** surface a raw `403`.
+  They return a structured error with `code: "auth_required"`, a message
+  naming the three configuration options above, and a link to
+  [data.neonscience.org/myaccount](https://data.neonscience.org/myaccount){target=_blank}.
+  The tool reference (published with the full tool catalogue) marks every
+  token-only tool so an agent can plan ahead.
+
+[^neon-api-auth]: NEON Data API — Authentication. <https://data.neonscience.org/data-api/authentication/>
+[^neon-api-rate-limiting]: NEON Data API — Rate Limiting. <https://data.neonscience.org/data-api/rate-limiting/>
+[^neon-myaccount]: NEON Data Portal — My Account. <https://data.neonscience.org/myaccount>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/about/ai-agents/
+
+---
+title: "For AI agents"
+description: "How agents and harnesses should consume this documentation — llms.txt, per-page Markdown with OKF frontmatter, trust signals — and why they should connect to the neon-mcp server itself for NEON data."
+type: Reference
+tags:
+  - about
+  - ai-agents
+  - OKF
+  - llms.txt
+generated:
+  by: "claude/fable-5.1"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: okf-spec
+    resource: "https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md"
+    title: "Open Knowledge Format (OKF) v0.2 specification"
+    author: "team:google-cloud"
+  - id: llmstxt
+    resource: "https://llmstxt.org"
+    title: "The /llms.txt convention"
+    author: "team:answer-ai"
+  - id: mcp-spec
+    resource: "https://modelcontextprotocol.io/specification/2026-07-28"
+    title: "Model Context Protocol specification, 2026-07-28"
+    author: "team:modelcontextprotocol"
+status: stable
+---
+
+# For AI agents
+
+This site is published for people **and** for AI agents. The documentation
+source is an [Open Knowledge Format (OKF) v0.2](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md){target=_blank}
+knowledge bundle[^okf-spec], and the deployed site exposes that structure
+directly. If you are an agent (or you are wiring one up), consume the
+documentation through the endpoints below rather than scraping rendered HTML.
+
+## This site documents an MCP server
+
+neon-mcp *is* an agent tool. If what you actually want is NEON data —
+products, sites, availability, files — do not scrape these pages: connect to
+the server and call its tools. Locally, run it over `stdio`
+(`claude mcp add neon -s user -- neon-mcp --transport stdio`); against a
+hosted instance, use Streamable HTTP at `https://<host>/mcp`
+(`claude mcp add --transport http neon https://<host>/mcp`). The server
+implements MCP 2026-07-28[^mcp-spec]: `server/discover` and `tools/list`
+return the live, authoritative tool catalogue with JSON Schema inputs and
+outputs, and every list result carries cache hints. Use this documentation
+to learn *how* to use the server; use the server to get the data.
+
+## Entry points
+
+All URLs are under `https://idss-mesa.github.io/neon-mcp/`.
+
+| Endpoint | What you get |
+| -------- | ------------ |
+| [`llms.txt`](../llms.txt) — `https://idss-mesa.github.io/neon-mcp/llms.txt` | Linked outline of every page with one-line descriptions ([llms.txt convention](https://llmstxt.org){target=_blank}[^llmstxt]) |
+| [`llms-full.txt`](../llms-full.txt) — `https://idss-mesa.github.io/neon-mcp/llms-full.txt` | The entire corpus in one file: every page's Markdown with frontmatter, each prefixed by its canonical URL |
+| Any page URL + `index.md` | That page's Markdown source with full OKF frontmatter, e.g. `https://idss-mesa.github.io/neon-mcp/getting-started/api-token/index.md` |
+| `https://idss-mesa.github.io/neon-mcp/sitemap.xml`, `https://idss-mesa.github.io/neon-mcp/robots.txt` | Standard crawl surface; `robots.txt` welcomes AI fetchers and repeats these pointers |
+| [Source repository](https://github.com/idss-mesa/neon-mcp){target=_blank} | The bundle itself under `docs/`, plus `AGENTS.md` with the rules coding agents follow when editing it |
+
+Every rendered page also declares its Markdown twin and OKF signals in its
+HTML `<head>`, as `okf:`-prefixed meta tags named after the frontmatter keys
+(`type`, `status`, `trust-tier`, `generated-at`, `generated-by`,
+`stale-after`) — for example:
+
+```html
+<link rel="alternate" type="text/markdown" href="index.md">
+<meta name="okf:status" content="stable">
+<meta name="okf:trust-tier" content="unverified">
+<meta name="okf:generated-at" content="2026-09-10T00:00:00Z">
+<meta name="okf:generated-by" content="claude/fable-5.1">
+<meta name="okf:stale-after" content="2027-03-10T00:00:00Z">
+```
+
+The page's `type` is exposed the same way, so a crawler can filter by kind of
+page (Guide, Reference, Policy, ...) without parsing frontmatter.
+
+## Reading the OKF frontmatter
+
+Each content page's YAML frontmatter answers the questions an agent should
+ask before relying on it[^okf-spec]:
+
+* **What is this?** — `type` (`Guide`, `Tutorial`, `Reference`, `Policy`,
+  `MCP Tool Reference`), `title`, `description`, `tags`.
+* **Where did it come from?** — `generated: { by, at }` records the actor
+  that produced the current text and when it last changed meaningfully;
+  `sources` lists the load-bearing external references (`id`, `resource`
+  URL, `title`, `author`). Footnotes in the body cite sources by their `id`.
+* **How much should I trust it?** — the `verified` key (see trust tiers
+  below). Its absence is meaningful: the page has not been confirmed by
+  anyone other than its generator.
+* **Is it still true?** — `status` (`stable` is the default; `draft` needs
+  review; `deprecated` is kept for history only) and `stale_after`, an
+  ISO 8601 instant after which the page should be re-checked. Pages that
+  state facts NEON or the MCP project may change — rate limits, token rules,
+  release tags, SDK versions — carry one.
+
+Actors follow OKF §7: `<producer>/<version>` for agents and tools (for
+example `claude/fable-5.1`), `human:<id>` for a person, `process:<id>` for an
+automated job such as the generated tool reference.
+
+## Trust tiers
+
+| `verified` key | Tier | Meaning |
+| --- | --- | --- |
+| absent | **unverified** | Generated content nobody has confirmed against its sources. Most pages on this site start here. |
+| present, non-`human:` actors only | **machine-confirmed** | An automated check (a CI job, a live smoke test) confirmed the content. |
+| present with a `human:<id>` actor | **human-reviewed** | A maintainer read and confirmed the page. Prefer these when answers conflict. |
+
+Only humans add `verified:` entries; a generator never does. The
+`okf:trust-tier` meta tag carries the derived tier for quick filtering.
+
+## Answering user questions
+
+Ground answers in this documentation and cite the page URL (for example
+`https://idss-mesa.github.io/neon-mcp/getting-started/api-token/`). For
+anything about the *data* — product codes, site codes, release tags,
+availability, file names — call the server or the
+[NEON Data API](https://data.neonscience.org/data-api/){target=_blank}
+rather than guessing from prose. When the corpus does not answer a question
+about neon-mcp itself, direct users to the
+[GitHub issue tracker](https://github.com/idss-mesa/neon-mcp/issues){target=_blank}.
+
+[^okf-spec]: Open Knowledge Format (OKF) v0.2 specification. <https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md>
+[^llmstxt]: The /llms.txt convention. <https://llmstxt.org>
+[^mcp-spec]: Model Context Protocol specification, 2026-07-28. <https://modelcontextprotocol.io/specification/2026-07-28>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/about/citing-neon/
+
+---
+title: "Citing NEON data"
+description: "NEON data are CC-BY 4.0: how to cite a data product and release by DOI, why provisional data cannot be cited by DOI, and how to acknowledge NEON and NSF."
+type: Policy
+tags:
+  - about
+  - citation
+  - DOI
+  - data-policy
+  - CC-BY
+generated:
+  by: "claude/fable-5.1"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-guidelines
+    resource: "https://www.neonscience.org/data-samples/guidelines-policies"
+    title: "NEON — Data and Samples: Guidelines and Policies"
+    author: "team:neon"
+  - id: neon-citation
+    resource: "https://www.neonscience.org/data-samples/data-policies-citation"
+    title: "NEON — Data Policies and Citation Guidelines"
+    author: "team:neon"
+  - id: neon-api-releases
+    resource: "https://data.neonscience.org/data-api/endpoints/releases/"
+    title: "NEON Data API — Releases endpoint"
+    author: "team:neon"
+  - id: neon-mcp-license
+    resource: "https://github.com/idss-mesa/neon-mcp/blob/main/LICENSE"
+    title: "neon-mcp LICENSE file (MIT)"
+    author: "team:idss-mesa"
+status: stable
+stale_after: "2027-03-10T00:00:00Z"
+---
+
+# Citing NEON data
+
+neon-mcp is only a conduit. The data it returns belong to the National
+Ecological Observatory Network (NEON), and NEON's data policy — not this
+project's license — governs how you may use and must credit them. This page
+summarises that policy and shows how to build a correct citation from what
+the API (and therefore neon-mcp) gives you.
+
+## License: CC-BY 4.0
+
+NEON releases its data and data products under the
+[Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/){target=_blank}
+license[^neon-guidelines]. You may use, share and adapt them for any purpose,
+including commercially, provided you give appropriate credit. NEON asks that
+you cite each data product you use, at the release you used, and acknowledge
+NEON and the U.S. National Science Foundation in publications[^neon-citation].
+Read the policy pages themselves before publishing; they are the authority
+and may change:
+
+* [Guidelines and policies](https://www.neonscience.org/data-samples/guidelines-policies){target=_blank}
+* [Data policies and citation guidelines](https://www.neonscience.org/data-samples/data-policies-citation){target=_blank}
+
+## Releases and DOIs
+
+NEON publishes an annual **release** — a frozen, versioned snapshot of a data
+product's files (RELEASE-2021 through RELEASE-2026 exist as of September
+2026). Every data product within a release has its own DOI, which is what you
+cite. Anything newer than the latest release is **provisional**: subject to
+reprocessing and without a DOI (see below).
+
+The Data API exposes the DOI wherever a product meets a release[^neon-api-releases]:
+
+* `GET /products/{productCode}` returns `releases[]`, each with `release`
+  (the tag), `generationDate`, `url` and `productDoi.url`.
+* `GET /releases/{releaseTag}` returns `dataProducts[]`, each with
+  `productCode`, `productName` and `productDoi`.
+
+For example, the product *2D wind speed and direction* (`DP1.00001.001`) in
+`RELEASE-2021` carries `productDoi.url` =
+[https://doi.org/10.48443/s9ya-zc81](https://doi.org/10.48443/s9ya-zc81){target=_blank}.
+neon-mcp's product and release tools surface these fields, so an agent can
+assemble a citation without a second lookup.
+
+## How to cite a data product
+
+NEON's recommended pattern[^neon-citation] names the product, its code, the
+release, the DOI and the access date:
+
+> NEON (National Ecological Observatory Network). *Product name*
+> (DPx.xxxxx.xxx), RELEASE-YYYY. https://doi.org/xx.xxxxx/xxxx-xxxx.
+> Dataset accessed from https://data.neonscience.org/data-products/DPx.xxxxx.xxx/RELEASE-YYYY
+> on Month DD, YYYY.
+
+Filled in for the example above:
+
+> NEON (National Ecological Observatory Network). 2D wind speed and direction
+> (DP1.00001.001), RELEASE-2021. https://doi.org/10.48443/s9ya-zc81. Dataset
+> accessed from https://data.neonscience.org/data-products/DP1.00001.001/RELEASE-2021
+> on September 10, 2026.
+
+Cite every product you used, each at the release you actually downloaded.
+If you retrieved data through neon-mcp you may mention the tool in your
+methods, but the citation of record is always the NEON data product DOI.
+
+## Provisional data
+
+Availability listings from the API carry a `PROVISIONAL` pseudo-release tag
+alongside real release tags[^neon-api-releases]. Provisional data:
+
+* have **no DOI** and cannot be cited by one;
+* may be revised, reprocessed or removed before they enter a release;
+* are excluded from data queries by default and must be requested explicitly.
+
+When neon-mcp shows a site-month only under `PROVISIONAL`, that data are not
+yet in any release. For reproducible work prefer a release; if you must use
+provisional data, say so and cite them by access date:
+
+> NEON (National Ecological Observatory Network). *Product name*
+> (DPx.xxxxx.xxx), provisional data. Dataset accessed from
+> https://data.neonscience.org on Month DD, YYYY.
+
+## Acknowledging NEON and NSF
+
+NEON requests an acknowledgement in publications that use its data or
+samples[^neon-citation]; its suggested wording is:
+
+> The National Ecological Observatory Network is a program sponsored by the
+> U.S. National Science Foundation and operated under cooperative agreement
+> by Battelle. This material is based in part upon work supported by the
+> National Science Foundation through the NEON Program.
+
+NEON also asks to be told about publications that use its data so it can
+track the observatory's impact; the citation-guidelines page explains how.
+
+## About neon-mcp itself
+
+The neon-mcp server software is MIT-licensed by The Regents of the University
+of New Mexico[^neon-mcp-license] and is not affiliated with or endorsed by
+NEON, Battelle or NSF. See [License](license.md) for the software and
+documentation licenses.
+
+[^neon-guidelines]: NEON — Data and Samples: Guidelines and Policies. <https://www.neonscience.org/data-samples/guidelines-policies>
+[^neon-citation]: NEON — Data Policies and Citation Guidelines. <https://www.neonscience.org/data-samples/data-policies-citation>
+[^neon-api-releases]: NEON Data API — Releases endpoint. <https://data.neonscience.org/data-api/endpoints/releases/>
+[^neon-mcp-license]: neon-mcp `LICENSE` file. <https://github.com/idss-mesa/neon-mcp/blob/main/LICENSE>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/about/license/
+
+---
+title: "License"
+description: "The neon-mcp server code is MIT-licensed by The Regents of the University of New Mexico; this documentation is CC-BY 4.0; NEON data are CC-BY 4.0."
+type: Policy
+tags:
+  - about
+  - license
+  - MIT
+  - CC-BY
+generated:
+  by: "claude/fable-5.1"
+  at: "2026-09-10T00:00:00Z"
+sources:
+  - id: neon-mcp-license
+    resource: "https://github.com/idss-mesa/neon-mcp/blob/main/LICENSE"
+    title: "neon-mcp LICENSE file (MIT)"
+    author: "team:idss-mesa"
+  - id: mit
+    resource: "https://opensource.org/license/mit"
+    title: "The MIT License"
+    author: "team:opensource-org"
+  - id: cc-by-4
+    resource: "https://creativecommons.org/licenses/by/4.0/"
+    title: "Creative Commons Attribution 4.0 International (CC BY 4.0)"
+    author: "team:creativecommons"
+status: stable
+---
+
+# License
+
+Three things meet on this site — the server software, the documentation
+you are reading, and the NEON data the server gives access to — and each has
+its own, mutually compatible license.
+
+## Server code — MIT
+
+The neon-mcp source code (the `neon_mcp` Python package, the `neon-mcp`
+command-line program, tests and build scripts) is released under the
+[MIT License](https://opensource.org/license/mit){target=_blank}[^mit]:
+
+> Copyright (c) 2026 The Regents of the University of New Mexico
+
+The full text is in the repository's
+[`LICENSE`](https://github.com/idss-mesa/neon-mcp/blob/main/LICENSE){target=_blank}
+file[^neon-mcp-license]. In short: you may use, copy, modify, merge, publish,
+distribute, sublicense and sell the software, provided the copyright notice
+and permission notice are included; the software is provided "as is",
+without warranty.
+
+## Documentation text — CC-BY 4.0
+
+The prose, tables and examples on this site (everything under `docs/` in the
+repository, including the OKF frontmatter) are licensed under
+[Creative Commons Attribution 4.0 International](https://creativecommons.org/licenses/by/4.0/){target=_blank}[^cc-by-4].
+You may share and adapt the material for any purpose, provided you give
+appropriate credit ("neon-mcp documentation, idss-mesa / The Regents of the
+University of New Mexico, CC-BY 4.0") and indicate whether changes were made.
+Code snippets embedded in the documentation may alternatively be used under
+the MIT terms above.
+
+## NEON data — CC-BY 4.0
+
+Data and data products retrieved from the NEON Data API through neon-mcp are
+not part of this project and are not covered by either license above. NEON
+publishes them under CC-BY 4.0 with its own citation and acknowledgement
+expectations — see [Citing NEON data](citing-neon.md).
+
+## Trademarks and affiliation
+
+neon-mcp is an independent project of
+[idss-mesa](https://github.com/idss-mesa){target=_blank} at the University
+of New Mexico. It is not developed, endorsed or supported by the National
+Ecological Observatory Network, Battelle, or the U.S. National Science
+Foundation. "NEON" and the NEON logo are the property of their respective
+owners; this site uses its own original artwork.
+
+[^mit]: The MIT License. <https://opensource.org/license/mit>
+[^neon-mcp-license]: neon-mcp `LICENSE` file. <https://github.com/idss-mesa/neon-mcp/blob/main/LICENSE>
+[^cc-by-4]: Creative Commons Attribution 4.0 International. <https://creativecommons.org/licenses/by/4.0/>
+
+---8<--- https://idss-mesa.github.io/neon-mcp/log/
+
+# Directory Update Log
+
+## 2026-09-10
+* **Creation**: Established the neon-mcp documentation bundle (OKF v0.2): root [index](index.md), this log, the Zensical site configuration, the OKF validator, the `llms.txt` generator and the post-build agent surface (Markdown mirror, `okf:*` head metadata, `robots.txt`).
+* **Creation**: [Getting started](getting-started/index.md) section with [NEON API token](getting-started/api-token.md) — why the data endpoints need a token, how to obtain one, how neon-mcp reads it, and the rate limits with and without it.
+* **Creation**: [About](about/index.md) section with [For AI agents](about/ai-agents.md), [Citing NEON data](about/citing-neon.md) and [License](about/license.md).

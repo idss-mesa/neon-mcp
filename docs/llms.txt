@@ -1,0 +1,23 @@
+# neon-mcp documentation
+
+> neon-mcp is a Model Context Protocol (MCP 2026-07-28) server that gives AI agents structured, rate-limit-aware access to the NEON Data API (https://data.neonscience.org/data-api/): data products, sites, locations, data availability, releases, taxonomy, samples and data downloads. This documentation covers installation, client setup, the NEON API token, the tool catalogue, the MCP protocol surface, deployment and development. The source repository is an Open Knowledge Format (OKF v0.2) bundle: every page carries YAML frontmatter with type, provenance (generated/sources), and lifecycle (status/stale_after) fields.
+
+Full corpus for ingestion: https://idss-mesa.github.io/neon-mcp/llms-full.txt
+
+Every page's Markdown source (OKF frontmatter included) is served at its URL plus `index.md` — for example https://idss-mesa.github.io/neon-mcp/getting-started/api-token/index.md. Agent guide: https://idss-mesa.github.io/neon-mcp/about/ai-agents/
+
+If you want NEON data rather than documentation, connect to the neon-mcp server itself (stdio or Streamable HTTP) and call its tools; the agent guide explains how.
+
+## Getting started
+
+- [NEON API token](https://idss-mesa.github.io/neon-mcp/getting-started/api-token/): Why NEON's data and sample endpoints require an API token, how to obtain one, how neon-mcp reads it, and the rate limits that apply with and without it.
+
+## About
+
+- [For AI agents](https://idss-mesa.github.io/neon-mcp/about/ai-agents/): How agents and harnesses should consume this documentation — llms.txt, per-page Markdown with OKF frontmatter, trust signals — and why they should connect to the neon-mcp server itself for NEON data.
+- [Citing NEON data](https://idss-mesa.github.io/neon-mcp/about/citing-neon/): NEON data are CC-BY 4.0: how to cite a data product and release by DOI, why provisional data cannot be cited by DOI, and how to acknowledge NEON and NSF.
+- [License](https://idss-mesa.github.io/neon-mcp/about/license/): The neon-mcp server code is MIT-licensed by The Regents of the University of New Mexico; this documentation is CC-BY 4.0; NEON data are CC-BY 4.0.
+
+## Meta
+
+- [Documentation update log](https://idss-mesa.github.io/neon-mcp/log/): dated history of changes to this bundle.

@@ -1,0 +1,63 @@
+name: Documentation
+
+on:
+  push:
+    branches:
+      - main
+  # Validation (incl. the llms.txt drift check) and a trial build on PRs,
+  # so problems surface before merge rather than after.
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  # Validate that every docs page conforms to the Open Knowledge Format (OKF v0.2)
+  okf-conformance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+      - run: pip install pyyaml
+      - run: python scripts/okf_validate.py docs
+      # Fail if the llms.txt machine-readable indexes are out of date.
+      # TODO(phase-2): once the tool catalogue is final, install the package
+      # (`pip install -e .`) and add `python scripts/gen_tools_reference.py`
+      # plus `docs/tools/reference.md` to this drift check.
+      - run: |
+          python scripts/gen_llms_txt.py
+          git diff --exit-code docs/llms.txt docs/llms-full.txt
+
+  deploy:
+    needs: okf-conformance
+    if: github.event_name != 'pull_request'
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/configure-pages@v6
+        with:
+          enablement: true
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: 3.x
+      - run: pip install zensical pyyaml
+      - run: zensical build --clean --strict
+      # Agent surface: markdown mirror, OKF meta injection, robots.txt
+      - run: python scripts/postbuild_agent_surface.py site
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+      - uses: actions/deploy-pages@v5
+        id: deployment
