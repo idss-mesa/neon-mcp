@@ -40,8 +40,9 @@ over **Streamable HTTP**. The examples use `neon-mcp` on your `PATH` (see
 `PATH`. JSON-configured clients do not expand `~` or `$HOME`, so use absolute paths
 there[^mesa-install].
 
-The token is optional; see [NEON API token](api-token.md). Put it in the client's
-environment settings, never in a shared or committed file.
+The token is optional; [NEON API token](api-token.md) shows how to create one. Every
+example below passes it as `NEON_TOKEN`, the name NEON's own tutorials use. Put it in
+the client's environment settings, never in a shared or committed file.
 
 ## Claude Code
 

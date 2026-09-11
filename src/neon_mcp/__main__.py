@@ -11,7 +11,7 @@ import argparse
 import sys
 from collections.abc import Sequence
 from pathlib import Path
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from neon_mcp import __version__
 
@@ -107,18 +107,29 @@ async def _check(config: Config) -> int:
         await server.aclose()
     payload = outcome.payload
     api = payload.get("api") or {}
-    ok = not outcome.is_error and bool(api.get("reachable")) and api.get("status") == 200
-    print(
-        json.dumps(
-            {
-                "ok": ok,
-                "version": __version__,
-                "tokenConfigured": payload.get("tokenConfigured"),
-                "apiReachable": bool(api.get("reachable")),
-                "rateLimit": payload.get("rateLimit"),
-            }
+    status = api.get("status")
+    # NEON answers 403 to a bad token even on public endpoints, so the probe (which
+    # carries the token on stdio) doubles as a token check.
+    token_sent = (payload.get("rateLimit") or {}).get("identity") == "token"
+    token_accepted = None
+    if payload.get("tokenConfigured") and token_sent and status in (200, 401, 403):
+        token_accepted = status == 200
+    ok = not outcome.is_error and bool(api.get("reachable")) and status == 200
+    report: dict[str, Any] = {
+        "ok": ok,
+        "version": __version__,
+        "tokenConfigured": payload.get("tokenConfigured"),
+        "tokenAccepted": token_accepted,
+        "apiReachable": bool(api.get("reachable")),
+        "apiStatus": status,
+        "rateLimit": payload.get("rateLimit"),
+    }
+    if token_accepted is False:
+        report["problem"] = (
+            "NEON rejected the API token (HTTP 403): check NEON_TOKEN for typos, quotes or "
+            "spaces, or create a new token at https://data.neonscience.org/myaccount"
         )
-    )
+    print(json.dumps(report))
     return 0 if ok else 1
 
 

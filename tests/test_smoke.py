@@ -8,7 +8,7 @@ import pytest
 
 import neon_mcp
 from neon_mcp import __main__ as cli
-from tests.fixture_router import FixtureRouter
+from tests.fixture_router import TEST_TOKEN, FixtureRouter, Reply, load_headers
 
 
 def test_version_and_entry_point() -> None:
@@ -58,6 +58,8 @@ def test_check_succeeds(
         report["ok"] is True
         and report["apiReachable"] is True
         and report["tokenConfigured"] is False
+        and report["tokenAccepted"] is None
+        and report["apiStatus"] == 200
     )
 
 
@@ -68,3 +70,20 @@ def test_check_fails_when_neon_errors(
     router.inject_5xx(3)
     assert cli.main(["--check", "--log-level", "error"]) == 1
     assert json.loads(capsys.readouterr().out.strip().splitlines()[-1])["ok"] is False
+
+
+def test_check_reports_a_rejected_token(
+    monkeypatch: pytest.MonkeyPatch, router: FixtureRouter, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.delenv("NEON_MCP_NEON__API_TOKEN", raising=False)
+    monkeypatch.setenv("NEON_TOKEN", TEST_TOKEN)
+    _patch_server(monkeypatch, router)
+    router.inject(
+        Reply(fixture="data_403.json", status=403, headers=load_headers("example_403.headers"))
+    )
+    assert cli.main(["--check", "--log-level", "error"]) == 1
+    out = capsys.readouterr().out
+    report = json.loads(out.strip().splitlines()[-1])
+    assert report["tokenConfigured"] is True and report["tokenAccepted"] is False
+    assert report["apiStatus"] == 403 and "rejected the API token" in report["problem"]
+    assert TEST_TOKEN not in out

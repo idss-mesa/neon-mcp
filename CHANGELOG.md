@@ -24,7 +24,7 @@ First release. Supersedes the TypeScript server in `tyson-swetnam/neon-data-api`
   documents (in-memory PDF text), a guard-railed GraphQL tool, and `neon_ping`.
 - 8 `neon://` resources, 3 resource templates, 3 prompts; server instructions.
 - NEON API token support (required by NEON since API 0.11.0 for data files, data
-  queries and sample views): `NEON_MCP_NEON__API_TOKEN` / `NEON_TOKEN` on stdio,
+  queries and sample views): `NEON_TOKEN` (or `NEON_MCP_NEON__API_TOKEN`) on stdio,
   per-request `X-API-Token` over HTTPS for hosted deployments; never logged.
 - Per-identity rate limiting 10 % under NEON's limits, 429/5xx retries, an
   in-memory TTL cache with single-flight and stale-if-error, GraphQL-first
