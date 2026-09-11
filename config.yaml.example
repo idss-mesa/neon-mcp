@@ -1,7 +1,7 @@
 # neon-mcp configuration example (pass with --config). Environment variables
 # (NEON_MCP_SECTION__FIELD) and command-line flags override these values.
 neon:
-  # api_token: ""                      # prefer NEON_MCP_NEON__API_TOKEN or NEON_TOKEN; never commit a token
+  # api_token: ""                      # prefer the NEON_TOKEN env var; never commit a token
   # token_for_public_endpoints: true   # auto: stdio true / http false
   prefer_graphql: true
   max_concurrency: 4

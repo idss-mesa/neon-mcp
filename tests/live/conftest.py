@@ -36,4 +36,4 @@ async def live(tmp_path: Path) -> AsyncIterator[NeonServer]:
 @pytest.fixture
 def needs_token() -> None:
     if not load_config().token_value():
-        pytest.skip("needs a NEON API token (NEON_MCP_NEON__API_TOKEN or NEON_TOKEN)")
+        pytest.skip("needs a NEON API token: set NEON_TOKEN (e.g. uv run --env-file .env)")

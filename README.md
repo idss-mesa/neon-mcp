@@ -38,11 +38,20 @@ Harvard Forest for June 2023 and cite it".
 
 ## NEON API token
 
-Create one at <https://data.neonscience.org/myaccount>. Set `NEON_MCP_NEON__API_TOKEN`
-(or `NEON_TOKEN`) in the server's environment. Without a token everything works except
-`neon_list_files`, `neon_download_files` (for data files) and `neon_get_sample`, which
-return `auth_required`. Hosted deployments accept each caller's token in the
-`X-API-Token` header behind HTTPS. Never commit a token.
+Optional. Without a token everything works except `neon_list_files`,
+`neon_download_files` (for data files) and `neon_get_sample`, which return
+`auth_required`. To create one:
+
+1. Sign in at <https://data.neonscience.org> (a free account: Google, CILogon or email).
+2. Open **My Account** (<https://data.neonscience.org/myaccount>), click
+   **GET API TOKEN** at the bottom, then **Copy**.
+3. Put it in the server's environment as **`NEON_TOKEN`**, the name NEON's own
+   tutorials use (`NEON_MCP_NEON__API_TOKEN` overrides it; `NEON_API_TOKEN` is not read).
+4. Run `neon-mcp --check` and look for `"tokenAccepted": true`.
+
+Hosted deployments accept each caller's token in the `X-API-Token` header behind
+HTTPS. Never commit a token. Details:
+[NEON API token](https://idss-mesa.github.io/neon-mcp/getting-started/api-token/).
 
 ## Clients
 

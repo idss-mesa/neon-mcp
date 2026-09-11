@@ -38,11 +38,13 @@ typo does not stop the server but is visible in its log.
 
 ## The NEON API token
 
-The token is the only secret. Set `NEON_MCP_NEON__API_TOKEN`; if that is unset,
-neon-mcp falls back to `NEON_TOKEN` (the variable neonUtilities documents) and then
-`NEON_API_TOKEN`. There is deliberately **no command-line flag** for it: arguments are
-visible to every user in the process list and end up in shell history. See
-[NEON API token](api-token.md).
+The token is the only secret. Set `NEON_TOKEN`, the name NEON's own tutorials use.
+`NEON_MCP_NEON__API_TOKEN`, when set, takes precedence (for giving neon-mcp a different
+token from your other NEON tools). `NEON_API_TOKEN` is **not** read; neon-mcp logs a
+warning if it is the only one set. There is deliberately **no command-line flag** for
+the token: arguments are visible to every user in the process list and end up in shell
+history. neon-mcp does not load `.env` files itself. See [NEON API token](api-token.md)
+for creating a token step by step and checking that NEON accepts it.
 
 ## Command-line flags
 
@@ -79,7 +81,7 @@ A few settings default to "unset" and resolve per transport:
 | --- | --- | --- | --- | --- |
 | `neon.base_url` | `NEON_MCP_NEON__BASE_URL` | str | `https://data.neonscience.org/api/v0` | NEON REST API base URL. |
 | `neon.graphql_url` | `NEON_MCP_NEON__GRAPHQL_URL` | str | `https://data.neonscience.org/graphql` | NEON GraphQL endpoint (not under /api/v0). |
-| `neon.api_token` | `NEON_MCP_NEON__API_TOKEN`<br>(or `NEON_TOKEN`, `NEON_API_TOKEN`) | SecretStr \| null | unset | NEON API token (https://data.neonscience.org/myaccount). Required for data files, data queries and sample views. Prefer the env var; never commit it. Fallbacks: NEON_TOKEN, NEON_API_TOKEN. |
+| `neon.api_token` | `NEON_MCP_NEON__API_TOKEN`<br>(or `NEON_TOKEN`) | SecretStr \| null | unset | NEON API token (https://data.neonscience.org/myaccount). Required for data files, data queries and sample views. Prefer the NEON_TOKEN env var; never commit it. |
 | `neon.token_for_public_endpoints` | `NEON_MCP_NEON__TOKEN_FOR_PUBLIC_ENDPOINTS` | bool \| null | unset | Also send the token to public endpoints (raises the rate limit). Unset: true on stdio, false on http. |
 | `neon.user_agent_suffix` | `NEON_MCP_NEON__USER_AGENT_SUFFIX` | str \| null | unset | Text appended to the User-Agent header. |
 | `neon.connect_timeout_s` | `NEON_MCP_NEON__CONNECT_TIMEOUT_S` | float | `10.0` | TCP/TLS connect timeout. |

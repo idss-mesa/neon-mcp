@@ -28,7 +28,13 @@ work the same way once connected ([Clients](clients.md)).
 
 ## 1. Register the server
 
+For file listings, downloads and sample views you need a NEON API token. Create one
+at [data.neonscience.org/myaccount](https://data.neonscience.org/myaccount){target=_blank}
+(**GET API TOKEN**, then **Copy**; [step by step](api-token.md#create-a-token)) and
+export it as `NEON_TOKEN`:
+
 ```bash
+read -rs NEON_TOKEN && export NEON_TOKEN     # paste the token, press Enter
 claude mcp add neon -s user -e NEON_TOKEN="$NEON_TOKEN" -- neon-mcp --transport stdio
 ```
 
@@ -37,8 +43,9 @@ listing, downloads and sample views works anonymously.
 
 ## 2. Check it
 
-Ask the agent to "call neon_ping". The result shows the version, protocol
-`2026-07-28`, whether a token is configured and whether downloads are enabled.
+In a terminal, `neon-mcp --check` prints `"tokenAccepted": true` once NEON accepts
+the token. Then ask the agent to "call neon_ping". The result shows the version,
+protocol `2026-07-28`, whether a token is configured and whether downloads are enabled.
 
 ## 3. Five calls from question to citation
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 
 from neon_mcp.server import NeonServer
-from tests.fixture_router import TEST_TOKEN, FixtureRouter
+from tests.fixture_router import TEST_TOKEN, FixtureRouter, Reply, load_headers
 from tests.helpers import call_ok
 
 
@@ -43,6 +43,20 @@ async def test_ping_check_api_reports_failure(server: NeonServer, router: Fixtur
     payload = await call_ok(server, "neon_ping", {"check_api": True})
     assert payload["api"]["status"] == 502
     assert len(router.calls) == 3
+
+
+async def test_ping_reports_a_rejected_token(
+    token_server: NeonServer, router: FixtureRouter
+) -> None:
+    # NEON answers 403 "Access Denied" to an invalid token even on public endpoints.
+    router.inject(
+        Reply(fixture="data_403.json", status=403, headers=load_headers("example_403.headers"))
+    )
+    payload = await call_ok(token_server, "neon_ping", {"check_api": True})
+    assert payload["api"]["status"] == 403 and len(router.calls) == 1
+    assert any("rejected the API token" in note for note in payload["notes"])
+    assert any("NEON_TOKEN" in step for step in payload["nextSteps"])
+    assert TEST_TOKEN not in json.dumps(payload)
 
 
 async def test_ping_over_http_has_no_downloads(http_server: NeonServer) -> None:

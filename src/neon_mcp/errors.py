@@ -47,8 +47,8 @@ MYACCOUNT_URL = "https://data.neonscience.org/myaccount"
 
 AUTH_REQUIRED_MESSAGE = (
     "This NEON endpoint requires an API token. Create one at "
-    f"{MYACCOUNT_URL} and set NEON_MCP_NEON__API_TOKEN (or NEON_TOKEN); in HTTP "
-    "mode send the X-API-Token header. Discovery tools work without a token."
+    f"{MYACCOUNT_URL} (GET API TOKEN) and set NEON_TOKEN in the server's environment; "
+    "in HTTP mode send the X-API-Token header. Discovery tools work without a token."
 )
 
 _NOT_FOUND_RE = re.compile(r"not\s+found", re.IGNORECASE)
@@ -199,9 +199,11 @@ def map_api_error(
             )
         return ToolError(
             "forbidden",
-            "NEON rejected the API token (expired or revoked?). Create a new one at "
-            f"{MYACCOUNT_URL}.",
-            details={"endpoint": endpoint},
+            "NEON rejected the API token (HTTP 403); it is usually mistyped, disabled or "
+            "deleted, and NEON refuses every request that carries it. Check the NEON_TOKEN "
+            f"value (or the X-API-Token header) or create a new token at {MYACCOUNT_URL}.",
+            details={"guide": API_TOKEN_GUIDE, "endpoint": endpoint},
+            hint="Read neon://guide/api-token.",
         )
     if status == 404 or (status == 400 and _NOT_FOUND_RE.search(exc.detail or "")):
         details: dict[str, Any] = {"endpoint": endpoint}

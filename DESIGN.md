@@ -29,7 +29,7 @@ Sections 1–10 are the ten sections required of the designers; §11 adds the im
 | D15 | Docs | RESEARCH §6 wholesale (OKF v0.2 bundle, Zensical, agent surface), extending the phase-1 scaffold already on disk. | Brief §6 overrides. |
 | D16 | Fixtures | The 43 `fixtures-small/` files copied verbatim + B's `FixtureRouter` (fails on unexpected upstream calls, asserts `X-API-Token` on token endpoints) + the hand-written additions in §12. | RESEARCH §1.9. |
 | D17 | mypy | `mypy --strict src/` on every module, no `continue-on-error`. | Greenfield repo. |
-| D18 | Token env aliases | Canonical `NEON_MCP_NEON__API_TOKEN`; loader fallbacks `NEON_TOKEN` (the variable neonUtilities documents) then `NEON_API_TOKEN`. No claim that neonUtilities uses `NEON_API_TOKEN`. | Fix A's unverified claim. |
+| D18 | Token env aliases | Documented name `NEON_TOKEN` (the variable NEON's tutorials and neonutilities examples use; neither package reads it automatically); `NEON_MCP_NEON__API_TOKEN` overrides it. `NEON_API_TOKEN` is **not** read (no NEON source uses it); the loader warns when it is the only one set. | Fix A's unverified claim; amended 2026-09-11 to drop the unsourced alias. |
 | D19 | tools/list size | Conformance test asserts `len(json.dumps(tools/list))` ≤ `limits.tools_list_max_bytes` (initial 48 000) **and** every description ≤ 600 chars ending in a "Next:" sentence. The integration package (§11 WP9) measures the real figure with pydantic `$defs`, records it in `docs/mcp/spec-2026-07-28.md`, and tightens the threshold to `ceil(measured × 1.25)`. | A's assertion; measure before fixing. |
 | D20 | Tool names (final) | `neon_get_availability`, `neon_find_locations`, `neon_list_files`, `neon_list_sample_classes`, `neon_download_files`; no aliases in v1. Prompts keep the `neon_` prefix. | One set. |
 | D21 | Extras | `pdf=["pypdf>=4"]`, `docs=["zensical>=0.0.60","pyyaml"]`, `dev=[…]`. No `crc32c` extra (crc32c is passed through from listings, never computed); no doi.org negotiation (BibTeX rendered locally). | Brief-mandated `docs` extra; drop speculative deps. |
@@ -314,7 +314,7 @@ def require_token(ctx: ToolContext, *, endpoint: str) -> Token       # raises To
 def header_token_allowed(config: Config) -> bool                       # https public_base_url or allow_insecure_header_token
 ```
 
-`resolve_token` precedence: **stdio** → `config.neon.api_token` (loader already applied the `NEON_TOKEN`/`NEON_API_TOKEN` fallbacks). **http** → inbound `X-API-Token` (`server.request_token_header`) when `server.accept_header_token` **and** `header_token_allowed(config)` (otherwise ignored with one warning per process); else the config token only when `server.share_config_token_over_http=true`; else `None`. Injection is header-only (`X-API-Token: <value>`), never the `apiToken=` query form, and only to `base_url.host`/`graphql_url.host` (`_headers_for(url, token)` — signed GCS URLs get no token). Public endpoints carry the token only when `send_token_on_public` (D9). Redaction: `logging.redact_secrets` drops keys matching `(?i)token|authorization|x-api-token` and masks any string equal to a bound token; tokens never appear in `ToolError.details`, `requestState`, `source`, `curlHint`, cache keys (only `identity()`), `/healthz`, `/readyz`.
+`resolve_token` precedence: **stdio** → `config.neon.api_token` (loader already applied the `NEON_TOKEN` fallback). **http** → inbound `X-API-Token` (`server.request_token_header`) when `server.accept_header_token` **and** `header_token_allowed(config)` (otherwise ignored with one warning per process); else the config token only when `server.share_config_token_over_http=true`; else `None`. Injection is header-only (`X-API-Token: <value>`), never the `apiToken=` query form, and only to `base_url.host`/`graphql_url.host` (`_headers_for(url, token)` — signed GCS URLs get no token). Public endpoints carry the token only when `send_token_on_public` (D9). Redaction: `logging.redact_secrets` drops keys matching `(?i)token|authorization|x-api-token` and masks any string equal to a bound token; tokens never appear in `ToolError.details`, `requestState`, `source`, `curlHint`, cache keys (only `identity()`), `/healthz`, `/readyz`.
 
 ### 3.3 Rate limiting and retries (`neon/ratelimit.py`)
 
@@ -965,7 +965,7 @@ class RetryConfig(BaseModel):
 class NeonConfig(BaseModel):
     base_url: str = "https://data.neonscience.org/api/v0"
     graphql_url: str = "https://data.neonscience.org/graphql"
-    api_token: SecretStr | None = None                  # NEON_MCP_NEON__API_TOKEN; fallbacks NEON_TOKEN, NEON_API_TOKEN
+    api_token: SecretStr | None = None                  # NEON_MCP_NEON__API_TOKEN; fallback NEON_TOKEN
     token_for_public_endpoints: bool | None = None      # None → True on stdio, False on http (D9)
     user_agent_suffix: str | None = None
     connect_timeout_s: float = 10.0; read_timeout_s: float = 60.0; catalog_read_timeout_s: float = 180.0; download_read_timeout_s: float = 300.0
