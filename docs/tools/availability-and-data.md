@@ -107,6 +107,9 @@ subdomains); files stream to `.part` and are renamed only after the MD5 matches.
 Existing identical files are skipped (`if_exists="error"` refuses instead);
 `as_zip=true` fetches NEON's package ZIP per site-month.
 
+To mirror the download directory to the CyVerse Data Store on a schedule, see
+[Sync downloads to CyVerse](../getting-started/sync-cyverse.md).
+
 [^neon-data]: NEON Data API — Data endpoint. <https://data.neonscience.org/data-api/endpoints/data/>
 [^neon-data-query]: NEON Data API — Data query endpoint. <https://data.neonscience.org/data-api/endpoints/data-query/>
 [^neon-auth]: NEON Data API — Authentication. <https://data.neonscience.org/data-api/authentication/>
