@@ -13,7 +13,7 @@ extra_css = ["stylesheets/extra.css"]
 
 nav = [
   { "Home" = "index.md" },
-  { "Getting started" = [ { "Contents" = "getting-started/index.md" }, "getting-started/install.md", "getting-started/quickstart.md", "getting-started/api-token.md", "getting-started/clients.md", "getting-started/configuration.md" ] },
+  { "Getting started" = [ { "Contents" = "getting-started/index.md" }, "getting-started/install.md", "getting-started/quickstart.md", "getting-started/api-token.md", "getting-started/clients.md", "getting-started/configuration.md", "getting-started/sync-cyverse.md" ] },
   { "Tools" = [ { "Contents" = "tools/index.md" }, "tools/reference.md", "tools/products.md", "tools/sites.md", "tools/locations.md", "tools/availability-and-data.md", "tools/releases.md", "tools/taxonomy.md", "tools/samples.md", "tools/prototype-datasets.md", "tools/graphql.md", "tools/utilities.md", "tools/resources-and-prompts.md" ] },
   { "MCP protocol" = [ { "Contents" = "mcp/index.md" }, "mcp/spec-2026-07-28.md", "mcp/transports.md" ] },
   { "Deploy" = [ { "Contents" = "deploy/index.md" }, "deploy/hosted-http.md", "deploy/security.md" ] },
