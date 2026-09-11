@@ -15,7 +15,7 @@ uv run pytest                                   # hermetic unit + conformance te
 uv run ruff check src tests scripts && uv run ruff format --check src tests
 uv run mypy --strict src
 uv run neon-mcp --check                         # config + one live NEON request
-NEON_MCP_LIVE=1 NEON_TOKEN=... uv run pytest -m live tests/live
+NEON_MCP_LIVE=1 uv run --env-file .env pytest -m live tests/live   # NEON_TOKEN in .env
 ```
 
 ## Fixed decisions (do not re-litigate)
@@ -25,7 +25,8 @@ NEON_MCP_LIVE=1 NEON_TOKEN=... uv run pytest -m live tests/live
 - Transports: stdio and stateless Streamable HTTP at `/mcp` (+ `/healthz`, `/readyz`);
   no SSE, no sessions, no OIDC, no roots/sampling/logging.
 - Config: `NEON_MCP_<SECTION>__<FIELD>`; precedence flag > env > YAML > defaults;
-  token `NEON_MCP_NEON__API_TOKEN`, fallbacks `NEON_TOKEN`, `NEON_API_TOKEN`; no token flag.
+  token `NEON_TOKEN` (NEON's documented name), overridden by `NEON_MCP_NEON__API_TOKEN`;
+  `NEON_API_TOKEN` is not read (warned about); no token flag; `.env` is not auto-loaded.
 - Downloads exist only on stdio, confined to `downloads.directory`.
 - MIT, Copyright (c) 2026 The Regents of the University of New Mexico.
 

@@ -54,7 +54,7 @@ def test_env_nesting_lists_and_nulls() -> None:
     ("env", "expected"),
     [
         ({"NEON_TOKEN": "tok-aaaa"}, "tok-aaaa"),
-        ({"NEON_API_TOKEN": "tok-bbbb"}, "tok-bbbb"),
+        ({"NEON_API_TOKEN": "tok-bbbb"}, None),  # not a NEON convention: ignored
         ({"NEON_TOKEN": "tok-aaaa", "NEON_API_TOKEN": "tok-bbbb"}, "tok-aaaa"),
         ({"NEON_MCP_NEON__API_TOKEN": "tok-cccc", "NEON_TOKEN": "tok-aaaa"}, "tok-cccc"),
         ({"NEON_MCP_NEON__API_TOKEN": "   "}, None),
@@ -117,3 +117,15 @@ def test_active_config_roundtrip() -> None:
     finally:
         set_active_config(None)
     assert isinstance(get_active_config(), Config)
+
+
+def test_neon_api_token_alone_warns_without_leaking(caplog: pytest.LogCaptureFixture) -> None:
+    with caplog.at_level(logging.WARNING, logger="neon_mcp.config"):
+        cfg = load_config(env={"NEON_API_TOKEN": "tok-bbbb-secret"})
+    assert cfg.token_value() is None
+    assert "rename it to NEON_TOKEN" in caplog.text
+    assert "tok-bbbb-secret" not in caplog.text
+    caplog.clear()
+    with caplog.at_level(logging.WARNING, logger="neon_mcp.config"):
+        load_config(env={"NEON_TOKEN": "tok-aaaa", "NEON_API_TOKEN": "tok-bbbb"})
+    assert "NEON_API_TOKEN" not in caplog.text

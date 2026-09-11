@@ -21,8 +21,13 @@ status: stable
 ```bash
 uv run pytest                      # unit + conformance, no network (about 350 tests, a few seconds)
 uv run pytest --cov=neon_mcp       # with coverage (95 % at 0.1.0)
-NEON_MCP_LIVE=1 NEON_TOKEN=... uv run pytest -m live tests/live   # against the real API
+NEON_MCP_LIVE=1 uv run --env-file .env pytest -m live tests/live   # against the real API
 ```
+
+Live tests that need a token skip unless `NEON_TOKEN` is set. Keep it in the
+git-ignored `.env` (`NEON_TOKEN=...`) and load it with `uv run --env-file .env`, since
+neither pytest nor neon-mcp reads `.env` on its own. Don't put the token on the command
+line, where it lands in shell history.
 
 ## Hermetic by default
 

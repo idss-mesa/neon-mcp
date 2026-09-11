@@ -141,6 +141,12 @@ async def neon_ping(args: PingIn, ctx: ToolContext) -> PingResult:
             "tools work; neon_list_files, neon_download_files and neon_get_sample need a token."
         )
         steps.append("Read neon://guide/api-token to enable file listing and downloads")
+    elif api is not None and api.status == 403 and identity != "anon":
+        notes.append(
+            "NEON rejected the API token (HTTP 403 on a public endpoint): it is mistyped, "
+            "disabled or deleted, and every request that carries it fails."
+        )
+        steps.append("Ask the user to fix or unset NEON_TOKEN (see neon://guide/api-token)")
     return PingResult(
         version=__version__,
         protocol_version=LATEST_PROTOCOL_VERSION,

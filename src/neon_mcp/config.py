@@ -6,8 +6,8 @@ Environment variables use the ``NEON_MCP_`` prefix and ``__`` to descend into
 nested sections at any depth: ``NEON_MCP_NEON__RATE_LIMIT__ANONYMOUS_RPS``
 sets ``config.neon.rate_limit.anonymous_rps``. List fields accept a
 comma-separated string. The NEON API token (``NEON_MCP_NEON__API_TOKEN``)
-additionally falls back to ``NEON_TOKEN`` (the variable neonUtilities
-documents) and then ``NEON_API_TOKEN``.
+additionally falls back to ``NEON_TOKEN``, the name NEON's own tutorials use.
+``NEON_API_TOKEN`` is not read; the loader warns when it is the only one set.
 
 The loader validates shape only; it never contacts NEON.
 """
@@ -32,7 +32,9 @@ LogLevel = Literal["debug", "info", "warning", "error", "critical"]
 ENV_PREFIX = "NEON_MCP_"
 ENV_DELIM = "__"
 #: Token variables consulted, in order, when NEON_MCP_NEON__API_TOKEN is unset.
-TOKEN_ENV_FALLBACKS: tuple[str, ...] = ("NEON_TOKEN", "NEON_API_TOKEN")
+TOKEN_ENV_FALLBACKS: tuple[str, ...] = ("NEON_TOKEN",)
+#: Plausible-looking token variables that are *not* read (warned about when alone).
+IGNORED_TOKEN_ENV: tuple[str, ...] = ("NEON_API_TOKEN",)
 
 
 class _Section(BaseModel):
@@ -94,7 +96,7 @@ class NeonConfig(_Section):
     api_token: SecretStr | None = Field(
         None,
         description="NEON API token (https://data.neonscience.org/myaccount). Required for data files, "
-        "data queries and sample views. Prefer the env var; never commit it. Fallbacks: NEON_TOKEN, NEON_API_TOKEN.",
+        "data queries and sample views. Prefer the NEON_TOKEN env var; never commit it.",
     )
     token_for_public_endpoints: bool | None = Field(
         None,
@@ -506,6 +508,13 @@ def load_config(
                 if isinstance(merged["neon"], dict):
                     merged["neon"]["api_token"] = value
                 break
+    neon = merged.get("neon")
+    if not (isinstance(neon, dict) and neon.get("api_token")):
+        for name in IGNORED_TOKEN_ENV:
+            if source_env.get(name, "").strip():
+                logger.warning(
+                    "%s is set but neon-mcp does not read it; rename it to NEON_TOKEN", name
+                )
     _normalize_lists(merged, Config)
     return Config.model_validate(merged)
 

@@ -73,7 +73,7 @@ def rows(model: type[BaseModel], path: tuple[str, ...] = ()) -> list[str]:
         env = "NEON_MCP_" + "__".join(p.upper() for p in (*path, name))
         desc = (field.description or "").replace("|", "\\|")
         if dotted == "neon.api_token":
-            env += "<br>(or `NEON_TOKEN`, `NEON_API_TOKEN`)"
+            env += "<br>(or `NEON_TOKEN`)"
         out.append(
             f"| `{dotted}` | `{env.split('<br>')[0]}`{'<br>' + env.split('<br>')[1] if '<br>' in env else ''} "
             f"| {_type_name(annotation)} | {_default(field)} | {desc} |"
