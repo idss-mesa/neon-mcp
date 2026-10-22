@@ -72,7 +72,7 @@ async def test_get_dataset_without_token_skips_files(
     assert "files" not in payload and payload["locations"][0]["siteCode"] == "BLUE"
     assert any("needs an API token" in n for n in payload["notes"])
     assert payload["nextSteps"][0].startswith("Read neon://guide/api-token")
-    for include in (["files"], ["all"]):
+    for include in (["files"], ["all"], ["files", "locations"]):
         error = await call_err(
             server,
             "neon_get_prototype_dataset",
@@ -81,6 +81,20 @@ async def test_get_dataset_without_token_skips_files(
         )
         assert error["details"]["endpoint"] == "GET /prototype/data"
     assert router.paths() == [f"GET /prototype/datasets/{BLUE}"]
+    located = await call_ok(
+        server, "neon_get_prototype_dataset", {"uuid": BLUE, "include": ["locations"]}
+    )
+    assert located["nextSteps"][0] == (
+        "Read neon://guide/api-token to list and download this dataset's files"
+    )
+    assert not any(s.startswith("neon_download_files") for s in located["nextSteps"])
+
+
+async def test_get_dataset_with_rejected_token(
+    token_server: NeonServer, router: FixtureRouter
+) -> None:
+    router.add(Route("GET", f"/prototype/data/{BLUE}", Reply(fixture="data_403.json", status=403)))
+    await call_err(token_server, "neon_get_prototype_dataset", {"uuid": BLUE}, "forbidden")
 
 
 async def test_get_dataset_options(token_server: NeonServer) -> None:

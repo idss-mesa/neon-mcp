@@ -34,7 +34,7 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 | [`neon_get_document`](#neon_get_document) | Get a NEON document | [documents](utilities.md) | no |
 | [`neon_get_location`](#neon_get_location) | Get a NEON location | [locations](locations.md) | no |
 | [`neon_get_product`](#neon_get_product) | Get a NEON data product | [catalog](products.md) | no |
-| [`neon_get_prototype_dataset`](#neon_get_prototype_dataset) | Get a NEON prototype dataset | [prototype](prototype-datasets.md) | no |
+| [`neon_get_prototype_dataset`](#neon_get_prototype_dataset) | Get a NEON prototype dataset | [prototype](prototype-datasets.md) | files |
 | [`neon_get_release`](#neon_get_release) | Get a NEON data release | [releases](releases.md) | no |
 | [`neon_get_sample`](#neon_get_sample) | Get a NEON sample | [samples](samples.md) | required |
 | [`neon_get_site`](#neon_get_site) | Get a NEON field site | [catalog](products.md) | no |
@@ -390,12 +390,12 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 
 ## neon_get_prototype_dataset
 
-**Get a NEON prototype dataset.** One prototype dataset: title, abstract, years, version, DOI, themes, teams, sites, and by default its files with sizes, MD5s and signed URLs (files need a NEON API token; without one they are skipped); optional project/design/metadata descriptions, publication citations and related products. Next: call neon_download_files(prototype_uuid=...) on stdio, or neon_get_citation(prototype_uuid=...).
+**Get a NEON prototype dataset.** One prototype dataset: title, abstract, years, version, DOI, themes, teams, sites, and by default its files with sizes, MD5s and signed URLs (files need a NEON API token: without one they are skipped, or auth_required if asked for explicitly); optional project/design/metadata descriptions, publication citations and related products. Next: call neon_download_files(prototype_uuid=...) on stdio, or neon_get_citation(prototype_uuid=...).
 
 | | |
 | --- | --- |
 | Surface | `prototype` |
-| NEON API token | not required |
+| NEON API token | not required; needed for `GET /prototype/data/{uuid}` (files) |
 | Transports | http, stdio |
 | Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
 | NEON endpoints | `GET /prototype/datasets/{uuid}`<br>`GET /prototype/data/{uuid}` |

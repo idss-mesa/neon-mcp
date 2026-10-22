@@ -9,7 +9,7 @@ GraphQL catalog fixtures deterministically from the REST ones.
     python scripts/record_fixtures.py check                 # CI: rules below
     python scripts/record_fixtures.py scrub                 # redact X-Goog-Signature / Credential values
     python scripts/record_fixtures.py derive-gql-catalog    # products.json/sites.json -> graphql_*_catalog.json
-    python scripts/record_fixtures.py record URL NAME       # fetch an anonymous endpoint to fixtures/_raw/NAME
+    python scripts/record_fixtures.py record URL NAME       # fetch to fixtures/_raw/NAME (sends NEON_TOKEN)
 
 Rules checked: no ``X-Goog-Signature=`` other than ``REDACTED``; no
 ``apiToken=``; no ``X-API-Token`` value; every fixture <= 40 KB (except the
@@ -19,6 +19,7 @@ two payload-hazard samples, which no route may serve); total <= 3 MB.
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -171,11 +172,16 @@ def check() -> int:
 
 
 def record(url: str, name: str) -> None:
+    import urllib.parse
     import urllib.request
 
     raw_dir = FIXTURES / "_raw"
     raw_dir.mkdir(exist_ok=True)
-    request = urllib.request.Request(url, headers={"User-Agent": "neon-mcp-fixture-recorder"})  # noqa: S310
+    headers = {"User-Agent": "neon-mcp-fixture-recorder"}
+    token = os.environ.get("NEON_TOKEN")
+    if token and urllib.parse.urlsplit(url).hostname == "data.neonscience.org":
+        headers["X-API-Token"] = token  # token-only endpoints (/data, /prototype/data); never saved
+    request = urllib.request.Request(url, headers=headers)  # noqa: S310
     with urllib.request.urlopen(request, timeout=120) as response:  # noqa: S310 - maintainer tool, https only
         body = response.read().decode("utf-8")
     body = CRED_RE.sub(r"\1REDACTED", SIG_RE.sub(r"\1REDACTED", body))

@@ -38,7 +38,6 @@ and reading a dataset's metadata need no token; since NEON Data API 0.12.0
   call leaves the files out and says so in `notes`; asking for `files` or `all`
   explicitly fails with `auth_required`.
 * Download the files on stdio with `neon_download_files(prototype_uuid=...)` (needs a
-  token); cite
-  with `neon_get_citation(prototype_uuid=...)`.
+  token); cite with `neon_get_citation(prototype_uuid=...)`.
 
 [^neon-prototype]: NEON Data API — Prototype datasets. <https://data.neonscience.org/data-api/endpoints/prototype/>

@@ -378,6 +378,7 @@ async def neon_download_files(args: DownloadFilesIn, ctx: ToolContext) -> Downlo
     notes: list[str] = []
     code = None
     if args.prototype_uuid:
+        # The listing needs the token; its file URLs are signed storage URLs that must never get it.
         require_token(ctx, endpoint="GET /prototype/data")
         try:
             env = await ctx.client.get_json(
