@@ -13,6 +13,6 @@ SERVER_INSTRUCTIONS = (
     "a release tag: use the provisional / include_provisional switches. Every result is compact and "
     "paginated (page.nextOffset), carries notes, and ends with nextSteps. Call neon_ping to learn "
     "whether a token is configured; without one, all discovery, availability, taxonomy, release, "
-    "location and prototype tools still work. Read neon://guide/agent-workflow for worked examples "
+    "location and prototype-metadata tools still work. Read neon://guide/agent-workflow for worked examples "
     "and neon://reference/vocabularies for valid filter values."
 )

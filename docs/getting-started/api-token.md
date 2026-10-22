@@ -1,6 +1,6 @@
 ---
 title: "NEON API token"
-description: "How to create a NEON API token step by step, why NEON's data and sample endpoints require it, how to give it to neon-mcp as NEON_TOKEN, how to check that NEON accepts it, and the rate limits with and without it."
+description: "How to create a NEON API token step by step, why NEON's data, sample and prototype-file endpoints require it, how to give it to neon-mcp as NEON_TOKEN, how to check that NEON accepts it, and the rate limits with and without it."
 type: Guide
 tags:
   - getting-started
@@ -8,8 +8,8 @@ tags:
   - api-token
   - rate-limits
 generated:
-  by: "claude/opus-5"
-  at: "2026-09-11T12:00:00Z"
+  by: "claude/opus-5.5"
+  at: "2026-10-22T12:00:00Z"
 sources:
   - id: neon-api-auth
     resource: "https://data.neonscience.org/data-api/authentication/"
@@ -36,15 +36,15 @@ sources:
     title: "neonutilities (Python) — README and examples"
     author: "team:neon"
 status: stable
-stale_after: "2027-03-11T00:00:00Z"
+stale_after: "2027-04-22T00:00:00Z"
 ---
 
 # NEON API token
 
 neon-mcp needs no credentials for discovery: NEON's product, site, location,
 release, taxonomy and prototype-dataset records are public. A **NEON API
-token** is required only when a tool has to list or fetch actual data files
-or trace samples. This page shows how to create a token, what to call it, how
+token** is required only when a tool has to list or fetch actual data or
+prototype files, or trace samples. This page shows how to create a token, what to call it, how
 to hand it to neon-mcp and how to check that NEON accepts it.
 
 **In short:** sign in at the NEON Data Portal, open **My Account**, click
@@ -64,10 +64,11 @@ endpoints are marked *Requires Authentication*. Without a token they answer
 | Data query | `GET /data/query`, `POST /data/query` |
 | Release-pinned data | `GET /releases/{releaseTag}/data/...` (all variants) |
 | Sample tracking | `GET /samples/view`, `GET /samples/download` |
+| Prototype files (since 0.12.0, October 2026) | `GET /prototype/data/{uuid}` (and `/{filename}`) |
 
 Everything else — `/products`, `/sites`, `/locations`, `/releases` (list,
 detail, products, sites), `/taxonomy`, `/samples/classes`,
-`/samples/supportedClasses`, `/prototype/*` and the GraphQL endpoint — is
+`/samples/supportedClasses`, `/prototype/datasets` and the GraphQL endpoint — is
 anonymous. Data availability per site and month is part of the public product
 and site records, so neon-mcp can tell you *what* exists without a token; it
 needs the token to tell you *where the files are* and to fetch them.
@@ -235,9 +236,11 @@ headers are authoritative[^neon-api-rate-limiting].
 
 * Discovery tools (products, sites, locations, availability, releases,
   taxonomy, prototype datasets) behave identically with or without a token,
-  apart from the lower rate limit.
+  apart from the lower rate limit — except that `neon_get_prototype_dataset`
+  leaves out the dataset's files (with a note) unless a token is set, and
+  fails with `auth_required` if you ask for `files` explicitly.
 * Three tools need a token: `neon_list_files`, `neon_download_files` (for NEON data
-  files; prototype and document downloads need none) and `neon_get_sample`. Without
+  and prototype files; document downloads need none) and `neon_get_sample`. Without
   one they fail **before** any request with a structured error,
   `code: "auth_required"`, whose message names `NEON_TOKEN` and links to
   [data.neonscience.org/myaccount](https://data.neonscience.org/myaccount){target=_blank}.

@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 
 from neon_mcp.server import NeonServer
-from tests.fixture_router import PROTOTYPE_UUID, FixtureRouter, Reply, Route
+from tests.fixture_router import PROTOTYPE_UUID, TEST_TOKEN, FixtureRouter, Reply, Route
 from tests.helpers import call_err, call_ok
 
 BLUE, MOSQ, SONAR = (
@@ -48,9 +48,10 @@ async def test_search_filters(server: NeonServer, args: dict, expected: list[str
     )
 
 
-async def test_get_dataset_with_files(server: NeonServer, router: FixtureRouter) -> None:
-    payload = await call_ok(server, "neon_get_prototype_dataset", {"uuid": BLUE.upper()})
+async def test_get_dataset_with_files(token_server: NeonServer, router: FixtureRouter) -> None:
+    payload = await call_ok(token_server, "neon_get_prototype_dataset", {"uuid": BLUE.upper()})
     assert router.paths() == [f"GET /prototype/datasets/{BLUE}", f"GET /prototype/data/{BLUE}"]
+    assert router.calls_to(f"GET /prototype/data/{BLUE}")[0].headers["x-api-token"] == TEST_TOKEN
     assert (
         payload["projectTitle"].startswith("NEON prototype reaeration")
         and payload["version"] == "v1"
@@ -63,7 +64,27 @@ async def test_get_dataset_with_files(server: NeonServer, router: FixtureRouter)
     assert any("expire" in n for n in payload["notes"])
 
 
-async def test_get_dataset_options(server: NeonServer) -> None:
+async def test_get_dataset_without_token_skips_files(
+    server: NeonServer, router: FixtureRouter
+) -> None:
+    payload = await call_ok(server, "neon_get_prototype_dataset", {"uuid": BLUE})
+    assert router.paths() == [f"GET /prototype/datasets/{BLUE}"]
+    assert "files" not in payload and payload["locations"][0]["siteCode"] == "BLUE"
+    assert any("needs an API token" in n for n in payload["notes"])
+    assert payload["nextSteps"][0].startswith("Read neon://guide/api-token")
+    for include in (["files"], ["all"]):
+        error = await call_err(
+            server,
+            "neon_get_prototype_dataset",
+            {"uuid": BLUE, "include": include},
+            "auth_required",
+        )
+        assert error["details"]["endpoint"] == "GET /prototype/data"
+    assert router.paths() == [f"GET /prototype/datasets/{BLUE}"]
+
+
+async def test_get_dataset_options(token_server: NeonServer) -> None:
+    server = token_server
     no_urls = await call_ok(
         server,
         "neon_get_prototype_dataset",

@@ -39,8 +39,9 @@ Harvard Forest for June 2023 and cite it".
 ## NEON API token
 
 Optional. Without a token everything works except `neon_list_files`,
-`neon_download_files` (for data files) and `neon_get_sample`, which return
-`auth_required`. To create one:
+`neon_download_files` (for data and prototype files) and `neon_get_sample`, which
+return `auth_required`, and `neon_get_prototype_dataset`, which leaves out a
+prototype dataset's files. To create one:
 
 1. Sign in at <https://data.neonscience.org> (a free account: Google, CILogon or email).
 2. Open **My Account** (<https://data.neonscience.org/myaccount>), click

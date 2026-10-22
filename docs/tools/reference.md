@@ -8,7 +8,7 @@ tags:
   - generated
 generated:
   by: "process:gen_tools_reference"
-  at: "2026-09-10T00:00:00Z"
+  at: "2026-10-22T00:00:00Z"
 sources:
   - id: registry
     resource: "https://github.com/idss-mesa/neon-mcp/tree/main/src/neon_mcp/tools"
@@ -50,12 +50,12 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 
 ## neon_download_files
 
-**Download NEON files.** Download data files (or package ZIPs), a prototype dataset's files, or a NEON document into the configured download directory (stdio only; data files need a token). The plan is checked against file/byte caps before any transfer; MD5s are verified; identical existing files are skipped. Next: read the CSVs (pandas.read_csv) and cite with neon_get_citation.
+**Download NEON files.** Download data files (or package ZIPs), a prototype dataset's files, or a NEON document into the configured download directory (stdio only; data and prototype files need a token). The plan is checked against file/byte caps before any transfer; MD5s are verified; identical existing files are skipped. Next: read the CSVs (pandas.read_csv) and cite with neon_get_citation.
 
 | | |
 | --- | --- |
 | Surface | `data` |
-| NEON API token | required for NEON data files; prototype and document downloads need none |
+| NEON API token | required for NEON data and prototype files; document downloads need none |
 | Transports | stdio |
 | Annotations | readOnly=false, destructive=false, idempotent=true, openWorld=true |
 | NEON endpoints | `GET /data/package/{productCode}/{siteCode}/{yearMonth}`<br>`GET /prototype/data/{uuid}`<br>`GET /documents/{specNumber}`<br>`POST /data/query` |
@@ -390,7 +390,7 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 
 ## neon_get_prototype_dataset
 
-**Get a NEON prototype dataset.** One prototype dataset: title, abstract, years, version, DOI, themes, teams, sites, and by default its files with sizes, MD5s and signed URLs; optional project/design/metadata descriptions, publication citations and related products. Next: call neon_download_files(prototype_uuid=...) on stdio, or neon_get_citation(prototype_uuid=...).
+**Get a NEON prototype dataset.** One prototype dataset: title, abstract, years, version, DOI, themes, teams, sites, and by default its files with sizes, MD5s and signed URLs (files need a NEON API token; without one they are skipped); optional project/design/metadata descriptions, publication citations and related products. Next: call neon_download_files(prototype_uuid=...) on stdio, or neon_get_citation(prototype_uuid=...).
 
 | | |
 | --- | --- |
@@ -405,7 +405,7 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 | Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `uuid` | string | yes |  | Prototype dataset uuid. |
-| `include` | array of `files` \\| `descriptions` \\| `locations` \\| `citations` \\| `related` \\| `all` |  |  | files (default; signed URLs), locations (default), descriptions, citations, related, all. |
+| `include` | array of `files` \\| `descriptions` \\| `locations` \\| `citations` \\| `related` \\| `all` |  |  | files (default; signed URLs; needs a token, skipped without one unless asked for), locations (default), descriptions, citations, related, all. |
 | `include_urls` | boolean |  | true | Include signed download URLs (valid ~7 days). |
 | `files_limit` | integer |  | `100` | >= 1; <= 500 |
 | `files_offset` | integer |  | `0` | >= 0 |
@@ -795,7 +795,7 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 
 ## neon_search_prototype_datasets
 
-**Search NEON prototype datasets.** Search NEON's prototype datasets (early or experimental data outside the standard products) by text, theme, science team, site, years, file type or publication flag, with facets. Each has its own DOI and version. No token. Next: call neon_get_prototype_dataset with a uuid for files.
+**Search NEON prototype datasets.** Search NEON's prototype datasets (early or experimental data outside the standard products) by text, theme, science team, site, years, file type or publication flag, with facets. Each has its own DOI and version. No token. Next: call neon_get_prototype_dataset with a uuid (its files need a token).
 
 | | |
 | --- | --- |

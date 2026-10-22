@@ -132,8 +132,8 @@ async def test_zip_packages(token_server: NeonServer, router: FixtureRouter) -> 
     )
 
 
-async def test_prototype_and_document_need_no_token(
-    server: NeonServer, router: FixtureRouter
+async def test_prototype_needs_token_and_document_does_not(
+    server: NeonServer, token_server: NeonServer, router: FixtureRouter
 ) -> None:
     proto_url = "https://neon-publication-proto.storage.googleapis.com/datasets/x/small.csv"
     router.add(
@@ -157,6 +157,7 @@ async def test_prototype_and_document_need_no_token(
                     }
                 }
             ),
+            token=True,
         ),
         Route("GET", proto_url, Reply(content=A, content_type="text/csv")),
         Route(
@@ -165,13 +166,19 @@ async def test_prototype_and_document_need_no_token(
             Reply(content=b"%PDF-1.4 tiny", content_type="application/pdf"),
         ),
     )
-    proto = await call_ok(server, "neon_download_files", {"prototype_uuid": PROTOTYPE_UUID})
+    error = await call_err(
+        server, "neon_download_files", {"prototype_uuid": PROTOTYPE_UUID}, "auth_required"
+    )
+    assert error["details"]["endpoint"] == "GET /prototype/data" and router.paths() == []
+    proto = await call_ok(token_server, "neon_download_files", {"prototype_uuid": PROTOTYPE_UUID})
     assert proto["files"][0]["status"] == "downloaded" and "prototype" in proto["files"][0]["path"]
     assert f"neon_get_citation(prototype_uuid='{PROTOTYPE_UUID}')" in proto["nextSteps"]
+    assert router.calls_to(f"GET /prototype/data/{PROTOTYPE_UUID}")[0].headers["x-api-token"]
+    assert "x-api-token" not in router.calls_to(f"GET {proto_url}")[0].headers
     doc = await call_ok(server, "neon_download_files", {"spec_number": "NEON.DOC.000780vD"})
     assert doc["files"][0]["path"].endswith("documents/NEON.DOC.000780vD.pdf")
     await call_err(
-        server,
+        token_server,
         "neon_download_files",
         {"prototype_uuid": PROTOTYPE_UUID, "file_names": ["nope.csv"]},
         "not_found",

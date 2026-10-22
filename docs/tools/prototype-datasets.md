@@ -6,8 +6,8 @@ tags:
   - tools
   - prototype-datasets
 generated:
-  by: "claude/opus-5"
-  at: "2026-09-10T00:00:00Z"
+  by: "claude/opus-5.5"
+  at: "2026-10-22T12:00:00Z"
 sources:
   - id: neon-prototype
     resource: "https://data.neonscience.org/data-api/endpoints/prototype/"
@@ -21,8 +21,10 @@ status: stable
 Prototype datasets are early, experimental or one-off NEON data outside the standard
 product catalogue, each with its own DOI and version[^neon-prototype]. Tools:
 [`neon_search_prototype_datasets`](reference.md#neon_search_prototype_datasets) and
-[`neon_get_prototype_dataset`](reference.md#neon_get_prototype_dataset). Neither
-needs a token.
+[`neon_get_prototype_dataset`](reference.md#neon_get_prototype_dataset). Searching
+and reading a dataset's metadata need no token; since NEON Data API 0.12.0
+(October 2026) listing or downloading its files does (see
+[NEON API token](../getting-started/api-token.md)).
 
 * Search by `query` (title, abstract, descriptions, keywords), `theme`, `science_team`,
   `site_code`, `start_year`/`end_year` (overlap), `file_type` or `is_published`;
@@ -32,8 +34,11 @@ needs a token.
   `science_team` a substring, so `land cover` and `AOS` both work.
 * `neon_get_prototype_dataset` returns the dataset with its files (sizes, MD5s,
   signed URLs that expire in about 7 days) and locations by default; add
-  `descriptions`, `citations` and `related`, or `all`.
-* Download the files on stdio with `neon_download_files(prototype_uuid=...)`; cite
+  `descriptions`, `citations` and `related`, or `all`. Without a token the default
+  call leaves the files out and says so in `notes`; asking for `files` or `all`
+  explicitly fails with `auth_required`.
+* Download the files on stdio with `neon_download_files(prototype_uuid=...)` (needs a
+  token); cite
   with `neon_get_citation(prototype_uuid=...)`.
 
 [^neon-prototype]: NEON Data API — Prototype datasets. <https://data.neonscience.org/data-api/endpoints/prototype/>

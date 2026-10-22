@@ -5,6 +5,20 @@ All notable changes to the neon-mcp package. The format follows
 [Semantic Versioning](https://semver.org/). Documentation changes are logged
 separately in `docs/log.md`.
 
+## [Unreleased]
+
+### Fixed
+
+- Prototype dataset files: NEON Data API 0.12.0 (2026-10-01) made
+  `/prototype/data/{uuid}` and `/prototype/data/{uuid}/{filename}` token-only.
+  neon-mcp now sends `X-API-Token` on those paths (it did not, so even
+  configured tokens got 403) and keys their cache per token.
+  `neon_get_prototype_dataset` without a token returns the dataset's metadata and
+  skips the file listing with a note (an explicit `include=["files"]` or `["all"]`
+  returns `auth_required`); `neon_download_files(prototype_uuid=)` returns
+  `auth_required` before any request. Signed storage URLs still never receive the
+  token.
+
 ## [0.1.0] - 2026-09-10
 
 First release. Supersedes the TypeScript server in `tyson-swetnam/neon-data-api`

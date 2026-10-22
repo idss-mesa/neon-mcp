@@ -145,7 +145,7 @@ def render() -> str:
         lines.append(f"**{spec.title}.** {spec.description}\n")
         token = "required" if spec.requires_token else "not required"
         if spec.requires_token and spec.token_check == "handler":
-            token = "required for NEON data files; prototype and document downloads need none"
+            token = "required for NEON data and prototype files; document downloads need none"
         hints = ", ".join(
             f"{name}={str(value).lower()}"
             for name, value in (

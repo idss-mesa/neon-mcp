@@ -342,8 +342,8 @@ class DownloadFilesIn(_Selectors):
     title="Download NEON files",
     description=(
         "Download data files (or package ZIPs), a prototype dataset's files, or a NEON document into the "
-        "configured download directory (stdio only; data files need a token). The plan is checked against "
-        "file/byte caps before any transfer; MD5s are verified; identical existing files are skipped. "
+        "configured download directory (stdio only; data and prototype files need a token). The plan is "
+        "checked against file/byte caps before any transfer; MD5s are verified; identical existing files are skipped. "
         "Next: read the CSVs (pandas.read_csv) and cite with neon_get_citation."
     ),
     input_model=DownloadFilesIn,
@@ -378,6 +378,7 @@ async def neon_download_files(args: DownloadFilesIn, ctx: ToolContext) -> Downlo
     notes: list[str] = []
     code = None
     if args.prototype_uuid:
+        require_token(ctx, endpoint="GET /prototype/data")
         try:
             env = await ctx.client.get_json(
                 f"/prototype/data/{args.prototype_uuid}",

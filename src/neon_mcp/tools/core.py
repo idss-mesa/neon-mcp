@@ -138,7 +138,8 @@ async def neon_ping(args: PingIn, ctx: ToolContext) -> PingResult:
     if ctx.token is None:
         notes.append(
             "No NEON API token: discovery, availability, taxonomy, releases, locations and prototype "
-            "tools work; neon_list_files, neon_download_files and neon_get_sample need a token."
+            "metadata work; neon_list_files, neon_download_files, neon_get_sample and prototype "
+            "file listings need a token."
         )
         steps.append("Read neon://guide/api-token to enable file listing and downloads")
     elif api is not None and api.status == 403 and identity != "anon":
