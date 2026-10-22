@@ -11,6 +11,7 @@ from pydantic import Field
 from neon_mcp.context import ToolContext
 from neon_mcp.errors import NeonApiError
 from neon_mcp.models.common import NeonInput, SiteCode, Uuid
+from neon_mcp.neon.auth import require_token
 from neon_mcp.neon.catalog import words
 from neon_mcp.projections.common import clip_text, null_list, paginate
 from neon_mcp.projections.prototype import (
@@ -96,7 +97,7 @@ def _matches(raw: Mapping[str, Any], args: SearchPrototypeIn) -> bool:
     description=(
         "Search NEON's prototype datasets (early or experimental data outside the standard products) by "
         "text, theme, science team, site, years, file type or publication flag, with facets. Each has "
-        "its own DOI and version. No token. Next: call neon_get_prototype_dataset with a uuid for files."
+        "its own DOI and version. No token. Next: call neon_get_prototype_dataset with a uuid (its files need a token)."
     ),
     input_model=SearchPrototypeIn,
     output_model=PrototypeSearchResult,
@@ -147,7 +148,10 @@ class GetPrototypeIn(NeonInput):
     include: list[Literal["files", "descriptions", "locations", "citations", "related", "all"]] = (
         Field(
             default_factory=lambda: ["files", "locations"],  # type: ignore[arg-type]
-            description="files (default; signed URLs), locations (default), descriptions, citations, related, all.",
+            description=(
+                "files (default; signed URLs; needs a token, skipped without one unless asked for), "
+                "locations (default), descriptions, citations, related, all."
+            ),
         )
     )
     include_urls: bool = Field(True, description="Include signed download URLs (valid ~7 days).")
@@ -161,9 +165,10 @@ class GetPrototypeIn(NeonInput):
     title="Get a NEON prototype dataset",
     description=(
         "One prototype dataset: title, abstract, years, version, DOI, themes, teams, sites, and by default "
-        "its files with sizes, MD5s and signed URLs; optional project/design/metadata descriptions, "
-        "publication citations and related products. Next: call neon_download_files(prototype_uuid=...) "
-        "on stdio, or neon_get_citation(prototype_uuid=...)."
+        "its files with sizes, MD5s and signed URLs (files need a NEON API token: without one they are "
+        "skipped, or auth_required if asked for explicitly); optional project/design/metadata "
+        "descriptions, publication citations and related products. Next: call "
+        "neon_download_files(prototype_uuid=...) on stdio, or neon_get_citation(prototype_uuid=...)."
     ),
     input_model=GetPrototypeIn,
     output_model=PrototypeDatasetDetail,
@@ -178,6 +183,14 @@ async def neon_get_prototype_dataset(
         if "all" in args.include
         else set(args.include)
     )
+    # /prototype/data needs a token since NEON Data API 0.12.0: an explicit request for files fails
+    # fast; the default include degrades to the token-free metadata (DESIGN.md D35).
+    files_skipped = False
+    if "files" in include and ctx.token is None:
+        if "include" in args.model_fields_set:
+            require_token(ctx, endpoint="GET /prototype/data")
+        include.discard("files")
+        files_skipped = True
     try:
         env = await ctx.client.get_json(
             f"/prototype/datasets/{args.uuid}", token=ctx.token, stats=ctx.stats, cache="detail"
@@ -225,13 +238,25 @@ async def neon_get_prototype_dataset(
             files, offset=args.files_offset, limit=args.files_limit
         )
     steps = [f"neon_get_citation(prototype_uuid='{args.uuid}')"]
-    if ctx.config.effective_downloads_enabled(ctx.transport):
-        steps.insert(
-            0, f"neon_download_files(prototype_uuid='{args.uuid}') to save the files locally"
-        )
     notes = (
         ["Signed URLs expire about 7 days after generation (urlExpiresAt)."] if detail.files else []
     )
+    if files_skipped:
+        notes.append(
+            "Files skipped: NEON's prototype file listing needs an API token (Data API 0.12.0)."
+        )
+    downloads = ctx.config.effective_downloads_enabled(ctx.transport)
+    if ctx.token is None:
+        steps.insert(
+            0,
+            "Read neon://guide/api-token to list "
+            + ("and download " if downloads else "")
+            + "this dataset's files",
+        )
+    elif downloads:
+        steps.insert(
+            0, f"neon_download_files(prototype_uuid='{args.uuid}') to save the files locally"
+        )
     detail.notes = notes
     detail.next_steps = steps
     detail.source = source(ctx)

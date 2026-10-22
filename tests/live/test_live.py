@@ -87,8 +87,10 @@ async def test_taxonomy_samples_prototype(live: NeonServer) -> None:
     assert classes["items"]
     protos = await call_ok(live, "neon_search_prototype_datasets", {"query": "reaeration"})
     assert PROTOTYPE_UUID in [i["uuid"] for i in protos["items"]]
-    proto = await call_ok(live, "neon_get_prototype_dataset", {"uuid": PROTOTYPE_UUID})
-    assert proto["files"]
+    proto = await call_ok(
+        live, "neon_get_prototype_dataset", {"uuid": PROTOTYPE_UUID, "include": ["locations"]}
+    )
+    assert proto["projectTitle"] and proto["locations"]
 
 
 async def test_document_and_graphql(live: NeonServer) -> None:
@@ -140,6 +142,16 @@ async def test_data_files_and_download(live: NeonServer, needs_token: None) -> N
         },
     )
     assert report["files"][0]["status"] == "downloaded"
+
+
+async def test_prototype_files_and_download(live: NeonServer, needs_token: None) -> None:
+    proto = await call_ok(live, "neon_get_prototype_dataset", {"uuid": PROTOTYPE_UUID})
+    assert proto["files"] and proto["files"][0]["url"]
+    eml = f"NEON.PROTOTYPE.DATASET.EML.{PROTOTYPE_UUID}.xml"
+    report = await call_ok(
+        live, "neon_download_files", {"prototype_uuid": PROTOTYPE_UUID, "file_names": [eml]}
+    )
+    assert [f["status"] for f in report["files"]] == ["downloaded"]
 
 
 async def test_sample(live: NeonServer, needs_token: None) -> None:

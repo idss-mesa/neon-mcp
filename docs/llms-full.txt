@@ -6,7 +6,7 @@ Each page below begins with its canonical URL followed by its original Markdown,
 
 ---
 title: "NEON API token"
-description: "How to create a NEON API token step by step, why NEON's data and sample endpoints require it, how to give it to neon-mcp as NEON_TOKEN, how to check that NEON accepts it, and the rate limits with and without it."
+description: "How to create a NEON API token step by step, why NEON's data, sample and prototype-file endpoints require it, how to give it to neon-mcp as NEON_TOKEN, how to check that NEON accepts it, and the rate limits with and without it."
 type: Guide
 tags:
   - getting-started
@@ -14,8 +14,8 @@ tags:
   - api-token
   - rate-limits
 generated:
-  by: "claude/opus-5"
-  at: "2026-09-11T12:00:00Z"
+  by: "claude/opus-5.5"
+  at: "2026-10-22T12:00:00Z"
 sources:
   - id: neon-api-auth
     resource: "https://data.neonscience.org/data-api/authentication/"
@@ -42,15 +42,15 @@ sources:
     title: "neonutilities (Python) — README and examples"
     author: "team:neon"
 status: stable
-stale_after: "2027-03-11T00:00:00Z"
+stale_after: "2027-04-22T00:00:00Z"
 ---
 
 # NEON API token
 
 neon-mcp needs no credentials for discovery: NEON's product, site, location,
 release, taxonomy and prototype-dataset records are public. A **NEON API
-token** is required only when a tool has to list or fetch actual data files
-or trace samples. This page shows how to create a token, what to call it, how
+token** is required only when a tool has to list or fetch actual data or
+prototype files, or trace samples. This page shows how to create a token, what to call it, how
 to hand it to neon-mcp and how to check that NEON accepts it.
 
 **In short:** sign in at the NEON Data Portal, open **My Account**, click
@@ -70,10 +70,11 @@ endpoints are marked *Requires Authentication*. Without a token they answer
 | Data query | `GET /data/query`, `POST /data/query` |
 | Release-pinned data | `GET /releases/{releaseTag}/data/...` (all variants) |
 | Sample tracking | `GET /samples/view`, `GET /samples/download` |
+| Prototype files (since 0.12.0, October 2026) | `GET /prototype/data/{uuid}` (and `/{filename}`) |
 
 Everything else — `/products`, `/sites`, `/locations`, `/releases` (list,
 detail, products, sites), `/taxonomy`, `/samples/classes`,
-`/samples/supportedClasses`, `/prototype/*` and the GraphQL endpoint — is
+`/samples/supportedClasses`, `/prototype/datasets` and the GraphQL endpoint — is
 anonymous. Data availability per site and month is part of the public product
 and site records, so neon-mcp can tell you *what* exists without a token; it
 needs the token to tell you *where the files are* and to fetch them.
@@ -241,9 +242,11 @@ headers are authoritative[^neon-api-rate-limiting].
 
 * Discovery tools (products, sites, locations, availability, releases,
   taxonomy, prototype datasets) behave identically with or without a token,
-  apart from the lower rate limit.
+  apart from the lower rate limit — except that `neon_get_prototype_dataset`
+  leaves out the dataset's files (with a note) unless a token is set, and
+  fails with `auth_required` if you ask for `files` explicitly.
 * Three tools need a token: `neon_list_files`, `neon_download_files` (for NEON data
-  files; prototype and document downloads need none) and `neon_get_sample`. Without
+  and prototype files; document downloads need none) and `neon_get_sample`. Without
   one they fail **before** any request with a structured error,
   `code: "auth_required"`, whose message names `NEON_TOKEN` and links to
   [data.neonscience.org/myaccount](https://data.neonscience.org/myaccount){target=_blank}.
@@ -1369,8 +1372,8 @@ tags:
   - tools
   - prototype-datasets
 generated:
-  by: "claude/opus-5"
-  at: "2026-09-10T00:00:00Z"
+  by: "claude/opus-5.5"
+  at: "2026-10-22T12:00:00Z"
 sources:
   - id: neon-prototype
     resource: "https://data.neonscience.org/data-api/endpoints/prototype/"
@@ -1384,8 +1387,10 @@ status: stable
 Prototype datasets are early, experimental or one-off NEON data outside the standard
 product catalogue, each with its own DOI and version[^neon-prototype]. Tools:
 [`neon_search_prototype_datasets`](reference.md#neon_search_prototype_datasets) and
-[`neon_get_prototype_dataset`](reference.md#neon_get_prototype_dataset). Neither
-needs a token.
+[`neon_get_prototype_dataset`](reference.md#neon_get_prototype_dataset). Searching
+and reading a dataset's metadata need no token; since NEON Data API 0.12.0
+(October 2026) listing or downloading its files does (see
+[NEON API token](../getting-started/api-token.md)).
 
 * Search by `query` (title, abstract, descriptions, keywords), `theme`, `science_team`,
   `site_code`, `start_year`/`end_year` (overlap), `file_type` or `is_published`;
@@ -1395,9 +1400,11 @@ needs a token.
   `science_team` a substring, so `land cover` and `AOS` both work.
 * `neon_get_prototype_dataset` returns the dataset with its files (sizes, MD5s,
   signed URLs that expire in about 7 days) and locations by default; add
-  `descriptions`, `citations` and `related`, or `all`.
-* Download the files on stdio with `neon_download_files(prototype_uuid=...)`; cite
-  with `neon_get_citation(prototype_uuid=...)`.
+  `descriptions`, `citations` and `related`, or `all`. Without a token the default
+  call leaves the files out and says so in `notes`; asking for `files` or `all`
+  explicitly fails with `auth_required`.
+* Download the files on stdio with `neon_download_files(prototype_uuid=...)` (needs a
+  token); cite with `neon_get_citation(prototype_uuid=...)`.
 
 [^neon-prototype]: NEON Data API — Prototype datasets. <https://data.neonscience.org/data-api/endpoints/prototype/>
 
@@ -1413,7 +1420,7 @@ tags:
   - generated
 generated:
   by: "process:gen_tools_reference"
-  at: "2026-09-10T00:00:00Z"
+  at: "2026-10-22T00:00:00Z"
 sources:
   - id: registry
     resource: "https://github.com/idss-mesa/neon-mcp/tree/main/src/neon_mcp/tools"
@@ -1439,7 +1446,7 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 | [`neon_get_document`](#neon_get_document) | Get a NEON document | [documents](utilities.md) | no |
 | [`neon_get_location`](#neon_get_location) | Get a NEON location | [locations](locations.md) | no |
 | [`neon_get_product`](#neon_get_product) | Get a NEON data product | [catalog](products.md) | no |
-| [`neon_get_prototype_dataset`](#neon_get_prototype_dataset) | Get a NEON prototype dataset | [prototype](prototype-datasets.md) | no |
+| [`neon_get_prototype_dataset`](#neon_get_prototype_dataset) | Get a NEON prototype dataset | [prototype](prototype-datasets.md) | files |
 | [`neon_get_release`](#neon_get_release) | Get a NEON data release | [releases](releases.md) | no |
 | [`neon_get_sample`](#neon_get_sample) | Get a NEON sample | [samples](samples.md) | required |
 | [`neon_get_site`](#neon_get_site) | Get a NEON field site | [catalog](products.md) | no |
@@ -1455,12 +1462,12 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 
 ## neon_download_files
 
-**Download NEON files.** Download data files (or package ZIPs), a prototype dataset's files, or a NEON document into the configured download directory (stdio only; data files need a token). The plan is checked against file/byte caps before any transfer; MD5s are verified; identical existing files are skipped. Next: read the CSVs (pandas.read_csv) and cite with neon_get_citation.
+**Download NEON files.** Download data files (or package ZIPs), a prototype dataset's files, or a NEON document into the configured download directory (stdio only; data and prototype files need a token). The plan is checked against file/byte caps before any transfer; MD5s are verified; identical existing files are skipped. Next: read the CSVs (pandas.read_csv) and cite with neon_get_citation.
 
 | | |
 | --- | --- |
 | Surface | `data` |
-| NEON API token | required for NEON data files; prototype and document downloads need none |
+| NEON API token | required for NEON data and prototype files; document downloads need none |
 | Transports | stdio |
 | Annotations | readOnly=false, destructive=false, idempotent=true, openWorld=true |
 | NEON endpoints | `GET /data/package/{productCode}/{siteCode}/{yearMonth}`<br>`GET /prototype/data/{uuid}`<br>`GET /documents/{specNumber}`<br>`POST /data/query` |
@@ -1795,12 +1802,12 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 
 ## neon_get_prototype_dataset
 
-**Get a NEON prototype dataset.** One prototype dataset: title, abstract, years, version, DOI, themes, teams, sites, and by default its files with sizes, MD5s and signed URLs; optional project/design/metadata descriptions, publication citations and related products. Next: call neon_download_files(prototype_uuid=...) on stdio, or neon_get_citation(prototype_uuid=...).
+**Get a NEON prototype dataset.** One prototype dataset: title, abstract, years, version, DOI, themes, teams, sites, and by default its files with sizes, MD5s and signed URLs (files need a NEON API token: without one they are skipped, or auth_required if asked for explicitly); optional project/design/metadata descriptions, publication citations and related products. Next: call neon_download_files(prototype_uuid=...) on stdio, or neon_get_citation(prototype_uuid=...).
 
 | | |
 | --- | --- |
 | Surface | `prototype` |
-| NEON API token | not required |
+| NEON API token | not required; needed for `GET /prototype/data/{uuid}` (files) |
 | Transports | http, stdio |
 | Annotations | readOnly=true, destructive=false, idempotent=true, openWorld=true |
 | NEON endpoints | `GET /prototype/datasets/{uuid}`<br>`GET /prototype/data/{uuid}` |
@@ -1810,7 +1817,7 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 | Name | Type | Required | Default | Description |
 | --- | --- | --- | --- | --- |
 | `uuid` | string | yes |  | Prototype dataset uuid. |
-| `include` | array of `files` \\| `descriptions` \\| `locations` \\| `citations` \\| `related` \\| `all` |  |  | files (default; signed URLs), locations (default), descriptions, citations, related, all. |
+| `include` | array of `files` \\| `descriptions` \\| `locations` \\| `citations` \\| `related` \\| `all` |  |  | files (default; signed URLs; needs a token, skipped without one unless asked for), locations (default), descriptions, citations, related, all. |
 | `include_urls` | boolean |  | true | Include signed download URLs (valid ~7 days). |
 | `files_limit` | integer |  | `100` | >= 1; <= 500 |
 | `files_offset` | integer |  | `0` | >= 0 |
@@ -2200,7 +2207,7 @@ Generated from the tool registry by `scripts/gen_tools_reference.py`; do not edi
 
 ## neon_search_prototype_datasets
 
-**Search NEON prototype datasets.** Search NEON's prototype datasets (early or experimental data outside the standard products) by text, theme, science team, site, years, file type or publication flag, with facets. Each has its own DOI and version. No token. Next: call neon_get_prototype_dataset with a uuid for files.
+**Search NEON prototype datasets.** Search NEON's prototype datasets (early or experimental data outside the standard products) by text, theme, science team, site, years, file type or publication flag, with facets. Each has its own DOI and version. No token. Next: call neon_get_prototype_dataset with a uuid (its files need a token).
 
 | | |
 | --- | --- |
@@ -3637,11 +3644,17 @@ owners; this site uses its own original artwork.
 
 # Directory Update Log
 
+## 2026-10-22
+
+* **Update**: [NEON API token](getting-started/api-token.md), [Prototype datasets](tools/prototype-datasets.md) and the [home page](index.md) — NEON Data API 0.12.0 (October 2026) requires a token for prototype dataset files (`/prototype/data/...`); without one `neon_get_prototype_dataset` leaves the files out and `neon_download_files(prototype_uuid=...)` returns `auth_required`.
+* **Update**: [Tool reference](tools/reference.md) regenerated for the new prototype token wording.
+
 ## 2026-09-11
 
 * **Creation**: [Sync downloads to CyVerse](getting-started/sync-cyverse.md) — install GoCommands, log in with `gocmd init`, a one-way hourly `gocmd sync` script (no `--delete`, `.DS_Store` cleanup, lock and log), launchd and cron schedules, and what the sync does not carry (deletions, tags, MESA history); linked from [Availability and data files](tools/availability-and-data.md).
 * **Update**: [NEON API token](getting-started/api-token.md) — step-by-step token creation (account sign-up, My Account, GET API TOKEN, Copy, disabling or deleting a token); `NEON_TOKEN` as the variable to use, with `NEON_MCP_NEON__API_TOKEN` as an override and `NEON_API_TOKEN` no longer read; loading `.env` files; checking the token with `neon-mcp --check` (`tokenAccepted`) and what a rejected token does.
 * **Update**: [Quickstart](getting-started/quickstart.md), [Clients](getting-started/clients.md), [Configuration](getting-started/configuration.md) and [Testing](develop/testing.md) — token naming aligned with the NEON API token page; live tests load the token from `.env` with `uv run --env-file`.
+
 
 ## 2026-09-10
 

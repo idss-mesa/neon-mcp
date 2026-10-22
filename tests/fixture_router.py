@@ -408,7 +408,12 @@ def default_routes(router: FixtureRouter) -> list[Route]:
         # prototype datasets
         Route("GET", "/prototype/datasets", F("prototype_datasets.json")),
         Route("GET", f"/prototype/datasets/{PROTOTYPE_UUID}", F("prototype_dataset_07dccab1.json")),
-        Route("GET", f"/prototype/data/{PROTOTYPE_UUID}", F("prototype_data_07dccab1.json")),
+        Route(
+            "GET",
+            f"/prototype/data/{PROTOTYPE_UUID}",
+            F("prototype_data_07dccab1.json"),
+            token=True,
+        ),
         Route(
             "GET",
             "/taxonomy",

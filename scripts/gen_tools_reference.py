@@ -28,7 +28,8 @@ TARGET = ROOT / "docs" / "tools" / "reference.md"
 sys.path.insert(0, str(ROOT / "src"))
 
 from neon_mcp import tools as _tools  # noqa: E402,F401  (registration)
-from neon_mcp.registry import get_registered_tools  # noqa: E402
+from neon_mcp.neon.auth import is_token_endpoint  # noqa: E402
+from neon_mcp.registry import ToolSpec, get_registered_tools  # noqa: E402
 
 FAMILY_PAGES = {
     "core": "utilities.md",
@@ -42,6 +43,11 @@ FAMILY_PAGES = {
     "documents": "utilities.md",
     "graphql": "graphql.md",
 }
+
+
+def _token_files(spec: ToolSpec) -> list[str]:
+    """Token-only endpoints a tool that otherwise works without a token can call."""
+    return [e for e in spec.endpoints if is_token_endpoint(e.split(" ", 1)[1])]
 
 
 def _ref_name(schema: dict[str, Any]) -> str | None:
@@ -132,7 +138,7 @@ def render() -> str:
         page = FAMILY_PAGES.get(spec.surface, "index.md")
         lines.append(
             f"| [`{spec.name}`](#{spec.name}) | {spec.title} | [{spec.surface}]({page}) | "
-            f"{'required' if spec.requires_token else 'no'} |"
+            f"{'required' if spec.requires_token else 'files' if _token_files(spec) else 'no'} |"
         )
     lines.append("")
     for spec in specs:
@@ -144,8 +150,10 @@ def render() -> str:
         lines.append(f"## {spec.name}\n")
         lines.append(f"**{spec.title}.** {spec.description}\n")
         token = "required" if spec.requires_token else "not required"
+        if not spec.requires_token and (gated := _token_files(spec)):
+            token = f"not required; needed for {', '.join(f'`{e}`' for e in gated)} (files)"
         if spec.requires_token and spec.token_check == "handler":
-            token = "required for NEON data files; prototype and document downloads need none"
+            token = "required for NEON data and prototype files; document downloads need none"
         hints = ", ".join(
             f"{name}={str(value).lower()}"
             for name, value in (

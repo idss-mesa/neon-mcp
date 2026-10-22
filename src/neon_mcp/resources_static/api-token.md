@@ -3,12 +3,15 @@
 Since NEON Data API 0.11.0 (June 2026) these endpoints return **HTTP 403**
 without a token: data files and packages (`/data/...`), data queries
 (`/data/query`), release-scoped data (`/releases/{tag}/data/...`), and sample
-views and downloads (`/samples/view`, `/samples/download`). Everything else —
-products, sites, locations, availability, taxonomy, releases, prototype
-datasets and GraphQL — works anonymously.
+views and downloads (`/samples/view`, `/samples/download`); since 0.12.0
+(October 2026) prototype dataset files (`/prototype/data/...`) do too.
+Everything else — products, sites, locations, availability, taxonomy,
+releases, prototype dataset metadata and GraphQL — works anonymously.
 
-In neon-mcp this means `neon_list_files`, `neon_download_files` (data files)
-and `neon_get_sample` need a token; every other tool works without one.
+In neon-mcp this means `neon_list_files`, `neon_download_files` (data and
+prototype files) and `neon_get_sample` need a token, and
+`neon_get_prototype_dataset` lists a dataset's files only with one; every
+other tool works without one.
 
 ## Create a token (the user does this, not the agent)
 

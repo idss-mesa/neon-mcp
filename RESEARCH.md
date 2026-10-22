@@ -35,7 +35,8 @@ Docs site: https://data.neonscience.org/data-api/ (SPA; the markdown sources are
   - `GET /data/query`, `POST /data/query`
   - `GET /releases/{releaseTag}/data/...` (all three data variants)
   - `GET /samples/view`, `GET /samples/download`
-- Everything else works anonymously. Consequence for the MCP server: it must run usefully with NO token (discovery, availability from `/products`, sites, locations, taxonomy, releases, prototype datasets) and unlock file listing/downloads/sample tracking when `NEON_MCP_NEON__API_TOKEN` (or equivalent) is configured. Tools that hit token-only endpoints must fail with a structured, actionable error (`auth_required`, link to myaccount page) — never a raw 403 stack.
+  - **Since v0.12.0 (2026-10-01):** `GET /prototype/data/{uuid}` and `GET /prototype/data/{uuid}/{filename}` (swagger dropped their `security: []`; NEONScience/neon-data-api commit 5a399ef). Verified live 2026-10-22: anonymous → 403 `Access Denied` (same body); valid token → 200 listing / 302 to `neon-publication-proto.storage.googleapis.com` for a file; bogus token → 403. `/prototype/datasets` and `/prototype/datasets/{uuid}` stay anonymous.
+- Everything else works anonymously. Consequence for the MCP server: it must run usefully with NO token (discovery, availability from `/products`, sites, locations, taxonomy, releases, prototype dataset metadata) and unlock file listing/downloads/sample tracking when `NEON_MCP_NEON__API_TOKEN` (or equivalent) is configured. Tools that hit token-only endpoints must fail with a structured, actionable error (`auth_required`, link to myaccount page) — never a raw 403 stack.
 - Tokens are secrets: never log them, never echo them in tool output or error details, never put them in MRTR `requestState` (it round-trips through the client).
 
 ### 1.2 Rate limiting (verified headers on every response)

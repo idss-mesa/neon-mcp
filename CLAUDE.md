@@ -33,8 +33,8 @@ NEON_MCP_LIVE=1 uv run --env-file .env pytest -m live tests/live   # NEON_TOKEN 
 ## NEON facts that drive the code
 
 - Since API 0.11.0 (June 2026) `/data/*`, `/data/query`, `/releases/{tag}/data/*`,
-  `/samples/view` and `/samples/download` return 403 without `X-API-Token`; all else is
-  anonymous. Rate limits: 200 burst / 2 rps anonymous (per IP), 2000 / 8 rps with a token.
+  `/samples/view` and `/samples/download` return 403 without `X-API-Token`, and since
+  0.12.0 (Oct 2026) so does `/prototype/data/*`; all else is anonymous. Rate limits: 200 burst / 2 rps anonymous (per IP), 2000 / 8 rps with a token.
 - Unknown codes are HTTP **400** "… not found" (→ `not_found`), not 404.
 - `PROVISIONAL` is not a release; `?release=PROVISIONAL` is a 400. Use the
   `provisional` / `include_provisional` switches.

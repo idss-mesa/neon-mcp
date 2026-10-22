@@ -25,7 +25,12 @@ if TYPE_CHECKING:
 
 log = structlog.get_logger("neon_mcp.auth")
 
-TOKEN_ENDPOINT_PREFIXES: tuple[str, ...] = ("/data/", "/samples/view", "/samples/download")
+TOKEN_ENDPOINT_PREFIXES: tuple[str, ...] = (
+    "/data/",
+    "/samples/view",
+    "/samples/download",
+    "/prototype/data/",
+)
 TOKEN_ENDPOINT_RE = re.compile(r"^/releases/[^/]+/data/")
 TOKEN_HEADER = "X-API-Token"
 

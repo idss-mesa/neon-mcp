@@ -1,5 +1,10 @@
 # Directory Update Log
 
+## 2026-10-22
+
+* **Update**: [NEON API token](getting-started/api-token.md), [Prototype datasets](tools/prototype-datasets.md) and the [home page](index.md) — NEON Data API 0.12.0 (October 2026) requires a token for prototype dataset files (`/prototype/data/...`); without one `neon_get_prototype_dataset` leaves the files out and `neon_download_files(prototype_uuid=...)` returns `auth_required`.
+* **Update**: [Tool reference](tools/reference.md) regenerated for the new prototype token wording.
+
 ## 2026-09-11
 
 * **Creation**: [Sync downloads to CyVerse](getting-started/sync-cyverse.md) — install GoCommands, log in with `gocmd init`, a one-way hourly `gocmd sync` script (no `--delete`, `.DS_Store` cleanup, lock and log), launchd and cron schedules, and what the sync does not carry (deletions, tags, MESA history); linked from [Availability and data files](tools/availability-and-data.md).

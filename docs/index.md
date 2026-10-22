@@ -35,7 +35,8 @@ server is running and can reach the NEON API.
 
     Product, site, location, release, taxonomy and prototype-dataset
     discovery work anonymously. Since NEON Data API 0.11.0 (June 2026) the
-    data-file, data-query and sample endpoints require an API token; see
+    data-file, data-query and sample endpoints require an API token, and
+    since 0.12.0 (October 2026) prototype dataset files do too; see
     [NEON API token](getting-started/api-token.md) to obtain one and pass it
     to neon-mcp.
 
